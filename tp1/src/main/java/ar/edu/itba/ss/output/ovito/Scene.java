@@ -48,7 +48,7 @@ public class Scene {
                 particlesSceneList.add(particleScene);
             }
 
-            ParticleScene radioScene = new ParticleScene(particleDataframe.getParticle(),atoms+1,rc);
+            ParticleScene radioScene = new ParticleScene(particleDataframe.getParticle(),atoms+1,rc+particleDataframe.getParticle().getEntity().getRadius());
             particlesSceneList.add(radioScene);
 
             Scene scene = new Scene(time,atoms+1,particlesSceneList);
