@@ -32,11 +32,30 @@ public class SquareGrid<T extends Entity> {
        locate(x, y).place(entity, x, y);
     }
 
+    public void place(T entity, double x, double y, double r) {
+        locate(x,y,r).forEach(c->c.place(entity,x,y));
+        locate(x, y).place(entity, x, y);
+    }
+
     public Cell<T> locate(double pX, double pY) {
         int cellX = (int) Math.min(pX * numCells / size, numCells - 1);
         int cellY = (int) Math.min(pY * numCells / size, numCells - 1);
 
         return cells.get(cellY).get(cellX);
+    }
+
+    public List<Cell<T>> locate(double pX, double pY, double r) {
+        int cellX = (int) Math.min(pX * numCells / size, numCells - 1);
+        int cellY = (int) Math.min(pY * numCells / size, numCells - 1);
+
+        Cell<T> mainCell = cells.get(cellY).get(cellX);
+        List<Cell<T>> list = getNeighbours(mainCell);
+        List<Cell<T>> newList = new ArrayList<>();
+        for (Cell<T> cell:list) {
+            if(cell.intersectCircle(pX,pY,r))
+                newList.add(cell);
+        }
+        return newList;
     }
 
     public List<Cell<T>> getNeighbours (Cell<T> cell) {
