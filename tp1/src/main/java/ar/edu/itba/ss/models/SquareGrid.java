@@ -22,7 +22,7 @@ public class SquareGrid<T extends Entity> {
         for (int i = 0; i < numCells; i++) {
             List<Cell<T>> row = new ArrayList<>(numCells);
             for (int j = 0; j < numCells; j++) {
-                row.add(new Cell<>(i, j));
+                row.add(new Cell<>(i, j,cellSize));
             }
             cells.add(row);
         }
