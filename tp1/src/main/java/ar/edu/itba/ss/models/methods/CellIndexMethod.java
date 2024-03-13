@@ -34,7 +34,7 @@ public class CellIndexMethod {
         System.out.printf("cell neighbours: %s\n\n",    Arrays.toString(neighbours.toArray()));
 
         List<SurfaceEntity<Particle>> neighbourCellsParticles =
-                neighbours.stream().flatMap(c -> c.getEntities().stream()).toList();
+                neighbours.stream().flatMap(c -> c.getEntities().stream()).collect(Collectors.toList());
 
         System.out.printf("neighbours cells particles: %s\n\n",
                 Arrays.toString(neighbourCellsParticles.toArray())

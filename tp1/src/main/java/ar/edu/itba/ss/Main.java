@@ -34,8 +34,8 @@ public class Main {
         Random random = new Random();
 
         for (int i = 0; i < n; i++) {
-            double x = random.nextDouble(0, l);
-            double y = random.nextDouble(0, l);
+            double x = random.nextDouble()*l;
+            double y = random.nextDouble()*l;
             Particle particle = new Particle(r);
             SurfaceEntity<Particle> entity = new SurfaceEntity<>(particle,x,y);
             particles.add(new SurfaceEntity<>(particle, x, y));

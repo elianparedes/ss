@@ -15,9 +15,12 @@ public abstract class Entity {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
-        if (!(obj instanceof Entity e))
+        if (!(obj instanceof Entity)) {
             return false;
+        }
+        Entity e = (Entity) obj;
         return this.id == e.getId();
     }
+
 }
 
