@@ -2,10 +2,11 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+### Resources
+src/main/resources
 
 ### IntelliJ IDEA ###
 .idea/remote-targets.xml
-.idea/workspace.xml
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml

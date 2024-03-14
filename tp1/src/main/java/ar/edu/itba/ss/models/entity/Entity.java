@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Entity {
 
-    private final static AtomicInteger atomicInteger = new AtomicInteger(0);
+    private final static AtomicInteger atomicInteger = new AtomicInteger(1);
 
     private final Integer id = atomicInteger.getAndIncrement();
 

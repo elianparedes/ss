@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38f3781a-bfae-4ac9-a355-218680b36585" name="Changes" comment="gitignore">
-      <change afterPath="$PROJECT_DIR$/.idea/remote-targets.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="38f3781a-bfae-4ac9-a355-218680b36585" name="Changes" comment="chore: dataframe order by particle comparable">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/Cell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/SquareGrid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/SquareGrid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/data/ParticleDataframe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/data/ParticleDataframe.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/entity/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/entity/Entity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/methods/CellIndexMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/methods/CellIndexMethod.java" afterDir="false" />
     </list>
     <list id="adec8276-40a1-40bb-abbc-af337c05eb11" name="Changes by saula" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,8 +21,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -66,6 +62,9 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="\\wsl$\Ubuntu\home\saula\ss\tp1\src\main\resources" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="ar.edu.itba.ss.models" />
     </key>
@@ -74,6 +73,7 @@
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ar.edu.itba.ss.Main" />
       <module name="tp1" />
+      <option name="PROGRAM_PARAMETERS" value="Dynamic100.txt" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="ar.edu.itba.ss.*" />
@@ -100,6 +100,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="JUnit.CellTest.testIntersectCircle" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
@@ -119,6 +123,7 @@
       <workItem from="1710158001928" duration="1747000" />
       <workItem from="1710169041049" duration="3121000" />
       <workItem from="1710362955609" duration="7559000" />
+      <workItem from="1710426706853" duration="11316000" />
     </task>
     <task id="LOCAL-00001" summary="gitignore">
       <option name="closed" value="true" />
@@ -128,7 +133,23 @@
       <option name="project" value="LOCAL" />
       <updated>1710370912432</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat: cim considers particle radius">
+      <option name="closed" value="true" />
+      <created>1710430146379</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1710430146379</updated>
+    </task>
+    <task id="LOCAL-00003" summary="chore: dataframe order by particle comparable">
+      <option name="closed" value="true" />
+      <created>1710431838555</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1710431838555</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,7 +157,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="gitignore" />
+    <MESSAGE value="feat: cim considers particle radius" />
+    <MESSAGE value="chore: dataframe order by particle comparable" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: dataframe order by particle comparable" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
