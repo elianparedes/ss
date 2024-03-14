@@ -43,7 +43,7 @@ public class Main {
             particles.add(entity);
         }
 
-        Map<Particle, ParticleDataframe> df = CellIndexMethod.calculate(l, m, n, rc, particles);
+        Map<SurfaceEntity<Particle>, ParticleDataframe> df = CellIndexMethod.calculate(l, m, n, rc, particles);
         List<Scene> scenes = Scene.getScenesByDataframes(df, particles, TIME_STEP, n, rc);
         System.out.println(Scene.toStringScenes(scenes));
 

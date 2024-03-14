@@ -2,7 +2,7 @@ package ar.edu.itba.ss.models;
 
 import ar.edu.itba.ss.models.entity.Entity;
 
-public class Particle extends Entity {
+public class Particle extends Entity{
 
     private double radius;
 

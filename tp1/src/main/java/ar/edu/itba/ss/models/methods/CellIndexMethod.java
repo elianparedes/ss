@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class CellIndexMethod {
 
-    public static Map<Particle, ParticleDataframe> calculateWithRadius(int l, int m, double rc, final List<SurfaceEntity<Particle>> particles){
+    public static Map<SurfaceEntity<Particle>, ParticleDataframe> calculateWithRadius(int l, int m, double rc, final List<SurfaceEntity<Particle>> particles){
         SquareGrid<Particle> grid = new SquareGrid<>(l, m);
         for (SurfaceEntity<Particle> particle : particles) {
             grid.place(particle, particle.getX(),particle.getY(), particle.getEntity().getRadius());
@@ -23,7 +23,7 @@ public class CellIndexMethod {
 
         return CellIndexMethod.cellIndexMethod(grid,rc);
     }
-    public static Map<Particle, ParticleDataframe> calculate(int l, int m, int n, double rc, final List<SurfaceEntity<Particle>> particles) {
+    public static Map<SurfaceEntity<Particle>, ParticleDataframe> calculate(int l, int m, int n, double rc, final List<SurfaceEntity<Particle>> particles) {
 
         SquareGrid<Particle> grid = new SquareGrid<>(l, m);
 
@@ -34,8 +34,8 @@ public class CellIndexMethod {
         return CellIndexMethod.cellIndexMethod(grid,rc);
     }
 
-    private static Map<Particle,ParticleDataframe> cellIndexMethod(SquareGrid<Particle> grid, double rc){
-        Map<Particle, ParticleDataframe> results = new LinkedHashMap<>();
+    private static Map<SurfaceEntity<Particle>,ParticleDataframe> cellIndexMethod(SquareGrid<Particle> grid, double rc){
+        Map<SurfaceEntity<Particle>, ParticleDataframe> results = new TreeMap<>();
         List<List<Cell<Particle>>> rows = grid.getCells();
 
         for (List<Cell<Particle>> columns : rows) {
@@ -57,7 +57,7 @@ public class CellIndexMethod {
                         double distance = (particle.distanceTo(neighbour) - neighbour.getEntity().getRadius()) - particle.getEntity().getRadius();
                         if (distance <= rc && !particle.equals(neighbour)) {
                             df.addNeighbour(neighbour, distance);
-                            ParticleDataframe neighbourDf = results.getOrDefault(neighbour.getEntity(), new ParticleDataframe(neighbour));
+                            ParticleDataframe neighbourDf = results.getOrDefault(neighbour, new ParticleDataframe(neighbour));
                             neighbourDf.addNeighbour(particle, distance);
                         }
                     }
@@ -68,7 +68,7 @@ public class CellIndexMethod {
                         }
                     }
 
-                    results.put(particle.getEntity(), df);
+                    results.put(particle, df);
                 }
             }
         }

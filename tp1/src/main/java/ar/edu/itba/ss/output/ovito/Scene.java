@@ -22,7 +22,7 @@ public class Scene {
         this.particles = particles;
     }
 
-    public static List<Scene> getScenesByDataframes(Map<Particle, ParticleDataframe> df, List<SurfaceEntity<Particle>> particles, Integer TIME_STEP, Integer atoms, Double rc){
+    public static List<Scene> getScenesByDataframes(Map<SurfaceEntity<Particle>, ParticleDataframe> df, List<SurfaceEntity<Particle>> particles, Integer TIME_STEP, Integer atoms, Double rc){
         List<Scene> scenes = new ArrayList<>();
         Integer time = 0;
 

@@ -2,7 +2,7 @@ package ar.edu.itba.ss.models.entity;
 
 import java.util.Objects;
 
-public class SurfaceEntity<T extends Entity> {
+public class SurfaceEntity<T extends Entity> implements Comparable{
     private final T entity;
     private double x;
     private double y;
@@ -57,5 +57,14 @@ public class SurfaceEntity<T extends Entity> {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        SurfaceEntity<?> other = (SurfaceEntity<?>) o;
+        if(Double.compare(other.y,this.y) == 0){
+            return Double.compare(this.x,other.x);
+        }
+        return Double.compare(this.y, other.y);
     }
 }
