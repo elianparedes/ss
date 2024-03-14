@@ -22,7 +22,7 @@ public class SquareGrid<T extends Entity> {
         for (int i = 0; i < numCells; i++) {
             List<Cell<T>> row = new ArrayList<>(numCells);
             for (int j = 0; j < numCells; j++) {
-                row.add(new Cell<>(i, j,cellSize));
+                row.add(new Cell<>(i, j, cellSize));
             }
             cells.add(row);
         }
@@ -71,6 +71,7 @@ public class SquareGrid<T extends Entity> {
         int j = cell.getJ();
 
         List<Cell<T>> neighbours = new ArrayList<>();
+
         for (int[] offset : offsets) {
             int neighborI = i + offset[0];
             int neighborJ = j + offset[1];

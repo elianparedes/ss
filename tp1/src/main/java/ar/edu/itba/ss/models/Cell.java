@@ -18,7 +18,6 @@ public class Cell<T extends Entity> {
     private final double size;
     private final Point top_left, top_right, bottom_left, bottom_right;
     private final Edge left, right, top, bottom;
-
     private final List<SurfaceEntity<T>> entities;
 
     public Cell(int i, int j, double size) {
