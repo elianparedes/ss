@@ -1,5 +1,7 @@
 package ar.edu.itba.ss.models.entity;
 
+import java.util.Objects;
+
 public class SurfaceEntity<T extends Entity> {
     private final T entity;
     private double x;
@@ -44,4 +46,16 @@ public class SurfaceEntity<T extends Entity> {
         return String.format("{ x: %.2f, y: %.2f, entity: %s }", x, y, entity);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        SurfaceEntity<?> that = (SurfaceEntity<?>) obj;
+        return entity.equals(that.entity);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

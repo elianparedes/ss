@@ -4,5 +4,7 @@ public enum ParticleStatus {
     CURRENT,
     NEIGHBOUR,
     RADIO,
-    OTHER
+    OTHER,
+    CELL,
+    NEIGHBOURCELL
 }

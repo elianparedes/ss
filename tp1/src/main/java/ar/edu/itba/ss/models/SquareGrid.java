@@ -37,6 +37,10 @@ public class SquareGrid<T extends Entity> {
         locate(x, y).place(entity, x, y);
     }
 
+    public void place(SurfaceEntity<T> surfaceEntity) {
+        locate(surfaceEntity.getX(), surfaceEntity.getY()).place(surfaceEntity);
+    }
+
     public Cell<T> locate(double pX, double pY) {
         int cellX = (int) Math.min(pX * numCells / size, numCells - 1);
         int cellY = (int) Math.min(pY * numCells / size, numCells - 1);
@@ -58,18 +62,15 @@ public class SquareGrid<T extends Entity> {
         return newList;
     }
 
-    public List<Cell<T>> getNeighbours (Cell<T> cell) {
+    public List<Cell<T>> getNeighbours(Cell<T> cell) {
+        return getNeighbours(cell, TraversalOffset.EIGHT_NEIGHBOURS);
+    }
+
+    public List<Cell<T>> getNeighbours (Cell<T> cell, int[][] offsets) {
         int i = cell.getI();
         int j = cell.getJ();
 
         List<Cell<T>> neighbours = new ArrayList<>();
-
-        int[][] offsets = {
-                {-1, -1}, {-1, 0}, {-1, 1},
-                {0, -1}, {0, 0}, {0, 1},
-                {1, -1}, {1, 0}, {1, 1}
-        };
-
         for (int[] offset : offsets) {
             int neighborI = i + offset[0];
             int neighborJ = j + offset[1];
@@ -79,6 +80,10 @@ public class SquareGrid<T extends Entity> {
         }
 
         return neighbours;
+    }
+
+    public List<List<Cell<T>>> getCells() {
+        return cells;
     }
 
     public void print() {

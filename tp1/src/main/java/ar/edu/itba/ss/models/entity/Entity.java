@@ -19,7 +19,7 @@ public abstract class Entity {
             return false;
         }
         Entity e = (Entity) obj;
-        return this.id == e.getId();
+        return this.id.equals(e.getId());
     }
 
 }

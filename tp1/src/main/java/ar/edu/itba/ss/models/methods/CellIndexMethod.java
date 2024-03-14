@@ -1,19 +1,72 @@
 package ar.edu.itba.ss.models.methods;
 
+import ar.edu.itba.ss.data.ParticleDataframe;
 import ar.edu.itba.ss.models.Cell;
 import ar.edu.itba.ss.models.Particle;
 import ar.edu.itba.ss.models.SquareGrid;
+import ar.edu.itba.ss.models.TraversalOffset;
+import ar.edu.itba.ss.models.entity.Entity;
 import ar.edu.itba.ss.models.entity.SurfaceEntity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
+
 
 public class CellIndexMethod {
 
-    public static void calculate(int l, int m, int n, double r, double rc, List<SurfaceEntity<Particle>> particles) {
+    public static Map<Particle, ParticleDataframe> calculate(int l, int m, int n, double r, double rc, final List<SurfaceEntity<Particle>> particles) {
+
+        Map<Particle, ParticleDataframe> results = new LinkedHashMap<>();
+
+        SquareGrid<Particle> grid = new SquareGrid<>(l, m);
+
+        for (SurfaceEntity<Particle> particle : particles) {
+            grid.place(particle);
+        }
+
+        List<List<Cell<Particle>>> rows = grid.getCells();
+
+        for (List<Cell<Particle>> columns : rows) {
+            for (Cell<Particle> cell : columns) {
+                for (SurfaceEntity<Particle> particle : cell.getEntities()) {
+                    ParticleDataframe df = new ParticleDataframe(particle);
+
+                    List<Cell<Particle>> neighbours = grid.getNeighbours(cell, TraversalOffset.L_NEIGHBOURS);
+                    df.addNeighbourCells(neighbours);
+
+                    List<SurfaceEntity<Particle>> neighbourCellsParticles =
+                            neighbours.stream().flatMap(c -> c.getEntities().stream()).collect(Collectors.toList());
+
+                    for (SurfaceEntity<Particle> neighbour : neighbourCellsParticles) {
+                        double distance = (particle.distanceTo(neighbour) - neighbour.getEntity().getRadius()) - particle.getEntity().getRadius();
+                        if (distance <= rc && !particle.equals(neighbour)) {
+                            df.addNeighbour(neighbour, distance);
+                            ParticleDataframe neighbourDf = results.getOrDefault(neighbour.getEntity(), new ParticleDataframe(neighbour));
+                            neighbourDf.addNeighbour(particle, distance);
+                        }
+                    }
+
+                    for (List<Cell<Particle>> cols : rows) {
+                        for (Cell<Particle>  c : cols){
+                            df.addCell(c);
+                        }
+                    }
+
+                    results.put(particle.getEntity(), df);
+                }
+            }
+        }
+
+        Map<Particle, ParticleDataframe> newResult = new LinkedHashMap<>();
+        for (SurfaceEntity<Particle> particle : particles) {
+            newResult.put(particle.getEntity(), results.get(particle.getEntity()));
+        }
+
+        return newResult;
+
+    }
+
+    public static void calculateForSingle(int l, int m, int n, double r, double rc, List<SurfaceEntity<Particle>> particles) {
 
         SquareGrid<Particle> grid = new SquareGrid<>(l, m);
 

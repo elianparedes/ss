@@ -33,6 +33,16 @@ public class ParticleScene {
         this.radius = radius;
     }
 
+    public ParticleScene (double x, double y, Integer id, Double radius, final ParticleStatus status){
+        this.id = id;
+        this.status = status;
+        this.x = x;
+        this.y = y;
+        this.z = 0.0;
+
+        this.radius = radius;
+    }
+
     public static String listToString(final List<ParticleScene> particleSceneList){
         StringBuilder builder = new StringBuilder();
         for (ParticleScene p:

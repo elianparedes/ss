@@ -27,4 +27,9 @@ public class Particle extends Entity {
         return String.format("{id: %s, radius: %s}", getId(), getRadius());
 
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }
