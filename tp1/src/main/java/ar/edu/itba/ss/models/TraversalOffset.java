@@ -9,10 +9,11 @@ public class TraversalOffset {
     };
 
     public static final int[][] L_NEIGHBOURS = {
-            {-1, 0},
-            {-1, 1},
             {0, 1},
             {1, 1},
+            {1, 0},
+            {1, -1},
+            {0, 0}
     };
 
 }

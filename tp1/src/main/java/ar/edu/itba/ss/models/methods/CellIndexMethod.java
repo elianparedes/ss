@@ -35,13 +35,13 @@ public class CellIndexMethod {
     }
 
     private static Map<SurfaceEntity<Particle>,ParticleDataframe> cellIndexMethod(SquareGrid<Particle> grid, double rc){
-        Map<SurfaceEntity<Particle>, ParticleDataframe> results = new TreeMap<>();
+        Map<SurfaceEntity<Particle>, ParticleDataframe> results = new LinkedHashMap<>();
         List<List<Cell<Particle>>> rows = grid.getCells();
 
         for (List<Cell<Particle>> columns : rows) {
             for (Cell<Particle> cell : columns) {
                 for (SurfaceEntity<Particle> particle : cell.getEntities()) {
-                    ParticleDataframe df = new ParticleDataframe(particle);
+                    ParticleDataframe df = results.getOrDefault(particle, new ParticleDataframe(particle));
 
                     List<Cell<Particle>> neighbours = grid.getNeighbours(cell, TraversalOffset.L_NEIGHBOURS);
 
@@ -59,6 +59,7 @@ public class CellIndexMethod {
                             df.addNeighbour(neighbour, distance);
                             ParticleDataframe neighbourDf = results.getOrDefault(neighbour, new ParticleDataframe(neighbour));
                             neighbourDf.addNeighbour(particle, distance);
+                            results.putIfAbsent(neighbour, neighbourDf);
                         }
                     }
 
@@ -68,7 +69,7 @@ public class CellIndexMethod {
                         }
                     }
 
-                    results.put(particle, df);
+                    results.putIfAbsent(particle, df);
                 }
             }
         }

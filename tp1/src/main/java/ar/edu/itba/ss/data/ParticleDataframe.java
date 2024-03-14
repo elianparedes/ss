@@ -37,7 +37,7 @@ public class ParticleDataframe {
     public List<SurfaceEntity<Particle>> getNotNeighbours(List<SurfaceEntity<Particle>> particles) {
         Set<SurfaceEntity<Particle>> neighbours = new HashSet<>(this.neighbours.keySet());
         List<SurfaceEntity<Particle>> notNeighbours = new ArrayList<>(particles);
-        System.out.println(notNeighbours.removeAll(neighbours));
+        notNeighbours.removeAll(neighbours);
 
         return new ArrayList<>(notNeighbours);
     }

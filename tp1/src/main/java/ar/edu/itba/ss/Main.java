@@ -59,7 +59,7 @@ public class Main {
         //double r = Double.parseDouble(args[2]);
         int n = 100;
         int l = 100;
-        int m = 1;
+        int m = 10;
         double r = 0.37;
         double rc = 6;
 
@@ -73,9 +73,7 @@ public class Main {
         orderedDf.putAll(df);
         orderedDf.values().forEach(System.out::println);
 
-        //List<Scene> scenes = Scene.getScenesByDataframes(df, particles, TIME_STEP, n, rc);
-        //System.out.println(Scene.toStringScenes(scenes));
-
-        //CellIndexMethod.calculate(l, m, n, r, rc,particles)
+        List<Scene> scenes = Scene.getScenesByDataframes(df, particles, TIME_STEP, n, rc);
+        System.out.println(Scene.toStringScenes(scenes));
     }
 }
