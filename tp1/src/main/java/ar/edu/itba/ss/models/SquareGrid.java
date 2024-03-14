@@ -32,9 +32,8 @@ public class SquareGrid<T extends Entity> {
        locate(x, y).place(entity, x, y);
     }
 
-    public void place(T entity, double x, double y, double r) {
-        locate(x,y,r).forEach(c->c.place(entity,x,y));
-        locate(x, y).place(entity, x, y);
+    public void place(SurfaceEntity<T> entity, double x, double y, double r) {
+        locate(x,y,r).forEach(c->c.place(entity));
     }
 
     public void place(SurfaceEntity<T> surfaceEntity) {
@@ -59,6 +58,7 @@ public class SquareGrid<T extends Entity> {
             if(cell.intersectCircle(pX,pY,r))
                 newList.add(cell);
         }
+        newList.add(mainCell);
         return newList;
     }
 
