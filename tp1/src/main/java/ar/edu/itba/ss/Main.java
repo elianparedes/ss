@@ -21,12 +21,12 @@ public class Main {
 
     private static final Integer TIME_STEP = 2000;
 
-    private final static int N = 100;
-    private final static int L = 100;
+    private final static int N = 1000;
+    private final static int L = 200;
 
     private final static double RC = 1.0;
 
-    private final static double R = 0.37;
+    private final static double R = 0.25;
 
     private static final Comparator<SurfaceEntity<Particle>> orderById = Comparator.comparing(particle -> particle.getEntity().getId());
 
@@ -105,12 +105,25 @@ public class Main {
             System.out.printf("Using M = %d%n",m);
         }
 
-
+        long startTime = System.nanoTime();
         Map<SurfaceEntity<Particle>, ParticleDataframe> df = CellIndexMethod.calculateWithRadius(l, m, rc,entityParticles);
+        long endTime = System.nanoTime();
+        long duration = endTime - startTime;
 
         TreeMap<SurfaceEntity<Particle>,ParticleDataframe> orderedDf = new TreeMap<>(orderById);
         orderedDf.putAll(df);
+
         orderedDf.values().forEach(System.out::println);
+        System.out.println("Tiempo de ejecución CIM: " + duration / 1000000.0 + " milisegundos");
+
+
+        startTime = System.nanoTime();
+        List<ParticleDataframe> bruteDf = BruteForce.calculate(entityParticles,rc);
+        endTime = System.nanoTime();
+        duration = endTime - startTime;
+
+        bruteDf.forEach(System.out::println);
+        System.out.println("Tiempo de ejecución BF: " + duration / 1000000.0 + " milisegundos");
 
         List<Scene> scenes = Scene.getScenesByDataframes(df, entityParticles, TIME_STEP, n, rc);
         //System.out.println(Scene.toStringScenes(scenes));
