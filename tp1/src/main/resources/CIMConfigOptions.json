@@ -1,6 +1,14 @@
 {
-  "l": "int: space size",
-  "n": "int: particles amount",
-  "r": "double: particles radius",
-  "rc": "double: particles interaction radius"
+  "parameters": {
+    "l": "int: space size",
+    "n": "int: particles amount",
+    "r": "double: particles radius",
+    "rc": "double: particles interaction radius"
+  },
+  "results": {
+    "time": "boolean: include time in results",
+    "ovito_file": "boolean: generate animation file for ovito",
+    "algorithms": "[]: 'CIM', 'BF' the algorithms to run",
+    "output_folder": "string: the name of the folder to save the output files"
+  }
 }

@@ -1,22 +1,18 @@
 package ar.edu.itba.ss;
 
 import ar.edu.itba.ss.data.ParticleDataframe;
-import ar.edu.itba.ss.input.CIMConfig;
+import ar.edu.itba.ss.input.ArgumentHandler;
+import ar.edu.itba.ss.config.CIMConfig;
 import ar.edu.itba.ss.input.DynamicFile;
 import ar.edu.itba.ss.input.StaticFile;
 import ar.edu.itba.ss.models.Particle;
-import ar.edu.itba.ss.models.SquareGrid;
 import ar.edu.itba.ss.models.entity.SurfaceEntity;
 import ar.edu.itba.ss.models.exceptions.ParticleOutOfBoundsException;
 import ar.edu.itba.ss.models.geometry.Point;
 import ar.edu.itba.ss.models.methods.BruteForce;
 import ar.edu.itba.ss.models.methods.CellIndexMethod;
-import ar.edu.itba.ss.output.ovito.ParticleScene;
-import ar.edu.itba.ss.output.ovito.ParticleStatus;
-import ar.edu.itba.ss.output.ovito.Scene;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 
 public class Main {
@@ -62,18 +58,19 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String staticFileArg = (args.length == 0) ? null : args[0];
-        String dynamicFileArg = (args.length == 1) ? null : args[1];
+        ArgumentHandler handler = new ArgumentHandler(args);
+        String staticFileArg = handler.getStaticFileName();
+        String dynamicFileArg = handler.getDynamicFileName();
 
         int n, l;
         double rc, maxR;
 
         try {
             CIMConfig config = CIMConfig.getConfig(Objects.requireNonNull(Main.class.getClassLoader().getResource(CONFIG_FILE)).getFile());
-            n = config.getN();
-            l = config.getL();
-            rc = config.getRc();
-            maxR = config.getR();
+            n = config.getParameters().getN();
+            l = config.getParameters().getL();
+            rc = config.getParameters().getRc();
+            maxR = config.getParameters().getR();
         } catch (Exception e) {
             throw new RuntimeException(CONFIG_FILE_ERROR);
         }
@@ -98,18 +95,14 @@ public class Main {
 
         List<SurfaceEntity<Particle>> entityParticles = getParticlesForSimulation(dynamicFileArg,n,l,particles);
 
-        int m;
-        if(args.length < 3){
-            m = (int)Math.floor(l/((rc)+2*maxR));
-            System.out.printf("Using M = %d%n",m);
-        } else{
-            m = Integer.parseInt(args[2]);
-            if((double)l/m < (rc+2*maxR)) {
+        int m = handler.getM();
+        if(m == 0 || (double)l/m < (rc+2*maxR)){
+            if(m != 0){
                 System.out.printf("M cannot be: %d%n", m);
-                m = (int)Math.floor(l/((rc)+2*maxR));
             }
-            System.out.printf("Using M = %d%n",m);
+            m = (int)Math.floor(l/((rc)+2*maxR));
         }
+        System.out.printf("Using M = %d%n",m);
 
         long startTime = System.nanoTime();
         Map<SurfaceEntity<Particle>, ParticleDataframe> df = CellIndexMethod.calculate(l, m, rc,entityParticles);
