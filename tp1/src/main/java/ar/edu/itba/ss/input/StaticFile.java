@@ -29,7 +29,7 @@ public class StaticFile {
         if(filename == null)
             throw  new FileNotFoundException();
 
-        Optional<URL> resourceOptional = Optional.ofNullable(Main.class.getClassLoader().getResource(filename));
+        Optional<URL> resourceOptional = Optional.ofNullable(Main.class.getClassLoader().getResource("input/"+filename));
         String path = resourceOptional.map(URL::getFile)
                 .orElseThrow(FileNotFoundException::new);
 

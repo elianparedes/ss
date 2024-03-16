@@ -3,7 +3,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 ### Resources
-src/main/resources
+src/main/resources/input/
+src/main/resources/output/
+src/main/resources/CIMConfig.json
 
 ### IntelliJ IDEA ###
 .idea/remote-targets.xml

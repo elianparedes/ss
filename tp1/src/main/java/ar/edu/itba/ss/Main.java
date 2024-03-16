@@ -1,6 +1,7 @@
 package ar.edu.itba.ss;
 
 import ar.edu.itba.ss.data.ParticleDataframe;
+import ar.edu.itba.ss.input.CIMConfig;
 import ar.edu.itba.ss.input.DynamicFile;
 import ar.edu.itba.ss.input.StaticFile;
 import ar.edu.itba.ss.models.Particle;
@@ -15,19 +16,15 @@ import ar.edu.itba.ss.output.ovito.ParticleStatus;
 import ar.edu.itba.ss.output.ovito.Scene;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 public class Main {
 
     private static final Integer TIME_STEP = 2000;
 
-    private final static int N = 2000;
-    private final static int L = 50;
-
-    private final static double RC = 1.0;
-
-    private final static double R = 0.25;
-
+    private static final String CONFIG_FILE = "CIMConfig.json";
+    private static final String CONFIG_FILE_ERROR = "The file CIMConfig.json was not found in resources";
     private static final Comparator<SurfaceEntity<Particle>> orderById = Comparator.comparing(particle -> particle.getEntity().getId());
 
     private static List<SurfaceEntity<Particle>> getParticlesForSimulation(String inputFile, int n, double l, List<Particle> particles){
@@ -70,6 +67,17 @@ public class Main {
 
         int n, l;
         double rc, maxR;
+
+        try {
+            CIMConfig config = CIMConfig.getConfig(Objects.requireNonNull(Main.class.getClassLoader().getResource(CONFIG_FILE)).getFile());
+            n = config.getN();
+            l = config.getL();
+            rc = config.getRc();
+            maxR = config.getR();
+        } catch (Exception e) {
+            throw new RuntimeException(CONFIG_FILE_ERROR);
+        }
+
         List<Particle> particles = new ArrayList<>();
 
         try {
@@ -83,12 +91,8 @@ public class Main {
 
         } catch (FileNotFoundException e) {
             System.out.println("Using default parameters");
-            n = N;
-            l = L;
-            rc = RC;
-            maxR = R;
             for (int i = 0; i < n; i++) {
-                particles.add(new Particle(R));
+                particles.add(new Particle(maxR));
             }
         }
 

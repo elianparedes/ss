@@ -1,0 +1,6 @@
+{
+  "l": "int: space size",
+  "n": "int: particles amount",
+  "r": "double: particles radius",
+  "rc": "double: particles interaction radius"
+}

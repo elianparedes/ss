@@ -20,10 +20,9 @@ public class DynamicFile {
         if(filename == null)
             throw  new FileNotFoundException();
 
-        Optional<URL> resourceOptional = Optional.ofNullable(Main.class.getClassLoader().getResource(filename));
+        Optional<URL> resourceOptional = Optional.ofNullable(Main.class.getClassLoader().getResource("input/"+filename));
         String path = resourceOptional.map(URL::getFile)
                 .orElseThrow(FileNotFoundException::new);
-
         Scanner scanner = new Scanner(new File(path));
 
         if (scanner.hasNextLine()) {

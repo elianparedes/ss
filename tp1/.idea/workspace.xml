@@ -4,12 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38f3781a-bfae-4ac9-a355-218680b36585" name="Changes" comment="chore: dataframe order by particle comparable">
+    <list default="true" id="38f3781a-bfae-4ac9-a355-218680b36585" name="Changes" comment="fix: inefficient cim">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/data/ParticleDataframe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/data/ParticleDataframe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/entity/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/entity/Entity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/input/DynamicFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/input/DynamicFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/input/StaticFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/input/StaticFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CIMConfigOptions.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CIMConfigOptions.json" afterDir="false" />
     </list>
     <list id="adec8276-40a1-40bb-abbc-af337c05eb11" name="Changes by saula" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -64,16 +66,17 @@
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="\\wsl$\Ubuntu\home\saula\ss\tp1\src\main\resources" />
+      <recent name="\\wsl$\Ubuntu\home\saula\ss\tp1\src\main\resources\input" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="ar.edu.itba.ss.models" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Application.With files">
+    <configuration name="With files" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="ar.edu.itba.ss.Main" />
       <module name="tp1" />
-      <option name="PROGRAM_PARAMETERS" value="Dynamic100.txt" />
+      <option name="PROGRAM_PARAMETERS" value="Static100_6rc.txt Dynamic100.txt 15" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="ar.edu.itba.ss.*" />
@@ -101,12 +104,12 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.With files" />
       <item itemvalue="JUnit.CellTest.testIntersectCircle" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.With files" />
         <item itemvalue="JUnit.CellTest.testIntersectCircle" />
       </list>
     </recent_temporary>
@@ -123,7 +126,9 @@
       <workItem from="1710158001928" duration="1747000" />
       <workItem from="1710169041049" duration="3121000" />
       <workItem from="1710362955609" duration="7559000" />
-      <workItem from="1710426706853" duration="11316000" />
+      <workItem from="1710426706853" duration="14689000" />
+      <workItem from="1710517119514" duration="958000" />
+      <workItem from="1710551769790" duration="3830000" />
     </task>
     <task id="LOCAL-00001" summary="gitignore">
       <option name="closed" value="true" />
@@ -149,7 +154,39 @@
       <option name="project" value="LOCAL" />
       <updated>1710431838555</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat: dynamic file argument in main">
+      <option name="closed" value="true" />
+      <created>1710446127517</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1710446127517</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat: static file in main">
+      <option name="closed" value="true" />
+      <created>1710467449754</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1710467449754</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: time measure">
+      <option name="closed" value="true" />
+      <created>1710470889794</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1710470889794</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fix: inefficient cim">
+      <option name="closed" value="true" />
+      <created>1710553435675</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1710553435676</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -159,7 +196,11 @@
     <MESSAGE value="gitignore" />
     <MESSAGE value="feat: cim considers particle radius" />
     <MESSAGE value="chore: dataframe order by particle comparable" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: dataframe order by particle comparable" />
+    <MESSAGE value="feat: dynamic file argument in main" />
+    <MESSAGE value="feat: static file in main" />
+    <MESSAGE value="feat: time measure" />
+    <MESSAGE value="fix: inefficient cim" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: inefficient cim" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
