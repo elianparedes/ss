@@ -21,8 +21,8 @@ public class Main {
 
     private static final Integer TIME_STEP = 2000;
 
-    private final static int N = 1000;
-    private final static int L = 200;
+    private final static int N = 2000;
+    private final static int L = 50;
 
     private final static double RC = 1.0;
 
@@ -49,7 +49,7 @@ public class Main {
         } catch (FileNotFoundException e){
 
             System.out.println("Using random generated particles");
-            Random random = new Random();
+            Random random = new Random(1234);
 
             for (int i = 0; i < n; i++) {
                 Particle particle = particles.get(i);
@@ -69,7 +69,7 @@ public class Main {
         String dynamicFileArg = (args.length == 1) ? null : args[1];
 
         int n, l;
-        double rc;
+        double rc, maxR;
         List<Particle> particles = new ArrayList<>();
 
         try {
@@ -77,6 +77,7 @@ public class Main {
             System.out.println("Using static file for parameters");
             n = staticFile.getN();
             l = staticFile.getL();
+            maxR = staticFile.getMaxR();
             rc = staticFile.getRc();
             particles = staticFile.getParticles();
 
@@ -85,6 +86,7 @@ public class Main {
             n = N;
             l = L;
             rc = RC;
+            maxR = R;
             for (int i = 0; i < n; i++) {
                 particles.add(new Particle(R));
             }
@@ -94,19 +96,19 @@ public class Main {
 
         int m;
         if(args.length < 3){
-            m = (int)Math.floor(l/rc);
+            m = (int)Math.floor(l/((rc)+2*maxR));
             System.out.printf("Using M = %d%n",m);
         } else{
             m = Integer.parseInt(args[2]);
-            if((double)l/m < rc) {
+            if((double)l/m < (rc+2*maxR)) {
                 System.out.printf("M cannot be: %d%n", m);
-                m = (int) Math.floor(l / rc);
+                m = (int)Math.floor(l/((rc)+2*maxR));
             }
             System.out.printf("Using M = %d%n",m);
         }
 
         long startTime = System.nanoTime();
-        Map<SurfaceEntity<Particle>, ParticleDataframe> df = CellIndexMethod.calculateWithRadius(l, m, rc,entityParticles);
+        Map<SurfaceEntity<Particle>, ParticleDataframe> df = CellIndexMethod.calculate(l, m, rc,entityParticles);
         long endTime = System.nanoTime();
         long duration = endTime - startTime;
 
@@ -125,7 +127,7 @@ public class Main {
         bruteDf.forEach(System.out::println);
         System.out.println("Tiempo de ejecución BF: " + duration / 1000000.0 + " milisegundos");
 
-        List<Scene> scenes = Scene.getScenesByDataframes(df, entityParticles, TIME_STEP, n, rc);
+        //List<Scene> scenes = Scene.getScenesByDataframes(df, entityParticles, TIME_STEP, n, rc);
         //System.out.println(Scene.toStringScenes(scenes));
     }
 }

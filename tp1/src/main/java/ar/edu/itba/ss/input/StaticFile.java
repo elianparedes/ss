@@ -20,6 +20,8 @@ public class StaticFile {
 
     private double rc;
 
+    private double maxR = 0.0;
+
     private final List<Particle> particles = new ArrayList<>();
 
     public StaticFile(String filename) throws FileNotFoundException {
@@ -46,6 +48,7 @@ public class StaticFile {
             String[] parts = line.trim().split("\\s+");
             if (parts.length == 2) {
                 double r = Double.parseDouble(parts[0]);
+                this.maxR = Math.max(this.maxR,r);
                 //We assume all rc are the same
                 rc = Double.parseDouble(parts[1]);
                 particles.add(new Particle(r));
@@ -72,6 +75,10 @@ public class StaticFile {
 
     public double getRc() {
         return rc;
+    }
+
+    public double getMaxR() {
+        return maxR;
     }
 
     public List<Particle> getParticles() {
