@@ -2,11 +2,11 @@ package ar.edu.itba.ss.input;
 
 import ar.edu.itba.ss.Main;
 import ar.edu.itba.ss.models.Particle;
-import ar.edu.itba.ss.models.geometry.Point;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +29,7 @@ public class StaticFile {
         if(filename == null)
             throw  new FileNotFoundException();
 
-        Optional<URL> resourceOptional = Optional.ofNullable(Main.class.getClassLoader().getResource("input/"+filename));
-        String path = resourceOptional.map(URL::getFile)
-                .orElseThrow(FileNotFoundException::new);
-
-        Scanner scanner = new Scanner(new File(path));
+        Scanner scanner = new Scanner(new File(Paths.get("input/" +filename).toAbsolutePath().toString()));
 
         if (scanner.hasNextLine()) {
             n = Integer.parseInt(scanner.nextLine().trim());

@@ -63,9 +63,16 @@ public class ParticleDataframe {
         otherCells.removeAll(neighbourCells);
         return otherCells;
     }
-
     public List<Cell<Particle>> getNeighbourCells() {
         return neighbourCells;
+    }
+    public static String collectionToString(Collection<ParticleDataframe> collection){
+        StringBuilder builder = new StringBuilder();
+        for (ParticleDataframe df:collection) {
+            builder.append(df.toString());
+            builder.append('\n');
+        }
+        return builder.toString();
     }
 
     @Override

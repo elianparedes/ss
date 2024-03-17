@@ -12,7 +12,8 @@ import ar.edu.itba.ss.models.geometry.Point;
 import ar.edu.itba.ss.models.methods.BruteForce;
 import ar.edu.itba.ss.models.methods.CellIndexMethod;
 
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Main {
@@ -64,9 +65,10 @@ public class Main {
 
         int n, l;
         double rc, maxR;
+        CIMConfig config;
 
         try {
-            CIMConfig config = CIMConfig.getConfig(Objects.requireNonNull(Main.class.getClassLoader().getResource(CONFIG_FILE)).getFile());
+            config = CIMConfig.getConfig(Objects.requireNonNull(Paths.get(CONFIG_FILE).toAbsolutePath().toString()));
             n = config.getParameters().getN();
             l = config.getParameters().getL();
             rc = config.getParameters().getRc();
@@ -104,27 +106,65 @@ public class Main {
         }
         System.out.printf("Using M = %d%n",m);
 
-        long startTime = System.nanoTime();
-        Map<SurfaceEntity<Particle>, ParticleDataframe> df = CellIndexMethod.calculate(l, m, rc,entityParticles);
-        long endTime = System.nanoTime();
-        long duration = endTime - startTime;
+        List<String> algorithms = config.getResults().getAlgorithms();
 
-        TreeMap<SurfaceEntity<Particle>,ParticleDataframe> orderedDf = new TreeMap<>(orderById);
-        orderedDf.putAll(df);
+        String folderPath = "output/" + config.getResults().getOutput_folder();
+        File directory = new File(folderPath);
+        directory.mkdirs();
 
-        orderedDf.values().forEach(System.out::println);
-        System.out.println("Tiempo de ejecución CIM: " + duration / 1000000.0 + " milisegundos");
+        String parametersString = String.format("L = %d ; N = %d ; M = %d; Rc = %.4f ; R (max) = %.4f\n", l, n, m, rc, maxR);
 
+        if(algorithms.contains("CIM")){
+            String filePath = folderPath + "/results_cim.txt";
+            File file = new File(filePath);
+            if (file.exists()) {
+                file.delete();
+            }
 
-        startTime = System.nanoTime();
-        List<ParticleDataframe> bruteDf = BruteForce.calculate(entityParticles,rc);
-        endTime = System.nanoTime();
-        duration = endTime - startTime;
+            long startTime = System.nanoTime();
+            Map<SurfaceEntity<Particle>, ParticleDataframe> df = CellIndexMethod.calculate(l, m, rc,entityParticles);
+            long endTime = System.nanoTime();
+            long duration = endTime - startTime;
 
-        bruteDf.forEach(System.out::println);
-        System.out.println("Tiempo de ejecución BF: " + duration / 1000000.0 + " milisegundos");
+            TreeMap<SurfaceEntity<Particle>,ParticleDataframe> orderedDf = new TreeMap<>(orderById);
+            orderedDf.putAll(df);
 
-        //List<Scene> scenes = Scene.getScenesByDataframes(df, entityParticles, TIME_STEP, n, rc);
-        //System.out.println(Scene.toStringScenes(scenes));
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,true))) {
+                StringBuilder builder = new StringBuilder();
+                builder.append(parametersString);
+                builder.append(ParticleDataframe.collectionToString(orderedDf.values()));
+                if(config.getResults().isTime()) {
+                    builder.append(String.format("TIEMPO DE EJECUCIÓN CIM: %.2f ms\n",(double)duration/1000000));
+                }
+                writer.append(builder.toString());
+            } catch (IOException e) {
+                System.err.println("Ocurrió un error al escribir los resultados " + e.getMessage());
+            }
+        }
+
+        if(algorithms.contains("BF")){
+            String filePath = folderPath + "/results_bf.txt";
+            File file = new File(filePath);
+            if (file.exists()) {
+                file.delete();
+            }
+
+            long startTime = System.nanoTime();
+            List<ParticleDataframe> bruteDf = BruteForce.calculate(entityParticles,rc);
+            long endTime = System.nanoTime();
+            long duration = endTime - startTime;
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,true))) {
+                StringBuilder builder = new StringBuilder();
+                builder.append(parametersString);
+                builder.append(ParticleDataframe.collectionToString(bruteDf));
+                if(config.getResults().isTime()) {
+                    builder.append(String.format("TIEMPO DE EJECUCIÓN BF: %.2f ms\n",(double)duration/1000000));
+                }
+                writer.append(builder.toString());
+            } catch (IOException e) {
+                System.err.println("Ocurrió un error al escribir los resultados " + e.getMessage());
+            }
+        }
     }
 }
