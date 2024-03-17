@@ -6,5 +6,8 @@ public enum ParticleStatus {
     RADIO,
     OTHER,
     CELL,
+
+    CURRENT_CELL,
+
     NEIGHBOURCELL
 }

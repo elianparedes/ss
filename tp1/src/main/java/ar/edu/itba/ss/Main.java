@@ -6,11 +6,14 @@ import ar.edu.itba.ss.config.CIMConfig;
 import ar.edu.itba.ss.input.DynamicFile;
 import ar.edu.itba.ss.input.StaticFile;
 import ar.edu.itba.ss.models.Particle;
+import ar.edu.itba.ss.models.SquareGrid;
 import ar.edu.itba.ss.models.entity.SurfaceEntity;
 import ar.edu.itba.ss.models.exceptions.ParticleOutOfBoundsException;
 import ar.edu.itba.ss.models.geometry.Point;
 import ar.edu.itba.ss.models.methods.BruteForce;
 import ar.edu.itba.ss.models.methods.CellIndexMethod;
+import ar.edu.itba.ss.output.ovito.OvitoDataFrame;
+import ar.edu.itba.ss.output.ovito.Scene;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -139,6 +142,22 @@ public class Main {
                 writer.append(builder.toString());
             } catch (IOException e) {
                 System.err.println("Ocurrió un error al escribir los resultados " + e.getMessage());
+            }
+
+            if(config.getResults().isOvito_file()){
+                String ovitoPath = folderPath + "/ovito_cim.txt";
+                File ovitoFile = new File(ovitoPath);
+                if (ovitoFile.exists()) {
+                    ovitoFile.delete();
+                }
+                Map<SurfaceEntity<Particle>, OvitoDataFrame> ovitoDf = OvitoDataFrame.toOvitoDataframeMap(df,new SquareGrid<>(l,m));
+                List<Scene> scenes = Scene.getScenesByDataframes(ovitoDf,entityParticles,TIME_STEP,entityParticles.size(),rc);
+
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(ovitoFile))) {
+                    writer.append(Scene.toStringScenes(scenes));
+                } catch (IOException e) {
+                    System.err.println("Ocurrió un error al escribir el archivo de ovito " + e.getMessage());
+                }
             }
         }
 

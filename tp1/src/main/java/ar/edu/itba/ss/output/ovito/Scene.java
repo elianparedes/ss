@@ -22,16 +22,16 @@ public class Scene {
         this.particles = particles;
     }
 
-    public static List<Scene> getScenesByDataframes(Map<SurfaceEntity<Particle>, ParticleDataframe> df, List<SurfaceEntity<Particle>> particles, Integer TIME_STEP, Integer atoms, Double rc){
+    public static List<Scene> getScenesByDataframes(Map<SurfaceEntity<Particle>, OvitoDataFrame> df, List<SurfaceEntity<Particle>> particles, Integer TIME_STEP, Integer atoms, Double rc){
         List<Scene> scenes = new ArrayList<>();
         Integer time = 0;
 
-        for (ParticleDataframe particleDataframe: df.values()) {
+        for (OvitoDataFrame particleDataframe: df.values()) {
             List<ParticleScene> particlesSceneList = new ArrayList<>();
             ParticleScene currentParticleScene = new ParticleScene(particleDataframe.getParticle(), ParticleStatus.CURRENT);
             particlesSceneList.add(currentParticleScene);
 
-            Set<SurfaceEntity<Particle>> neighbours = new HashSet<>(particleDataframe.getNeighbours().keySet());
+            Set<SurfaceEntity<Particle>> neighbours = new HashSet<>(particleDataframe.getNeighbours());
 
             for (SurfaceEntity<Particle> particle:neighbours) {
                 ParticleScene particleScene = new ParticleScene(particle,ParticleStatus.NEIGHBOUR);
@@ -50,7 +50,7 @@ public class Scene {
             particlesSceneList.add(radioScene);
 
             int cellId = atoms + 2;
-            for (Cell<Particle> cell : particleDataframe.getCells()) {
+            for (Cell<Particle> cell : particleDataframe.getNotNeighbourCells()) {
                 ParticleScene cellScene = new ParticleScene(cell.getCenterX(), cell.getCenterY(), cellId,cell.getSize() / 2 - 0.05, ParticleStatus.CELL);
                 particlesSceneList.add(cellScene);
                 cellId++;
@@ -63,8 +63,12 @@ public class Scene {
                 cellNeighbourId++;
             }
 
+            int currentCellId = cellNeighbourId;
+            Cell<Particle> current = particleDataframe.getCell();
+            ParticleScene currentCellScene = new ParticleScene(current.getCenterX(),current.getCenterY(),currentCellId,current.getSize()/2 -0.05, ParticleStatus.CURRENT_CELL);
+            particlesSceneList.add(currentCellScene);
 
-            Scene scene = new Scene(time,atoms + 1 + particleDataframe.getCells().size() + particleDataframe.getNeighbourCells().size() , particlesSceneList);
+            Scene scene = new Scene(time,atoms + 1 + particleDataframe.getNotNeighbourCells().size() + particleDataframe.getNeighbourCells().size() + 1 , particlesSceneList);
             scenes.add(scene);
             time += TIME_STEP;
         }
