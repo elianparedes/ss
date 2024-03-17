@@ -66,7 +66,11 @@ public class SquareGrid<T extends Entity> {
         return getNeighbours(cell, TraversalOffset.EIGHT_NEIGHBOURS);
     }
 
-    public List<Cell<T>> getNeighbours (Cell<T> cell, int[][] offsets) {
+    public List<Cell<T>> getNeighbours(Cell<T> cell, boolean periodicBoundaryCondition) {
+        return getNeighbours(cell, TraversalOffset.EIGHT_NEIGHBOURS);
+    }
+
+    public List<Cell<T>> getNeighbours(Cell<T> cell, int[][] offsets) {
         int i = cell.getI();
         int j = cell.getJ();
 
@@ -78,6 +82,28 @@ public class SquareGrid<T extends Entity> {
             if (isValidCell(neighborI, neighborJ)) {
                 neighbours.add(cells.get(neighborI).get(neighborJ));
             }
+        }
+
+        return neighbours;
+    }
+
+    public List<Cell<T>> getPeriodicNeighbours(Cell<T> cell) {
+        return getPeriodicNeighbours(cell, TraversalOffset.EIGHT_NEIGHBOURS);
+    }
+
+    public List<Cell<T>> getPeriodicNeighbours(Cell<T> cell, int[][] offsets) {
+        int i = cell.getI();
+        int j = cell.getJ();
+
+        List<Cell<T>> neighbours = new ArrayList<>();
+
+        int numRows = cells.size();
+        int numCols = cells.get(0).size();
+
+        for (int[] offset : offsets) {
+            int neighborI = (i + offset[0] + numRows) % numRows;
+            int neighborJ = (j + offset[1] + numCols) % numCols;
+            neighbours.add(cells.get(neighborI).get(neighborJ));
         }
 
         return neighbours;
