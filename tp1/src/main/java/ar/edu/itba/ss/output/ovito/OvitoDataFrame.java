@@ -20,7 +20,9 @@ public class OvitoDataFrame {
     }
 
     public Set<SurfaceEntity<Particle>> getNeighbours(){
-        return particleDataframe.getNeighbours().keySet();
+        Set<SurfaceEntity<Particle>> neighbours = particleDataframe.getNeighbours().keySet();
+        neighbours.remove(particleDataframe.getParticle());
+        return neighbours;
     }
 
     public List<SurfaceEntity<Particle>> getNotNeighbours(List<SurfaceEntity<Particle>> particles){
