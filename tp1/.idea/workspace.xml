@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38f3781a-bfae-4ac9-a355-218680b36585" name="Changes" comment="fix: inefficient cim">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/input/DynamicFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/input/DynamicFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/input/StaticFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/input/StaticFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CIMConfigOptions.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CIMConfigOptions.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/entity/SurfaceEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/entity/SurfaceEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/methods/CellIndexMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/methods/CellIndexMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/output/ovito/OvitoDataFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/output/ovito/OvitoDataFrame.java" afterDir="false" />
     </list>
     <list id="adec8276-40a1-40bb-abbc-af337c05eb11" name="Changes by saula" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -72,11 +70,24 @@
       <recent name="ar.edu.itba.ss.models" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.With files">
+  <component name="RunManager" selected="Application.Without files">
     <configuration name="With files" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="ar.edu.itba.ss.Main" />
       <module name="tp1" />
       <option name="PROGRAM_PARAMETERS" value="Static100_6rc.txt Dynamic100.txt 15" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ar.edu.itba.ss.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Without files" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="ar.edu.itba.ss.Main" />
+      <module name="tp1" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="ar.edu.itba.ss.*" />
@@ -104,6 +115,7 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.Without files" />
       <item itemvalue="Application.With files" />
       <item itemvalue="JUnit.CellTest.testIntersectCircle" />
     </list>
@@ -129,6 +141,7 @@
       <workItem from="1710426706853" duration="14689000" />
       <workItem from="1710517119514" duration="958000" />
       <workItem from="1710551769790" duration="3830000" />
+      <workItem from="1710706882889" duration="6814000" />
     </task>
     <task id="LOCAL-00001" summary="gitignore">
       <option name="closed" value="true" />
