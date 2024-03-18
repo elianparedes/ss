@@ -27,24 +27,25 @@ public class CellIndexMethod {
     private static Map<SurfaceEntity<Particle>,ParticleDataframe> cellIndexMethod(List<SurfaceEntity<Particle>> particles, SquareGrid<Particle> grid ,double rc){
         Map<SurfaceEntity<Particle>, ParticleDataframe> results = new LinkedHashMap<>();
 
-        for (SurfaceEntity<Particle> p: particles) {
-            Cell<Particle> cell = grid.locate(p.getX(),p.getY());
-            List<Cell<Particle>> cells = grid.getNeighbours(cell,TraversalOffset.L_NEIGHBOURS);
-            ParticleDataframe df = results.getOrDefault(p, new ParticleDataframe(p));
+        for (SurfaceEntity<Particle> currentParticle : particles) {
+            Cell<Particle> cell = grid.locate(currentParticle.getX(), currentParticle.getY());
+            List<Cell<Particle>> neighbourCells = grid.getPeriodicNeighbours(cell,TraversalOffset.L_NEIGHBOURS);
+            ParticleDataframe currentParticleDf = results.getOrDefault(currentParticle, new ParticleDataframe(currentParticle));
 
-            for (Cell<Particle> c: cells) {
-                for (SurfaceEntity<Particle> particle:c.getEntities()) {
-                    double distance = (particle.distanceTo(p) - particle.getEntity().getRadius()) - p.getEntity().getRadius();
-                    if (distance <= rc && !p.equals(particle)) {
-                        df.addNeighbour(particle, distance);
-                        ParticleDataframe neighbourDf = results.getOrDefault(particle, new ParticleDataframe(particle));
-                        neighbourDf.addNeighbour(particle, distance);
-                        results.putIfAbsent(particle, neighbourDf);
+            for (Cell<Particle> c: neighbourCells) {
+                for (SurfaceEntity<Particle> neighbourCandidate : c.getEntities()) {
+                    double distance = (neighbourCandidate.distanceTo(currentParticle) - neighbourCandidate.getEntity().getRadius()) - currentParticle.getEntity().getRadius();
+                    if (distance <= rc && !currentParticle.equals(neighbourCandidate)) {
+                        currentParticleDf.addNeighbour(neighbourCandidate, distance);
+
+                        ParticleDataframe neighbourDf = results.getOrDefault(neighbourCandidate, new ParticleDataframe(neighbourCandidate));
+                        neighbourDf.addNeighbour(currentParticle, distance);
+                        results.put(neighbourCandidate, neighbourDf);
                     }
                 }
             }
 
-            results.putIfAbsent(p, df);
+            results.put(currentParticle, currentParticleDf);
         }
 
         return results;
