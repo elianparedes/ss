@@ -145,7 +145,7 @@ public class Main {
             }
 
             if(config.getResults().isOvito_file()){
-                String ovitoPath = folderPath + "/ovito_cim.txt";
+                String ovitoPath = folderPath + "/ovito_cim.dump";
                 File ovitoFile = new File(ovitoPath);
                 if (ovitoFile.exists()) {
                     ovitoFile.delete();
