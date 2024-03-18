@@ -1,8 +1,8 @@
 package ar.edu.itba.ss;
 
-import ar.edu.itba.ss.config.CIMConfig;
 import ar.edu.itba.ss.models.Particle;
 import ar.edu.itba.ss.models.entity.SurfaceEntity;
+import ar.edu.itba.ss.models.methods.BruteForce;
 import ar.edu.itba.ss.models.methods.CellIndexMethod;
 
 import java.io.BufferedWriter;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Analytics {
+public class AnalyticsBruteForce {
 
     private static final int L = 20;
     private static final double RC = 1.0;
@@ -55,7 +55,7 @@ public class Analytics {
 
             while(aux_m > 0){
                 start =System.nanoTime();
-                CellIndexMethod.calculate(L,aux_m,RC,entities);
+                BruteForce.calculate(entities,RC);
                 end = System.nanoTime();
                 long duration = end-start;
                 if(Math.min(duration,minDuration) == duration){
@@ -70,7 +70,7 @@ public class Analytics {
 
         }
 
-        String outputPath = "output/analytics.csv";
+        String outputPath = "output/analytics_bf.csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath))) {
             writer.write(builder.toString());
         } catch (IOException e) {
