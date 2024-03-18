@@ -46,7 +46,7 @@ public class Main {
         } catch (FileNotFoundException e){
 
             System.out.println("Using random generated particles");
-            Random random = new Random(1234);
+            Random random = new Random();
 
             for (int i = 0; i < n; i++) {
                 Particle particle = particles.get(i);
