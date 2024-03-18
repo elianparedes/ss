@@ -55,7 +55,7 @@ public class CellIndexMethod {
         SquareGrid<Particle> grid = new SquareGrid<>(l, m);
 
         for (SurfaceEntity<Particle> particle : particles) {
-            grid.place(particle.getEntity(), particle.getX(), particle.getY());
+            grid.place(particle);
         }
 
         SurfaceEntity<Particle> particle = particles.get(0);
