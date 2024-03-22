@@ -1,13 +1,16 @@
 package ar.edu.itba.ss.simulation;
 
+import ar.edu.itba.ss.cim.CellIndexMethodParameters;
 import ar.edu.itba.ss.simulation.algorithms.Algorithm;
 import ar.edu.itba.ss.simulation.algorithms.AlgorithmParameters;
 import ar.edu.itba.ss.simulation.events.EventsQueue;
 
+import java.util.function.Consumer;
+
 public class Simulation<P extends AlgorithmParameters>{
 
-    private Algorithm<P> algorithm;
-    private EventsQueue events;
+    private final Algorithm<P> algorithm;
+    private final EventsQueue events;
 
     public Simulation(Algorithm<P> algorithm){
         this.algorithm = algorithm;
@@ -20,7 +23,10 @@ public class Simulation<P extends AlgorithmParameters>{
     }
 
     public void run(P params) {
-        algorithm.calculate(params, (e) -> events.add(e));
+        algorithm.calculate(params, events::add);
     }
 
+    public EventsQueue getEvents() {
+        return events;
+    }
 }
