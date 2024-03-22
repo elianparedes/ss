@@ -23,7 +23,7 @@ public class Main {
 
         sim.run(params);
 
-        EventsQueue queue = sim.getEvents();
+        EventsQueue queue = sim.getEventQueue(Integer.class);
         for (Event<?> e:queue) {
             processor.processEvent(e);
         }
