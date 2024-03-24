@@ -9,7 +9,6 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/entity/SurfaceEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/entity/SurfaceEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/methods/CellIndexMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/models/methods/CellIndexMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/output/ovito/OvitoDataFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/output/ovito/OvitoDataFrame.java" afterDir="false" />
     </list>
     <list id="adec8276-40a1-40bb-abbc-af337c05eb11" name="Changes by saula" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -48,7 +47,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;build/periodic-boundary-conditions&quot;,
     &quot;last_opened_file_path&quot;: &quot;//wsl$/Ubuntu/home/saula/ss/tp1&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -63,6 +62,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/input" />
       <recent name="\\wsl$\Ubuntu\home\saula\ss\tp1\src\main\resources" />
       <recent name="\\wsl$\Ubuntu\home\saula\ss\tp1\src\main\resources\input" />
     </key>
@@ -70,11 +70,11 @@
       <recent name="ar.edu.itba.ss.models" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Without files">
+  <component name="RunManager" selected="Application.With files">
     <configuration name="With files" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="ar.edu.itba.ss.Main" />
       <module name="tp1" />
-      <option name="PROGRAM_PARAMETERS" value="Static100_6rc.txt Dynamic100.txt 15" />
+      <option name="PROGRAM_PARAMETERS" value="-S Static100_6rc.txt -D Dynamic100.txt -M 15" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="ar.edu.itba.ss.*" />
@@ -141,7 +141,13 @@
       <workItem from="1710426706853" duration="14689000" />
       <workItem from="1710517119514" duration="958000" />
       <workItem from="1710551769790" duration="3830000" />
+<<<<<<< Updated upstream
       <workItem from="1710706882889" duration="6814000" />
+=======
+      <workItem from="1710706882889" duration="10690000" />
+      <workItem from="1710761556822" duration="984000" />
+      <workItem from="1710772618303" duration="23000" />
+>>>>>>> Stashed changes
     </task>
     <task id="LOCAL-00001" summary="gitignore">
       <option name="closed" value="true" />

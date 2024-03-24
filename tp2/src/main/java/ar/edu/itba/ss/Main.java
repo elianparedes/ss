@@ -8,20 +8,21 @@ import ar.edu.itba.ss.simulation.events.Event;
 import ar.edu.itba.ss.simulation.events.EventProcessor;
 import ar.edu.itba.ss.simulation.events.EventsQueue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
 
     public static void main(String[] args) {
-        CellIndexMethod cim = new CellIndexMethod();
-        CellIndexMethodParameters params = new CellIndexMethodParameters();
 
-        Simulation<CellIndexMethodParameters> sim = new Simulation<>(cim);
+        CellIndexMethod cellIndexMethod = new CellIndexMethod();
+        Simulation<CellIndexMethodParameters> sim = new Simulation<>(cellIndexMethod);
+        CellIndexMethodParameters cellIndexMethodParameters = new CellIndexMethodParameters(1, 1, 1, 1.0, new ArrayList<>());
 
         EventProcessor processor = new EventProcessor();
         processor.registerHandler(Integer.class,(p)-> System.out.println("Este es del hanlder: " + p));
 
-        sim.run(params);
+        sim.run(cellIndexMethodParameters);
 
         EventsQueue queue = sim.getEventQueue(Integer.class);
         for (Event<?> e:queue) {

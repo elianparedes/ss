@@ -1,4 +1,4 @@
-package ar.edu.itba.ss.models;
+package ar.edu.itba.ss.cim.config;
 
 public class TraversalOffset {
 
@@ -17,3 +17,4 @@ public class TraversalOffset {
     };
 
 }
+

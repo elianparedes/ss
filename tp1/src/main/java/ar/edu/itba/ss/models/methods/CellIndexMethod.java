@@ -51,6 +51,23 @@ public class CellIndexMethod {
         return results;
     }
 
+    private static double calculatePeriodicDistance(SurfaceEntity<Particle> p1, SurfaceEntity<Particle> p2, SquareGrid<Particle> grid) {
+        double dx = Math.abs(p1.getX() - p2.getX());
+        double dy = Math.abs(p1.getY() - p2.getY());
+        double size = grid.getSize();
+
+        if (dx > size / 2) {
+            dx = size - dx;
+        }
+        if (dy > size / 2) {
+            dy = size - dy;
+        }
+
+        double radiusSum = p1.getEntity().getRadius() + p2.getEntity().getRadius();
+        return Math.sqrt(dx * dx + dy * dy) - radiusSum;
+    }
+
+
     public static void calculateForSingle(int l, int m, int n, double r, double rc, List<SurfaceEntity<Particle>> particles) {
 
         SquareGrid<Particle> grid = new SquareGrid<>(l, m);
