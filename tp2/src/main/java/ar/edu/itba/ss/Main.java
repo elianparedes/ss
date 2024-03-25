@@ -41,12 +41,13 @@ public class Main {
 
         simOffLatice.run(offLaticeParameters);
         EventsQueue queue = simOffLatice.getEventQueue(OffLaticeState.class);
-        System.out.println(queue.size());
+        System.out.println("time,id,x,y,radius,speed,angle");
         for (Event<?> e:queue) {
             OffLaticeState state = (OffLaticeState) e.getPayload();
             List<MovableSurfaceEntity<Particle>> results = state.getParticles();
             for (MovableSurfaceEntity<Particle> movable:results) {
-                System.out.println(movable);
+                System.out.printf("%d %d %.2f %.2f %.2f %.2f %.2f\n",
+                        state.getTime(),movable.getEntity().getId(),movable.getX(),movable.getY(),movable.getEntity().getRadius(),movable.getSpeed(),movable.getAngle());
             }
         }
     }

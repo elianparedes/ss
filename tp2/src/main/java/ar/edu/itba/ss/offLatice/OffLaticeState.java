@@ -7,12 +7,17 @@ import java.util.List;
 
 public class OffLaticeState {
     private final List<MovableSurfaceEntity<Particle>> particles;
-
-    public OffLaticeState(List<MovableSurfaceEntity<Particle>> particles) {
+    private final int time;
+    public OffLaticeState(List<MovableSurfaceEntity<Particle>> particles, int time) {
         this.particles = particles;
+        this.time = time;
     }
 
     public List<MovableSurfaceEntity<Particle>> getParticles() {
         return particles;
+    }
+
+    public int getTime() {
+        return time;
     }
 }

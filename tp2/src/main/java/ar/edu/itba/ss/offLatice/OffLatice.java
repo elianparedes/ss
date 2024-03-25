@@ -65,7 +65,7 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
                 processor.processEvent(e);
             }
             particles = newParticles;
-            eventListener.emit(new Event<>(new OffLaticeState(newParticles)));
+            eventListener.emit(new Event<>(new OffLaticeState(newParticles, i)));
         }
     }
 }
