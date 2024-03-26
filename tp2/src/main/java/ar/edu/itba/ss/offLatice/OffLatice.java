@@ -23,9 +23,9 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
         Algorithm<CellIndexMethodParameters> cim = new CellIndexMethod();
         List<MovableSurfaceEntity<Particle>> particles = new ArrayList<>(params.particles);
 
-        for (int i = 0; i < params.MAX_ITERATIONS; i++) {
+        for (int i = 0; i < params.maxIter; i++) {
             CellIndexMethodParameters parameters = new CellIndexMethodParameters(params.cimParameters.l,params.cimParameters.m,params.cimParameters.n,
-                    params.cimParameters.rc,particles);
+                    params.cimParameters.rc, params.cimParameters.r, particles);
 
             EventsQueue queue = new EventsQueue();
             EventProcessor processor = new EventProcessor();
@@ -45,7 +45,7 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
                     double atan2Avg = Math.atan2(sinAvg,cosAvg);
 
                     Random random = new Random();
-                    double randomAngle = random.nextDouble() * params.ETHA- params.ETHA / 2;
+                    double randomAngle = random.nextDouble() * params.etha- params.etha / 2;
 
                     double newAngle;
                     if(entry.getValue().size() < 1){

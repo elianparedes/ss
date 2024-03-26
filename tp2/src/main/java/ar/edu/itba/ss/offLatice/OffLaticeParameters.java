@@ -5,22 +5,32 @@ import ar.edu.itba.ss.cim.CellIndexMethodParameters;
 import ar.edu.itba.ss.cim.models.Particle;
 import ar.edu.itba.ss.offLatice.entity.MovableSurfaceEntity;
 import ar.edu.itba.ss.simulation.algorithms.AlgorithmParameters;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OffLaticeParameters extends AlgorithmParameters {
-    public final CellIndexMethodParameters cimParameters;
-    public static final double SPEED = 0.3;
+    @JsonProperty("cim")
+    public CellIndexMethodParameters cimParameters;
+    @JsonProperty("speed")
+    public double speed;
 
-    public static final int MAX_ITERATIONS = 10;
+    @JsonProperty("max_iterations")
+    public  int maxIter;
 
-    public final List<MovableSurfaceEntity<Particle>> particles;
+    public List<MovableSurfaceEntity<Particle>> particles;
 
-    public final double ETHA;
+    @JsonProperty("etha")
+    public double etha;
+
+    public OffLaticeParameters() {
+    }
 
     public OffLaticeParameters(CellIndexMethodParameters cimParameters, List<MovableSurfaceEntity<Particle>> particles, double etha) {
         this.cimParameters = cimParameters;
         this.particles = particles;
-        this.ETHA = etha;
+        this.etha = etha;
     }
 }
