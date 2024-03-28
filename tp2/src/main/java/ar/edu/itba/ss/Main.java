@@ -27,21 +27,25 @@ public class Main {
 
     public final static String CONFIG_PATH = "config.json";
     public final static String OUTPUT_PATH = "output/offlatice";
+
     public static void main(String[] args) throws IOException {
 
         JsonConfigReader configReader = new JsonConfigReader();
 
-        OffLaticeParameters offLaticeParameters = configReader.readConfig(CONFIG_PATH,OffLaticeParameters.class);
+        OffLaticeParameters offLaticeParameters = configReader.readConfig(CONFIG_PATH, OffLaticeParameters.class);
         CellIndexMethodParameters cimParameters = offLaticeParameters.cimParameters;
 
         Random random = new Random();
         List<MovableSurfaceEntity<Particle>> particles = new ArrayList<>();
         for (int i = 0; i < cimParameters.n; i++) {
+            double x = random.nextDouble() * cimParameters.l;
+            double y = random.nextDouble() * cimParameters.l;
+
             particles.add(new MovableSurfaceEntity<>(new Particle(cimParameters.r),
-                    random.nextDouble()* cimParameters.l,
-                    random.nextDouble()* cimParameters.l,
+                    x,
+                    y,
                     offLaticeParameters.speed,
-                    random.nextDouble()*2*Math.PI));
+                    random.nextDouble() * 2 * Math.PI));
         }
 
         OffLatice offLatice = new OffLatice();
@@ -52,14 +56,15 @@ public class Main {
         EventsQueue queue = simOffLatice.getEventQueue(OffLaticeState.class);
 
         CSVBuilder builder = new CSVBuilder();
-        builder.addLine("time","id","x","y","radius","speed","angle");
-        for (Event<?> e:queue) {
+        builder.addLine("time", "id", "x", "y", "radius", "speed", "angle");
+        for (Event<?> e : queue) {
             OffLaticeState state = (OffLaticeState) e.getPayload();
             List<MovableSurfaceEntity<Particle>> results = state.getParticles();
-            for (MovableSurfaceEntity<Particle> movable:results) {
+            for (MovableSurfaceEntity<Particle> movable : results) {
                 builder.addLine(String.valueOf(state.getTime()),
                         String.valueOf(movable.getEntity().getId()),
                         String.valueOf(movable.getX()),
+                        String.valueOf(movable.getY()),
                         String.valueOf(movable.getEntity().getRadius()),
                         String.valueOf(movable.getSpeed()),
                         String.valueOf(movable.getAngle()));
@@ -70,7 +75,7 @@ public class Main {
         String formattedDate = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()).format(formatter);
 
         ArgumentHandler handler = new ArgumentHandler()
-                .addArgument("-O",(v)-> true,true,OUTPUT_PATH+"_"+ formattedDate + ".csv");
+                .addArgument("-O", (v) -> true, true, OUTPUT_PATH + "_" + formattedDate + ".csv");
         handler.parse(args);
         builder.build(handler.getArgument("-O"));
     }
