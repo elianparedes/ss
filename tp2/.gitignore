@@ -4,7 +4,7 @@ target/
 !**/src/test/**/target/
 
 ### Project ###
-output/
+./output
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
