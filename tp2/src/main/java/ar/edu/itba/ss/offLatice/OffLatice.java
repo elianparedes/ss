@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class OffLatice implements Algorithm<OffLaticeParameters> {
     @Override
@@ -30,7 +31,13 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
             EventsQueue queue = new EventsQueue();
             EventProcessor processor = new EventProcessor();
             List<MovableSurfaceEntity<Particle>> newParticles = new ArrayList<>();
+            AtomicReference<Double> va = new AtomicReference<>((double) 0);
+
             processor.registerHandler(CIMNeighboursMap.class, (map) -> {
+
+                double speedXSum = 0;
+                double speedYSum = 0;
+
                 for (Map.Entry<SurfaceEntity<Particle>, List<SurfaceEntity<Particle>>> entry : map.getParticlesNeighbours().entrySet()) {
                     double sinAngleSum = Math.sin(((MovableSurfaceEntity<Particle>) entry.getKey()).getAngle());
                     double cosAngleSum = Math.cos(((MovableSurfaceEntity<Particle>) entry.getKey()).getAngle());
@@ -59,15 +66,22 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
                     newX = newX < 0 ? newX + params.cimParameters.l : newX;
                     newY = newY < 0 ? newY + params.cimParameters.l : newY;
 
+                    speedXSum += ((MovableSurfaceEntity<Particle>) entry.getKey()).getXSpeed();
+                    speedYSum += ((MovableSurfaceEntity<Particle>) entry.getKey()).getYSpeed();
+
                     newParticles.add(new MovableSurfaceEntity<>(entry.getKey().getEntity(), newX, newY, current.getSpeed(), newAngle));
                 }
+
+                double speed = Math.sqrt(Math.pow(speedXSum, 2) + Math.pow(speedYSum, 2));
+                va.set(speed / (params.cimParameters.n * params.speed));
+
             });
             cim.calculate(parameters, queue::add);
             for (Event<?> e : queue) {
                 processor.processEvent(e);
             }
             particles = newParticles;
-            eventListener.emit(new Event<>(new OffLaticeState(newParticles, i)));
+            eventListener.emit(new Event<>(new OffLaticeState(newParticles, i, va.get())));
         }
     }
 }

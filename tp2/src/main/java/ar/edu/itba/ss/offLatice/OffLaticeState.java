@@ -8,9 +8,12 @@ import java.util.List;
 public class OffLaticeState {
     private final List<MovableSurfaceEntity<Particle>> particles;
     private final int time;
-    public OffLaticeState(List<MovableSurfaceEntity<Particle>> particles, int time) {
+
+    private final double va;
+    public OffLaticeState(List<MovableSurfaceEntity<Particle>> particles, int time, double va) {
         this.particles = particles;
         this.time = time;
+        this.va = va;
     }
 
     public List<MovableSurfaceEntity<Particle>> getParticles() {
@@ -20,4 +23,10 @@ public class OffLaticeState {
     public int getTime() {
         return time;
     }
+
+    public double getVa() {
+        return va;
+    }
 }
+
+
