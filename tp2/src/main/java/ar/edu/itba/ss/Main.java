@@ -56,7 +56,7 @@ public class Main {
         EventsQueue queue = simOffLatice.getEventQueue(OffLaticeState.class);
 
         CSVBuilder builder = new CSVBuilder();
-        builder.addLine("time", "id", "x", "y", "radius", "speed", "angle");
+        builder.addLine("time", "id", "x", "y", "radius", "speed", "angle", "va", "etha");
         for (Event<?> e : queue) {
             OffLaticeState state = (OffLaticeState) e.getPayload();
             List<MovableSurfaceEntity<Particle>> results = state.getParticles();
@@ -67,7 +67,9 @@ public class Main {
                         String.valueOf(movable.getY()),
                         String.valueOf(movable.getEntity().getRadius()),
                         String.valueOf(movable.getSpeed()),
-                        String.valueOf(movable.getAngle()));
+                        String.valueOf(movable.getAngle()),
+                        String.valueOf(state.getVa()),
+                        String.valueOf(offLaticeParameters.etha));
             }
         }
 
