@@ -60,14 +60,14 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
                     newAngle = randomAngle + atan2Avg;
 
                     MovableSurfaceEntity<Particle> current = (MovableSurfaceEntity<Particle>) entry.getKey();
-                    double newX = (entry.getKey().getX() + Math.cos(newAngle) * (current.getSpeed())) % params.cimParameters.l;
-                    double newY = (entry.getKey().getY() + Math.sin(newAngle) * (current.getSpeed())) % params.cimParameters.l;
+                    double newX = (current.getX() + current.getX()) % params.cimParameters.l;
+                    double newY = (current.getY() + current.getY()) % params.cimParameters.l;
 
                     newX = newX < 0 ? newX + params.cimParameters.l : newX;
                     newY = newY < 0 ? newY + params.cimParameters.l : newY;
 
-                    speedXSum += ((MovableSurfaceEntity<Particle>) entry.getKey()).getXSpeed();
-                    speedYSum += ((MovableSurfaceEntity<Particle>) entry.getKey()).getYSpeed();
+                    speedXSum += current.getXSpeed();
+                    speedYSum += current.getYSpeed();
 
                     newParticles.add(new MovableSurfaceEntity<>(entry.getKey().getEntity(), newX, newY, current.getSpeed(), newAngle));
                 }
