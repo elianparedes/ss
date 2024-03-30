@@ -32,7 +32,15 @@ public class Main {
 
         JsonConfigReader configReader = new JsonConfigReader();
 
-        OffLaticeParameters offLaticeParameters = configReader.readConfig(CONFIG_PATH, OffLaticeParameters.class);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
+        String formattedDate = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()).format(formatter);
+
+        ArgumentHandler handler = new ArgumentHandler()
+                .addArgument("-O", (v) -> true, true, OUTPUT_PATH + "_" + formattedDate + ".csv")
+                .addArgument("-C",(v)->true,true,CONFIG_PATH);
+        handler.parse(args);
+
+        OffLaticeParameters offLaticeParameters = configReader.readConfig(handler.getArgument("-C"), OffLaticeParameters.class);
         CellIndexMethodParameters cimParameters = offLaticeParameters.cimParameters;
 
         Random random = new Random();
@@ -72,13 +80,6 @@ public class Main {
                         String.valueOf(offLaticeParameters.etha));
             }
         }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
-        String formattedDate = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()).format(formatter);
-
-        ArgumentHandler handler = new ArgumentHandler()
-                .addArgument("-O", (v) -> true, true, OUTPUT_PATH + "_" + formattedDate + ".csv");
-        handler.parse(args);
         builder.build(handler.getArgument("-O"));
     }
 }
