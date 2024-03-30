@@ -10,11 +10,11 @@ import java.util.List;
 
 public class Grid<T extends Entity> {
 
-    private final int size;
+    private final double size;
     private final int numCells;
     private final List<List<Cell<T>>> cells;
 
-    public Grid(int size, int numCells) {
+    public Grid(double size, int numCells) {
         this.size = size;
         this.numCells = numCells;
         double cellSize = (double) size / numCells;

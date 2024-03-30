@@ -12,7 +12,7 @@ import java.util.List;
 public class CellIndexMethodParameters extends AlgorithmParameters {
 
     @JsonProperty("l")
-    public int l;
+    public double l;
     @JsonProperty("m")
     public int m;
 
@@ -30,7 +30,7 @@ public class CellIndexMethodParameters extends AlgorithmParameters {
     public CellIndexMethodParameters() {
     }
 
-    public CellIndexMethodParameters(int l, int m, int n, double rc, double r, final List<? extends SurfaceEntity<Particle>> particles) {
+    public CellIndexMethodParameters(double l, int m, int n, double rc, double r, final List<? extends SurfaceEntity<Particle>> particles) {
         this.l = l;
         this.m = m;
         this.n = n;
