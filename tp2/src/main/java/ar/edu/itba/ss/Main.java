@@ -7,11 +7,16 @@ import ar.edu.itba.ss.input.JsonConfigReader;
 import ar.edu.itba.ss.offLatice.OffLatice;
 import ar.edu.itba.ss.offLatice.OffLaticeParameters;
 import ar.edu.itba.ss.offLatice.OffLaticeState;
+import ar.edu.itba.ss.offLatice.OffLaticeUtils;
 import ar.edu.itba.ss.offLatice.entity.MovableSurfaceEntity;
 import ar.edu.itba.ss.output.CSVBuilder;
+import ar.edu.itba.ss.output.OffLaticeCsvWorker;
+import ar.edu.itba.ss.output.OffLaticeVaEthaCsvWorker;
 import ar.edu.itba.ss.simulation.Simulation;
 import ar.edu.itba.ss.simulation.events.Event;
 import ar.edu.itba.ss.simulation.events.EventsQueue;
+import ar.edu.itba.ss.simulation.worker.QueueWorker;
+import ar.edu.itba.ss.simulation.worker.QueueWorkerHandler;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -36,50 +41,22 @@ public class Main {
         String formattedDate = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()).format(formatter);
 
         ArgumentHandler handler = new ArgumentHandler()
-                .addArgument("-O", (v) -> true, true, OUTPUT_PATH + "_" + formattedDate + ".csv")
+                .addArgument("-O", (v) -> true, true, OUTPUT_PATH + "_" + formattedDate)
                 .addArgument("-C",(v)->true,true,CONFIG_PATH);
         handler.parse(args);
 
         OffLaticeParameters offLaticeParameters = configReader.readConfig(handler.getArgument("-C"), OffLaticeParameters.class);
-        CellIndexMethodParameters cimParameters = offLaticeParameters.cimParameters;
-
-        Random random = new Random();
-        List<MovableSurfaceEntity<Particle>> particles = new ArrayList<>();
-        for (int i = 0; i < cimParameters.n; i++) {
-            double x = random.nextDouble() * cimParameters.l;
-            double y = random.nextDouble() * cimParameters.l;
-
-            particles.add(new MovableSurfaceEntity<>(new Particle(cimParameters.r),
-                    x,
-                    y,
-                    offLaticeParameters.speed,
-                    random.nextDouble() * 2 * Math.PI));
-        }
+        offLaticeParameters.particles = OffLaticeUtils.initializeParticles(offLaticeParameters);
 
         OffLatice offLatice = new OffLatice();
         Simulation<OffLaticeParameters> simOffLatice = new Simulation<>(offLatice);
-        offLaticeParameters.particles = particles;
+
 
         simOffLatice.run(offLaticeParameters);
         EventsQueue queue = simOffLatice.getEventQueue(OffLaticeState.class);
 
-        CSVBuilder builder = new CSVBuilder();
-        builder.addLine("time", "id", "x", "y", "radius", "speed", "angle", "va", "etha");
-        for (Event<?> e : queue) {
-            OffLaticeState state = (OffLaticeState) e.getPayload();
-            List<MovableSurfaceEntity<Particle>> results = state.getParticles();
-            for (MovableSurfaceEntity<Particle> movable : results) {
-                builder.addLine(String.valueOf(state.getTime()),
-                        String.valueOf(movable.getEntity().getId()),
-                        String.valueOf(movable.getX()),
-                        String.valueOf(movable.getY()),
-                        String.valueOf(movable.getEntity().getRadius()),
-                        String.valueOf(movable.getSpeed()),
-                        String.valueOf(movable.getAngle()),
-                        String.valueOf(state.getVa()),
-                        String.valueOf(offLaticeParameters.etha));
-            }
-        }
-        builder.build(handler.getArgument("-O"));
+        OffLaticeCsvWorker csvWorker = new OffLaticeCsvWorker(handler.getArgument("-O")+".csv",offLaticeParameters);
+        Thread thread1 = new Thread(new QueueWorkerHandler(csvWorker,queue));
+        thread1.start();
     }
 }

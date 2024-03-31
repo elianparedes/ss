@@ -1,5 +1,6 @@
 package ar.edu.itba.ss.offLatice;
 
+import ar.edu.itba.ss.Main;
 import ar.edu.itba.ss.cim.CIMNeighboursMap;
 import ar.edu.itba.ss.cim.CellIndexMethod;
 import ar.edu.itba.ss.cim.CellIndexMethodParameters;
@@ -53,15 +54,14 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
                     double cosAvg = cosAngleSum / neighboursCount;
                     double atan2Avg = Math.atan2(sinAvg, cosAvg);
 
-                    Random random = new Random();
-                    double randomAngle = random.nextDouble() * params.etha - params.etha / 2;
+                    double randomAngle = Math.random() * params.etha - params.etha / 2;
 
                     double newAngle;
                     newAngle = randomAngle + atan2Avg;
 
                     MovableSurfaceEntity<Particle> current = (MovableSurfaceEntity<Particle>) entry.getKey();
-                    double newX = (current.getX() + current.getX()) % params.cimParameters.l;
-                    double newY = (current.getY() + current.getY()) % params.cimParameters.l;
+                    double newX = (current.getX() + current.getXSpeed()) % params.cimParameters.l;
+                    double newY = (current.getY() + current.getYSpeed()) % params.cimParameters.l;
 
                     newX = newX < 0 ? newX + params.cimParameters.l : newX;
                     newY = newY < 0 ? newY + params.cimParameters.l : newY;

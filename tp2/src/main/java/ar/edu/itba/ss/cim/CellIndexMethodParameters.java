@@ -30,6 +30,15 @@ public class CellIndexMethodParameters extends AlgorithmParameters {
     public CellIndexMethodParameters() {
     }
 
+    public CellIndexMethodParameters(CellIndexMethodParameters cim) {
+        this.l = cim.l;
+        this.m = cim.m;
+        this.n = cim.n;
+        this.r = cim.r;
+        this.rc = cim.rc;
+        this.particles = cim.particles;
+    }
+
     public CellIndexMethodParameters(double l, int m, int n, double rc, double r, final List<? extends SurfaceEntity<Particle>> particles) {
         this.l = l;
         this.m = m;

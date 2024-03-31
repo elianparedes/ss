@@ -8,6 +8,7 @@ import ar.edu.itba.ss.simulation.algorithms.AlgorithmParameters;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -27,6 +28,15 @@ public class OffLaticeParameters extends AlgorithmParameters {
 
     public OffLaticeParameters() {
     }
+
+    public OffLaticeParameters(OffLaticeParameters offLaticeParameters) {
+        this.etha = offLaticeParameters.etha;
+        this.maxIter = offLaticeParameters.maxIter;
+        this.speed = offLaticeParameters.speed;
+        this.cimParameters = new CellIndexMethodParameters(offLaticeParameters.cimParameters);
+        this.particles = new ArrayList<>(offLaticeParameters.particles);
+    }
+
 
     public OffLaticeParameters(CellIndexMethodParameters cimParameters, List<MovableSurfaceEntity<Particle>> particles, double etha) {
         this.cimParameters = cimParameters;

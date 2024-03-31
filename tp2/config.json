@@ -1,12 +1,12 @@
 {
   "cim": {
-    "l": 3.1,
-    "m": 3,
-    "n": 40,
+    "l": 10,
+    "m": 9,
+    "n": 400,
     "rc": 1,
     "r":0.0
   },
-  "speed": 0.03,
-  "max_iterations": 1000,
+  "speed": 0.1,
+  "max_iterations": 4000,
   "etha": 0.1
 }
