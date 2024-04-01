@@ -1,6 +1,5 @@
 package ar.edu.itba.ss.offLatice;
 
-import ar.edu.itba.ss.Main;
 import ar.edu.itba.ss.cim.CIMNeighboursMap;
 import ar.edu.itba.ss.cim.CellIndexMethod;
 import ar.edu.itba.ss.cim.CellIndexMethodParameters;
@@ -16,16 +15,17 @@ import ar.edu.itba.ss.simulation.events.EventsQueue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class OffLatice implements Algorithm<OffLaticeParameters> {
+
     @Override
     public void calculate(OffLaticeParameters params, EventListener eventListener) {
-        Algorithm<CellIndexMethodParameters> cim = new CellIndexMethod();
-        List<MovableSurfaceEntity<Particle>> particles = new ArrayList<>(params.particles);
+
+        List<MovableSurfaceEntity<Particle>> particles = OffLaticeUtils.initializeParticles(params);
 
         for (int i = 0; i < params.maxIter; i++) {
+            Algorithm<CellIndexMethodParameters> cim = new CellIndexMethod();
             CellIndexMethodParameters parameters = new CellIndexMethodParameters(params.cimParameters.l, params.cimParameters.m, params.cimParameters.n,
                     params.cimParameters.rc, params.cimParameters.r, particles);
 

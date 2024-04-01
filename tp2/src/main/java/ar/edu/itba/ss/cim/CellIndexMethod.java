@@ -25,13 +25,12 @@ public class CellIndexMethod implements Algorithm<CellIndexMethodParameters> {
 
         for (SurfaceEntity<Particle> currentParticle : params.particles) {
             Cell<Particle> cell = grid.locate(currentParticle.getX(), currentParticle.getY());
-            List<Cell<Particle>> neighbourCells = grid.getPeriodicNeighbours(cell, TraversalOffset.L_NEIGHBOURS);
+            List<Cell<Particle>> neighbourCells = grid.getPeriodicNeighbours(cell, TraversalOffset.EIGHT_NEIGHBOURS);
             List<SurfaceEntity<Particle>> currentParticleNeighbours = particlesNeighbours.getOrDefault(currentParticle, new ArrayList<>());
 
             for (Cell<Particle> c: neighbourCells) {
                 for (SurfaceEntity<Particle> neighbourCandidate : c.getEntities()) {
-                    double distance = (neighbourCandidate.distanceTo(currentParticle) - neighbourCandidate.getEntity().getRadius()) - currentParticle.getEntity().getRadius();
-                    if (distance <= params.rc && !currentParticle.equals(neighbourCandidate)) {
+                    if (calculatePeriodicDistance(currentParticle,neighbourCandidate,params.l)<= params.rc && !currentParticle.equals(neighbourCandidate)) {
 
                         // Set current particle neighbour
                         currentParticleNeighbours.add(neighbourCandidate);
@@ -47,5 +46,16 @@ public class CellIndexMethod implements Algorithm<CellIndexMethodParameters> {
         };
         CIMNeighboursMap map = new CIMNeighboursMap(particlesNeighbours);
         eventListener.emit(new Event<>(map));
+    }
+
+    private double calculatePeriodicDistance(SurfaceEntity<Particle> fromParticle, SurfaceEntity<Particle> toParticle, double l) {
+        double dx = Math.abs(fromParticle.getX() - toParticle.getX());
+        double dy = Math.abs(fromParticle.getY() - toParticle.getY());
+
+        dx = dx > l / 2 ? l - dx : dx;
+        dy = dy > l / 2 ? l - dy : dy;
+
+        double radiusSum = fromParticle.getEntity().getRadius() + toParticle.getEntity().getRadius();
+        return Math.sqrt(dx * dx + dy * dy) - radiusSum;
     }
 }
