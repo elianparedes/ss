@@ -29,7 +29,7 @@ public class OffLaticeVaEthaCsvWorker implements QueueWorker {
         CSVBuilder builder = new CSVBuilder();
         String outputPath = this.outputPath;
         try {
-            builder.appendLine(outputPath,"n", "l", "etha", "va","stDev");
+            builder.appendLine(outputPath,"n", "l", "etha", "va","stdev");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -50,14 +50,15 @@ public class OffLaticeVaEthaCsvWorker implements QueueWorker {
         for (Double va:values) {
             varSum += Math.pow(va-media,2);
         }
-        double stDev = Math.sqrt(varSum/values.size());
+
+        double stdev = Math.sqrt(varSum/(values.size() - 1));
         try {
             builder.appendLine(outputPath,
                     String.valueOf(parameters.cimParameters.n),
                     String.valueOf(parameters.cimParameters.l),
                     String.valueOf(parameters.etha),
                     String.valueOf(media),
-                    String.valueOf(stDev));
+                    String.valueOf(stdev));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
