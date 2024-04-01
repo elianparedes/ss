@@ -1,5 +1,6 @@
 package ar.edu.itba.ss.output;
 
+import ar.edu.itba.ss.cim.geometry.Point;
 import ar.edu.itba.ss.cim.models.Particle;
 import ar.edu.itba.ss.offLatice.OffLaticeParameters;
 import ar.edu.itba.ss.offLatice.OffLaticeState;
@@ -47,6 +48,7 @@ public class OffLatticeVisitorsCsvWorker implements QueueWorker {
         double visitingAreaCenter = parameters.cimParameters.l / 2;
         VisitingArea visitingArea = new VisitingArea(visitingAreaCenter, visitingAreaCenter, visitingAreaRadius);
         Map<Integer, Boolean> visitorsMap = new HashMap<>();
+        Map<Integer, Point> previousPositions = new HashMap<>();
 
         CSVBuilder builder = new CSVBuilder();
 
@@ -62,9 +64,21 @@ public class OffLatticeVisitorsCsvWorker implements QueueWorker {
 
             for (MovableSurfaceEntity<Particle> movable : results) {
                 try {
-                    boolean isVisiting = visitingArea.isInside(movable.getX(), movable.getY());
-                    if (isVisiting) visitorsMap.putIfAbsent(movable.getEntity().getId(), true);
 
+                    // Check if periodic boundary condition was applied
+                    Point previousPosition = previousPositions.getOrDefault(movable.getEntity().getId(), null);
+                    Point currentPosition = new Point(movable.getX(), movable.getY());
+                    if (previousPosition != null) {
+                        boolean mustForgetVisitor = periodicBoundaryConditionApplied(currentPosition, previousPosition);
+                        if (mustForgetVisitor) visitorsMap.put(movable.getEntity().getId(), false);
+                    }
+                    previousPositions.put(movable.getEntity().getId(), currentPosition);
+
+                    // Compute visitors
+                    boolean isVisiting = visitingArea.isInside(movable.getX(), movable.getY());
+                    if (isVisiting) {
+                        visitorsMap.put(movable.getEntity().getId(), true);
+                    }
                     boolean hasVisited = visitorsMap.getOrDefault(movable.getEntity().getId(), false);
 
                     builder.appendLine(outputPath,String.valueOf(state.getTime()),
@@ -87,5 +101,16 @@ public class OffLatticeVisitorsCsvWorker implements QueueWorker {
             }
         }
 
+    }
+
+    private boolean periodicBoundaryConditionApplied(Point currentPosition, Point previousPosition) {
+        double deltaX = Math.abs(currentPosition.getX() - previousPosition.getX());
+        double deltaY = Math.abs(currentPosition.getY() - previousPosition.getY());
+
+        if (deltaX > this.parameters.cimParameters.l / 2) {
+            return true;
+        }
+
+        return deltaY > this.parameters.cimParameters.l / 2;
     }
 }
