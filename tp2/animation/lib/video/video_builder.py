@@ -1,5 +1,5 @@
 import os
-from typing import Callable
+from typing import Callable, Any
 
 import cv2
 import numpy as np
@@ -8,29 +8,21 @@ from numpy import ndarray
 DEFAULT_VIDEO_WIDTH = 800
 DEFAULT_VIDEO_HEIGHT = 800
 DEFAULT_VIDEO_FPS = 30
-DEFAULT_VIDEO_NAME = 'output.mp4'
-DEFAULT_VIDEO_PATH = os.getcwd()
 
 
 class VideoBuilder:
-    def __init__(self):
-        self.name: str = DEFAULT_VIDEO_NAME
-        self.output_path: str = DEFAULT_VIDEO_PATH
+    def __init__(self, output_path: str, name: str):
         self.width: int = DEFAULT_VIDEO_WIDTH
         self.height: int = DEFAULT_VIDEO_HEIGHT
         self.fps: int = DEFAULT_VIDEO_FPS
         self.current_frame: ndarray = ndarray([])
         self.frames: ndarray = ndarray([])
         self.out = cv2.VideoWriter(
-            os.path.join(self.output_path, self.name),
+            os.path.join(output_path, name),
             cv2.VideoWriter.fourcc(*'mp4v'),
             self.fps,
             (self.width, self.height)
         )
-
-    def set_output_path(self, output_path: str):
-        self.output_path = output_path
-        return self
 
     def set_fps(self, fps: int):
         self.fps = fps
@@ -48,7 +40,7 @@ class VideoBuilder:
         self.current_frame = np.zeros((self.height, self.width, 3), np.uint8)
         return self
 
-    def draw_frame(self, draw_func: Callable[[ndarray], None]):
+    def draw_frame(self, draw_func: Callable[[ndarray], Any]):
         draw_func(self.current_frame)
         return self
 
