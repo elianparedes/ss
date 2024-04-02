@@ -6,14 +6,13 @@ import ar.edu.itba.ss.offLatice.OffLatice;
 import ar.edu.itba.ss.offLatice.OffLaticeParameters;
 import ar.edu.itba.ss.offLatice.OffLaticeState;
 import ar.edu.itba.ss.offLatice.OffLaticeUtils;
-import ar.edu.itba.ss.output.OffLaticeVaTimeCsvWorker;
-import ar.edu.itba.ss.output.OffLatticeVisitorsCsvWorker;
+import ar.edu.itba.ss.output.OffLatticeVisitorsRateCsvWorker;
+import ar.edu.itba.ss.output.OffLatticeVisitorsVizCsvWorker;
 import ar.edu.itba.ss.simulation.Simulation;
 import ar.edu.itba.ss.simulation.events.EventsQueue;
 import ar.edu.itba.ss.simulation.worker.QueueWorkerHandler;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 
 public class VisitorsMain {
 
@@ -40,8 +39,12 @@ public class VisitorsMain {
         simOffLatice.run(aux);
         EventsQueue queue = simOffLatice.getEventQueue(OffLaticeState.class);
 
-        OffLatticeVisitorsCsvWorker timeCsvWorker = new OffLatticeVisitorsCsvWorker(handler.getArgument("-O")+'_'+offLaticeParameters.cimParameters.l +'_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + ".csv", 1,aux);
-        Thread thread = new Thread(new QueueWorkerHandler(timeCsvWorker,queue));
-        thread.start();
+        OffLatticeVisitorsVizCsvWorker visitorsVizCsvWorker = new OffLatticeVisitorsVizCsvWorker(handler.getArgument("-O")+'_'+offLaticeParameters.cimParameters.l +'_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + ".csv", 1,aux);
+        Thread visitorsVizCsvThread = new Thread(new QueueWorkerHandler(visitorsVizCsvWorker,queue));
+        visitorsVizCsvThread.start();
+
+        OffLatticeVisitorsRateCsvWorker visitorsRateCsvWorker = new OffLatticeVisitorsRateCsvWorker(handler.getArgument("-O")+'_'+offLaticeParameters.cimParameters.l +'_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + '_' + "rate" + ".csv", 1,aux);
+        Thread visitorsRateCsvThread = new Thread(new QueueWorkerHandler(visitorsRateCsvWorker,queue));
+        visitorsRateCsvThread.start();
     }
 }

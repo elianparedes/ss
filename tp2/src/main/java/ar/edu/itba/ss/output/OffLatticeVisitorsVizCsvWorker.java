@@ -14,9 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OffLatticeVisitorsCsvWorker implements QueueWorker {
+public class OffLatticeVisitorsVizCsvWorker implements QueueWorker {
 
-    private static class VisitingArea {
+    static class VisitingArea {
         private final double centerX;
         private final double centerY;
         private final double radius;
@@ -33,11 +33,11 @@ public class OffLatticeVisitorsCsvWorker implements QueueWorker {
         }
     }
 
-    private final String outputPath;
-    private final OffLaticeParameters parameters;
-    private final double visitingAreaRadius;
+    final String outputPath;
+    final OffLaticeParameters parameters;
+    final double visitingAreaRadius;
 
-    public OffLatticeVisitorsCsvWorker(String outputPath, double visitingAreaRadius, OffLaticeParameters parameters) {
+    public OffLatticeVisitorsVizCsvWorker(String outputPath, double visitingAreaRadius, OffLaticeParameters parameters) {
         this.outputPath = outputPath;
         this.parameters = parameters;
         this.visitingAreaRadius = visitingAreaRadius;
@@ -64,7 +64,6 @@ public class OffLatticeVisitorsCsvWorker implements QueueWorker {
 
             for (MovableSurfaceEntity<Particle> movable : results) {
                 try {
-
                     // Check if periodic boundary condition was applied
                     Point previousPosition = previousPositions.getOrDefault(movable.getEntity().getId(), null);
                     Point currentPosition = new Point(movable.getX(), movable.getY());
@@ -103,7 +102,7 @@ public class OffLatticeVisitorsCsvWorker implements QueueWorker {
 
     }
 
-    private boolean periodicBoundaryConditionApplied(Point currentPosition, Point previousPosition) {
+    boolean periodicBoundaryConditionApplied(Point currentPosition, Point previousPosition) {
         double deltaX = Math.abs(currentPosition.getX() - previousPosition.getX());
         double deltaY = Math.abs(currentPosition.getY() - previousPosition.getY());
 
