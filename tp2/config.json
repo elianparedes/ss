@@ -1,12 +1,13 @@
 {
-  "cim": {
-    "l": 10,
-    "m": 10,
-    "n": 400,
-    "rc": 1,
-    "r":0.0
-  },
-  "speed": 0.03,
-  "max_iterations": 5000,
-  "etha": 2
+    "$schema": "./config.schema.json",
+    "cim": {
+        "l": 10,
+        "m": 10,
+        "n": 1000,
+        "rc": 1,
+        "r": 0.0
+    },
+    "speed": 0.05,
+    "max_iterations": 1000,
+    "etha": 0.1
 }
