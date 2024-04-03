@@ -3,6 +3,7 @@ package ar.edu.itba.ss.offLatice;
 import ar.edu.itba.ss.cim.CIMNeighboursMap;
 import ar.edu.itba.ss.cim.CellIndexMethod;
 import ar.edu.itba.ss.cim.CellIndexMethodParameters;
+import ar.edu.itba.ss.cim.entity.Entity;
 import ar.edu.itba.ss.cim.entity.SurfaceEntity;
 import ar.edu.itba.ss.cim.models.Particle;
 import ar.edu.itba.ss.offLatice.entity.MovableSurfaceEntity;
@@ -37,7 +38,6 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
             AtomicReference<Double> va = new AtomicReference<>((double) 0);
 
             processor.registerHandler(CIMNeighboursMap.class, (map) -> {
-
                 double speedXSum = 0;
                 double speedYSum = 0;
 
@@ -65,13 +65,15 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
                     double newX = (current.getX() + current.getXSpeed()) % params.cimParameters.l;
                     double newY = (current.getY() + current.getYSpeed()) % params.cimParameters.l;
 
+                    boolean isOutOfBounds = (newX < 0 || newY < 0);
+
                     newX = newX < 0 ? newX + params.cimParameters.l : newX;
                     newY = newY < 0 ? newY + params.cimParameters.l : newY;
 
                     speedXSum += current.getXSpeed();
                     speedYSum += current.getYSpeed();
 
-                    newParticles.add(new MovableSurfaceEntity<>(entry.getKey().getEntity(), newX, newY, current.getSpeed(), newAngle));
+                    newParticles.add(new MovableSurfaceEntity<>(isOutOfBounds && !params.hasPeriodicBoundaryConditions ? new Particle() : entry.getKey().getEntity(), newX, newY, current.getSpeed(), newAngle));
                 }
 
                 double speed = Math.sqrt(Math.pow(speedXSum, 2) + Math.pow(speedYSum, 2));

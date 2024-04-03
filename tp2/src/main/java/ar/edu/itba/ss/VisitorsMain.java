@@ -40,8 +40,7 @@ public class VisitorsMain {
         OffLaticeParameters offLaticeParameters = configReader.readConfig(handler.getArgument("-C"), OffLaticeParameters.class);
 
         double visitingAreaRadius = handler.getDoubleArgument("--area-radius");
-        boolean isOpenBoundaryConditions = handler.getArgument("--conditions").equals("obc");
-
+        offLaticeParameters.hasPeriodicBoundaryConditions = handler.getArgument("--conditions").equals("pbc");
         offLaticeParameters.particles = OffLaticeUtils.initializeParticles(offLaticeParameters);
         OffLaticeParameters aux = new OffLaticeParameters(offLaticeParameters);
 
@@ -51,11 +50,11 @@ public class VisitorsMain {
         simOffLatice.run(aux);
         EventsQueue queue = simOffLatice.getEventQueue(OffLaticeState.class);
 
-        OffLatticeVisitorsVizCsvWorker visitorsVizCsvWorker = new OffLatticeVisitorsVizCsvWorker(handler.getArgument("-O") + '_' + offLaticeParameters.cimParameters.l + '_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + ".csv", aux, visitingAreaRadius, isOpenBoundaryConditions);
+        OffLatticeVisitorsVizCsvWorker visitorsVizCsvWorker = new OffLatticeVisitorsVizCsvWorker(handler.getArgument("-O") + '_' + offLaticeParameters.cimParameters.l + '_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + ".csv", aux, visitingAreaRadius);
         Thread visitorsVizCsvThread = new Thread(new QueueWorkerHandler(visitorsVizCsvWorker, queue));
         visitorsVizCsvThread.start();
 
-        OffLatticeVisitorsRateCsvWorker visitorsRateCsvWorker = new OffLatticeVisitorsRateCsvWorker(handler.getArgument("-O") + '_' + offLaticeParameters.cimParameters.l + '_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + '_' + "rates" + ".csv", aux, visitingAreaRadius, isOpenBoundaryConditions);
+        OffLatticeVisitorsRateCsvWorker visitorsRateCsvWorker = new OffLatticeVisitorsRateCsvWorker(handler.getArgument("-O") + '_' + offLaticeParameters.cimParameters.l + '_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + '_' + "rates" + ".csv", aux, visitingAreaRadius);
         Thread visitorsRateCsvThread = new Thread(new QueueWorkerHandler(visitorsRateCsvWorker, queue));
         visitorsRateCsvThread.start();
     }

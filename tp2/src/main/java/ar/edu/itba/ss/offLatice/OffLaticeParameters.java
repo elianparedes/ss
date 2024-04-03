@@ -22,6 +22,7 @@ public class OffLaticeParameters extends AlgorithmParameters {
     public  int maxIter;
 
     public List<MovableSurfaceEntity<Particle>> particles;
+    public boolean hasPeriodicBoundaryConditions = true;
 
     @JsonProperty("etha")
     public double etha;
@@ -35,6 +36,7 @@ public class OffLaticeParameters extends AlgorithmParameters {
         this.speed = offLaticeParameters.speed;
         this.cimParameters = new CellIndexMethodParameters(offLaticeParameters.cimParameters);
         this.particles = new ArrayList<>(offLaticeParameters.particles);
+        this.hasPeriodicBoundaryConditions = offLaticeParameters.hasPeriodicBoundaryConditions;
     }
 
 

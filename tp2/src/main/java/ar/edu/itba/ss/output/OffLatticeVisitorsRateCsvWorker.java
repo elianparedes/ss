@@ -1,6 +1,5 @@
 package ar.edu.itba.ss.output;
 
-import ar.edu.itba.ss.cim.geometry.Point;
 import ar.edu.itba.ss.cim.models.Particle;
 import ar.edu.itba.ss.offLatice.OffLaticeParameters;
 import ar.edu.itba.ss.offLatice.OffLaticeState;
@@ -14,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 public class OffLatticeVisitorsRateCsvWorker extends OffLatticeVisitorsVizCsvWorker {
-    public OffLatticeVisitorsRateCsvWorker(String outputPath, OffLaticeParameters parameters, double visitingAreaRadius, boolean isOpenBoundaryConditions) {
-        super(outputPath, parameters, visitingAreaRadius, isOpenBoundaryConditions);
+    public OffLatticeVisitorsRateCsvWorker(String outputPath, OffLaticeParameters parameters, double visitingAreaRadius) {
+        super(outputPath, parameters, visitingAreaRadius);
     }
 
     @Override
@@ -24,14 +23,12 @@ public class OffLatticeVisitorsRateCsvWorker extends OffLatticeVisitorsVizCsvWor
         VisitingArea visitingArea = new VisitingArea(visitingAreaCenter, visitingAreaCenter, this.visitingAreaRadius);
 
         Map<Integer, Boolean> visitorsMap = new HashMap<>();
-        Map<Integer, Point> previousPositions = new HashMap<>();
-
 
         CSVBuilder builder = new CSVBuilder();
 
         String outputPath = this.outputPath;
         try {
-            builder.appendLine(outputPath, "time", "n", "l", "visiting_count", "visited_count", "not_visited_count");
+            builder.appendLine(outputPath, "time", "n", "l", "visiting_count", "visited_count");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -42,19 +39,7 @@ public class OffLatticeVisitorsRateCsvWorker extends OffLatticeVisitorsVizCsvWor
             List<MovableSurfaceEntity<Particle>> results = state.getParticles();
 
             int visitingCount = 0;
-
             for (MovableSurfaceEntity<Particle> movable : results) {
-                if (isOpenBoundaryConditions) {
-                    // Check if particle moved out of viewport
-                    Point previousPosition = previousPositions.getOrDefault(movable.getEntity().getId(), null);
-                    Point currentPosition = new Point(movable.getX(), movable.getY());
-                    if (previousPosition != null) {
-                        boolean mustForgetVisitor = periodicBoundaryConditionApplied(currentPosition, previousPosition);
-                        if (mustForgetVisitor) visitorsMap.put(movable.getEntity().getId(), false);
-                    }
-                    previousPositions.put(movable.getEntity().getId(), currentPosition);
-                }
-
                 // Compute visitors
                 boolean isVisiting = visitingArea.isInside(movable.getX(), movable.getY());
                 if (isVisiting) {
@@ -67,7 +52,6 @@ public class OffLatticeVisitorsRateCsvWorker extends OffLatticeVisitorsVizCsvWor
                     .filter(Map.Entry::getValue)
                     .count();
 
-            long notVisitedCount = results.size() - visitedCount;
 
             try {
                 builder.appendLine(outputPath,
@@ -75,8 +59,7 @@ public class OffLatticeVisitorsRateCsvWorker extends OffLatticeVisitorsVizCsvWor
                         String.valueOf(parameters.cimParameters.n),
                         String.valueOf(parameters.cimParameters.l),
                         String.valueOf(visitingCount),
-                        String.valueOf(visitedCount),
-                        String.valueOf(notVisitedCount));
+                        String.valueOf(visitedCount));
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
