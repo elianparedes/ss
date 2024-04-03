@@ -14,18 +14,25 @@ import ar.edu.itba.ss.simulation.worker.QueueWorkerHandler;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class VaTimeMain {
 
     public final static String CONFIG_PATH = "config.json";
 
-    public final static String OUTPUT_PATH = "output/va_time/va_time";
+    public final static String OUTPUT_PATH = "output/va-time/va-time";
 
     public static void main(String[] args) throws IOException {
         JsonConfigReader configReader = new JsonConfigReader();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
+        String formattedDate = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()).format(formatter);
+
         ArgumentHandler handler = new ArgumentHandler()
-                .addArgument("-O", (v) -> true, true, OUTPUT_PATH)
+                .addArgument("-O", (v) -> true, true, OUTPUT_PATH + "_" + formattedDate)
                 .addArgument("-C", (v) -> true, true, CONFIG_PATH)
                 .addArgument("--etha-step", ArgumentHandler::validateDouble, true, "0.1")
                 .addArgument("--etha-start", ArgumentHandler::validateDouble, true, "0")

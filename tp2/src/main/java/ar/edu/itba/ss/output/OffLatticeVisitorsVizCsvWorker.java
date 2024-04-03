@@ -56,7 +56,7 @@ public class OffLatticeVisitorsVizCsvWorker implements QueueWorker {
 
         String outputPath = this.outputPath;
         try {
-            builder.appendLine(outputPath,"time", "id", "x", "y", "radius", "speed", "angle", "va", "etha", "visiting_area_x", "visiting_area_y", "visiting_area_radius", "has_visited", "is_visiting");
+            builder.appendLine(outputPath,"time", "n", "l", "id", "x", "y", "radius", "speed", "angle", "va", "etha", "visiting_area_x", "visiting_area_y", "visiting_area_radius", "has_visited", "is_visiting");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -85,7 +85,10 @@ public class OffLatticeVisitorsVizCsvWorker implements QueueWorker {
                     }
                     boolean hasVisited = visitorsMap.getOrDefault(movable.getEntity().getId(), false);
 
-                    builder.appendLine(outputPath,String.valueOf(state.getTime()),
+                    builder.appendLine(outputPath,
+                            String.valueOf(state.getTime()),
+                            String.valueOf(parameters.cimParameters.n),
+                            String.valueOf(parameters.cimParameters.l),
                             String.valueOf(movable.getEntity().getId()),
                             String.valueOf(movable.getX()),
                             String.valueOf(movable.getY()),

@@ -12,18 +12,25 @@ import ar.edu.itba.ss.simulation.events.EventsQueue;
 import ar.edu.itba.ss.simulation.worker.QueueWorkerHandler;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class VaEthaMain {
 
     public final static String CONFIG_PATH = "config.json";
 
-    public final static String OUTPUT_PATH = "output/va_etha/va_etha";
+    public final static String OUTPUT_PATH = "output/va-etha/va-etha";
 
     public static void main(String[] args) throws IOException {
         JsonConfigReader configReader = new JsonConfigReader();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
+        String formattedDate = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()).format(formatter);
+
         ArgumentHandler handler = new ArgumentHandler()
-                .addArgument("-O", (v) -> true, true, OUTPUT_PATH)
+                .addArgument("-O", (v) -> true, true, OUTPUT_PATH + "_" + formattedDate)
                 .addArgument("-C", (v) -> true, true, CONFIG_PATH)
                 .addArgument("--etha-step", ArgumentHandler::validateDouble, true, "0.1")
                 .addArgument("--etha-start", ArgumentHandler::validateDouble, true, "0")

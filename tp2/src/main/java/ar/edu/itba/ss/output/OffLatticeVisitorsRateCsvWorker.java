@@ -31,7 +31,7 @@ public class OffLatticeVisitorsRateCsvWorker extends OffLatticeVisitorsVizCsvWor
 
         String outputPath = this.outputPath;
         try {
-            builder.appendLine(outputPath, "time", "visiting_count", "visited_count", "not_visited_count");
+            builder.appendLine(outputPath, "time", "n", "l", "visiting_count", "visited_count", "not_visited_count");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,7 +70,10 @@ public class OffLatticeVisitorsRateCsvWorker extends OffLatticeVisitorsVizCsvWor
             long notVisitedCount = results.size() - visitedCount;
 
             try {
-                builder.appendLine(outputPath, String.valueOf(state.getTime()),
+                builder.appendLine(outputPath,
+                        String.valueOf(state.getTime()),
+                        String.valueOf(parameters.cimParameters.n),
+                        String.valueOf(parameters.cimParameters.l),
                         String.valueOf(visitingCount),
                         String.valueOf(visitedCount),
                         String.valueOf(notVisitedCount));

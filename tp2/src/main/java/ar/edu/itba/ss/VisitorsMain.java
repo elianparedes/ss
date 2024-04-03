@@ -13,6 +13,10 @@ import ar.edu.itba.ss.simulation.events.EventsQueue;
 import ar.edu.itba.ss.simulation.worker.QueueWorkerHandler;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class VisitorsMain {
 
@@ -23,8 +27,11 @@ public class VisitorsMain {
     public static void main(String[] args) throws IOException {
         JsonConfigReader configReader = new JsonConfigReader();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
+        String formattedDate = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()).format(formatter);
+
         ArgumentHandler handler = new ArgumentHandler()
-                .addArgument("-O", (v) -> true, true, OUTPUT_PATH)
+                .addArgument("-O", (v) -> true, true, OUTPUT_PATH + "_" + formattedDate)
                 .addArgument("-C", (v) -> true, true, CONFIG_PATH)
                 .addArgument("--area-radius", ArgumentHandler::validateDouble, true, "1")
                 .addArgument("--conditions", (v) -> true, true, "pbc");
@@ -48,7 +55,7 @@ public class VisitorsMain {
         Thread visitorsVizCsvThread = new Thread(new QueueWorkerHandler(visitorsVizCsvWorker, queue));
         visitorsVizCsvThread.start();
 
-        OffLatticeVisitorsRateCsvWorker visitorsRateCsvWorker = new OffLatticeVisitorsRateCsvWorker(handler.getArgument("-O") + '_' + offLaticeParameters.cimParameters.l + '_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + '_' + "rate" + ".csv", aux, visitingAreaRadius, isOpenBoundaryConditions);
+        OffLatticeVisitorsRateCsvWorker visitorsRateCsvWorker = new OffLatticeVisitorsRateCsvWorker(handler.getArgument("-O") + '_' + offLaticeParameters.cimParameters.l + '_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + '_' + "rates" + ".csv", aux, visitingAreaRadius, isOpenBoundaryConditions);
         Thread visitorsRateCsvThread = new Thread(new QueueWorkerHandler(visitorsRateCsvWorker, queue));
         visitorsRateCsvThread.start();
     }

@@ -26,7 +26,7 @@ public class OffLaticeCsvWorker implements QueueWorker {
         CSVBuilder builder = new CSVBuilder();
         String outputPath = this.outputPath;
         try {
-            builder.appendLine(outputPath,"time", "id", "x", "y", "radius", "speed", "angle", "va", "etha");
+            builder.appendLine(outputPath,"time", "n", "l", "id", "x", "y", "radius", "speed", "angle", "va", "etha");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -35,7 +35,10 @@ public class OffLaticeCsvWorker implements QueueWorker {
             List<MovableSurfaceEntity<Particle>> results = state.getParticles();
             for (MovableSurfaceEntity<Particle> movable : results) {
                 try {
-                    builder.appendLine(outputPath,String.valueOf(state.getTime()),
+                    builder.appendLine(outputPath,
+                            String.valueOf(state.getTime()),
+                            String.valueOf(parameters.cimParameters.n),
+                            String.valueOf(parameters.cimParameters.l),
                             String.valueOf(movable.getEntity().getId()),
                             String.valueOf(movable.getX()),
                             String.valueOf(movable.getY()),
