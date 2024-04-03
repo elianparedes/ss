@@ -1,6 +1,5 @@
 package ar.edu.itba.ss;
 
-import ar.edu.itba.ss.cim.CellIndexMethodParameters;
 import ar.edu.itba.ss.input.ArgumentHandler;
 import ar.edu.itba.ss.input.JsonConfigReader;
 import ar.edu.itba.ss.offLatice.OffLatice;
@@ -25,29 +24,38 @@ public class VaEthaMain {
 
         ArgumentHandler handler = new ArgumentHandler()
                 .addArgument("-O", (v) -> true, true, OUTPUT_PATH)
-                .addArgument("-C",(v)->true,true,CONFIG_PATH);
+                .addArgument("-C", (v) -> true, true, CONFIG_PATH)
+                .addArgument("--etha-step", ArgumentHandler::validateDouble, true, "0.1")
+                .addArgument("--etha-start", ArgumentHandler::validateDouble, true, "0")
+                .addArgument("--etha-max", ArgumentHandler::validateDouble, true, "5")
+                .addArgument("--time-start", ArgumentHandler::validateInt, true, "500")
+                .addArgument("--time-end", ArgumentHandler::validateInt, true, "900");
         handler.parse(args);
 
         OffLaticeParameters offLaticeParameters = configReader.readConfig(handler.getArgument("-C"), OffLaticeParameters.class);
 
-        double etha = 0;
-        double step = 0.1;
-        while (etha <= 5.0){
+        int timeStart = handler.getIntArgument("--time-start");
+        int timeEnd = handler.getIntArgument("--time-end");
+
+        double etha = handler.getDoubleArgument("--etha-step");
+        double ethaStep = handler.getDoubleArgument("--etha-start");
+        double ethaMax = handler.getDoubleArgument("--etha-max");
+
+        while (etha <= ethaMax) {
             offLaticeParameters.etha = etha;
             offLaticeParameters.particles = OffLaticeUtils.initializeParticles(offLaticeParameters);
 
             OffLatice offLatice = new OffLatice();
             Simulation<OffLaticeParameters> simOffLatice = new Simulation<>(offLatice);
 
-
             simOffLatice.run(offLaticeParameters);
             EventsQueue queue = simOffLatice.getEventQueue(OffLaticeState.class);
 
-            OffLaticeVaEthaCsvWorker ethaCsvWorker = new OffLaticeVaEthaCsvWorker(handler.getArgument("-O")+'_'+offLaticeParameters.cimParameters.l +'_' + offLaticeParameters.cimParameters.n + ".csv", 6000,10000,offLaticeParameters);
-            Thread thread = new Thread(new QueueWorkerHandler(ethaCsvWorker,queue));
+            OffLaticeVaEthaCsvWorker ethaCsvWorker = new OffLaticeVaEthaCsvWorker(handler.getArgument("-O") + '_' + offLaticeParameters.cimParameters.l + '_' + offLaticeParameters.cimParameters.n + ".csv", timeStart, timeEnd, offLaticeParameters);
+            Thread thread = new Thread(new QueueWorkerHandler(ethaCsvWorker, queue));
             thread.start();
 
-            etha += step;
+            etha += ethaStep;
         }
 
     }
