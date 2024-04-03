@@ -1,3 +1,4 @@
+import argparse
 from typing import Sequence
 
 import cv2
@@ -5,9 +6,10 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
+from lib.file.csv import get_most_recent_csv
 from lib.video.video_builder import VideoBuilder
 
-video_name = "pbc_visitors.mp4"
+video_name = "visitors.mp4"
 video_width = 800
 video_height = 800
 grid_size = 10
@@ -106,13 +108,13 @@ def draw_stats(video_builder: VideoBuilder, data: DataFrame):
     video_builder.draw_frame(lambda frame: render_bars(frame))
 
 
-def pbc_visitors(show_stats: bool):
+def render_visitors(show_stats: bool):
     video_builder = VideoBuilder("", video_name).set_width(video_width).set_height(video_height)
 
-    visitors_file = '../../output/visitors/visitors_10.0_100_0.1.csv'
+    visitors_file = get_most_recent_csv('../../output/visitors/')
     data = pd.read_csv(visitors_file)
 
-    visitors_stats_file = '../../output/visitors/visitors_10.0_100_0.1_rate.csv'
+    visitors_stats_file = get_most_recent_csv('../../output/visitors/', 'rates')
     stats = pd.read_csv(visitors_stats_file)
 
     timesteps = data['time'].unique()
@@ -131,5 +133,12 @@ def pbc_visitors(show_stats: bool):
 
     video_builder.render()
 
+def main():
+    parser = argparse.ArgumentParser(description='Process boolean argument')
+    parser.add_argument('--show-stats', action='store_true', help='Show stats')
+    args = parser.parse_args()
+    render_visitors(args.show_stats)
 
-pbc_visitors(False)
+
+if __name__ == '__main__':
+    main()
