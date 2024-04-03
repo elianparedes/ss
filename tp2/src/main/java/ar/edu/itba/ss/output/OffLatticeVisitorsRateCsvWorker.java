@@ -9,11 +9,13 @@ import ar.edu.itba.ss.simulation.events.Event;
 import ar.edu.itba.ss.simulation.events.EventsQueue;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OffLatticeVisitorsRateCsvWorker extends OffLatticeVisitorsVizCsvWorker {
-    public OffLatticeVisitorsRateCsvWorker(String outputPath, double visitingAreaRadius, OffLaticeParameters parameters) {
-        super(outputPath, visitingAreaRadius, parameters);
+    public OffLatticeVisitorsRateCsvWorker(String outputPath, OffLaticeParameters parameters, double visitingAreaRadius, boolean isOpenBoundaryConditions) {
+        super(outputPath, parameters, visitingAreaRadius, isOpenBoundaryConditions);
     }
 
     @Override
@@ -42,14 +44,16 @@ public class OffLatticeVisitorsRateCsvWorker extends OffLatticeVisitorsVizCsvWor
             int visitingCount = 0;
 
             for (MovableSurfaceEntity<Particle> movable : results) {
-                // Check if periodic boundary condition was applied
-                Point previousPosition = previousPositions.getOrDefault(movable.getEntity().getId(), null);
-                Point currentPosition = new Point(movable.getX(), movable.getY());
-                if (previousPosition != null) {
-                    boolean mustForgetVisitor = periodicBoundaryConditionApplied(currentPosition, previousPosition);
-                    if (mustForgetVisitor) visitorsMap.put(movable.getEntity().getId(), false);
+                if (isOpenBoundaryConditions) {
+                    // Check if particle moved out of viewport
+                    Point previousPosition = previousPositions.getOrDefault(movable.getEntity().getId(), null);
+                    Point currentPosition = new Point(movable.getX(), movable.getY());
+                    if (previousPosition != null) {
+                        boolean mustForgetVisitor = periodicBoundaryConditionApplied(currentPosition, previousPosition);
+                        if (mustForgetVisitor) visitorsMap.put(movable.getEntity().getId(), false);
+                    }
+                    previousPositions.put(movable.getEntity().getId(), currentPosition);
                 }
-                previousPositions.put(movable.getEntity().getId(), currentPosition);
 
                 // Compute visitors
                 boolean isVisiting = visitingArea.isInside(movable.getX(), movable.getY());

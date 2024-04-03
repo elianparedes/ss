@@ -36,11 +36,13 @@ public class OffLatticeVisitorsVizCsvWorker implements QueueWorker {
     final String outputPath;
     final OffLaticeParameters parameters;
     final double visitingAreaRadius;
+    final boolean isOpenBoundaryConditions;
 
-    public OffLatticeVisitorsVizCsvWorker(String outputPath, double visitingAreaRadius, OffLaticeParameters parameters) {
+    public OffLatticeVisitorsVizCsvWorker(String outputPath, OffLaticeParameters parameters, double visitingAreaRadius, boolean isOpenBoundaryConditions) {
         this.outputPath = outputPath;
         this.parameters = parameters;
         this.visitingAreaRadius = visitingAreaRadius;
+        this.isOpenBoundaryConditions = isOpenBoundaryConditions;
     }
 
     @Override
@@ -64,14 +66,17 @@ public class OffLatticeVisitorsVizCsvWorker implements QueueWorker {
 
             for (MovableSurfaceEntity<Particle> movable : results) {
                 try {
-                    // Check if periodic boundary condition was applied
-                    Point previousPosition = previousPositions.getOrDefault(movable.getEntity().getId(), null);
-                    Point currentPosition = new Point(movable.getX(), movable.getY());
-                    if (previousPosition != null) {
-                        boolean mustForgetVisitor = periodicBoundaryConditionApplied(currentPosition, previousPosition);
-                        if (mustForgetVisitor) visitorsMap.put(movable.getEntity().getId(), false);
+
+                    if (isOpenBoundaryConditions) {
+                        // Check if particle moved out of viewport
+                        Point previousPosition = previousPositions.getOrDefault(movable.getEntity().getId(), null);
+                        Point currentPosition = new Point(movable.getX(), movable.getY());
+                        if (previousPosition != null) {
+                            boolean mustForgetVisitor = periodicBoundaryConditionApplied(currentPosition, previousPosition);
+                            if (mustForgetVisitor) visitorsMap.put(movable.getEntity().getId(), false);
+                        }
+                        previousPositions.put(movable.getEntity().getId(), currentPosition);
                     }
-                    previousPositions.put(movable.getEntity().getId(), currentPosition);
 
                     // Compute visitors
                     boolean isVisiting = visitingArea.isInside(movable.getX(), movable.getY());

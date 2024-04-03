@@ -25,10 +25,15 @@ public class VisitorsMain {
 
         ArgumentHandler handler = new ArgumentHandler()
                 .addArgument("-O", (v) -> true, true, OUTPUT_PATH)
-                .addArgument("-C",(v)->true,true,CONFIG_PATH);
+                .addArgument("-C", (v) -> true, true, CONFIG_PATH)
+                .addArgument("--area-radius", ArgumentHandler::validateDouble, true, "1")
+                .addArgument("--conditions", (v) -> true, true, "pbc");
         handler.parse(args);
 
         OffLaticeParameters offLaticeParameters = configReader.readConfig(handler.getArgument("-C"), OffLaticeParameters.class);
+
+        double visitingAreaRadius = handler.getDoubleArgument("--area-radius");
+        boolean isOpenBoundaryConditions = handler.getArgument("--conditions").equals("obc");
 
         offLaticeParameters.particles = OffLaticeUtils.initializeParticles(offLaticeParameters);
         OffLaticeParameters aux = new OffLaticeParameters(offLaticeParameters);
@@ -39,12 +44,12 @@ public class VisitorsMain {
         simOffLatice.run(aux);
         EventsQueue queue = simOffLatice.getEventQueue(OffLaticeState.class);
 
-        OffLatticeVisitorsVizCsvWorker visitorsVizCsvWorker = new OffLatticeVisitorsVizCsvWorker(handler.getArgument("-O")+'_'+offLaticeParameters.cimParameters.l +'_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + ".csv", 1,aux);
-        Thread visitorsVizCsvThread = new Thread(new QueueWorkerHandler(visitorsVizCsvWorker,queue));
+        OffLatticeVisitorsVizCsvWorker visitorsVizCsvWorker = new OffLatticeVisitorsVizCsvWorker(handler.getArgument("-O") + '_' + offLaticeParameters.cimParameters.l + '_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + ".csv", aux, visitingAreaRadius, isOpenBoundaryConditions);
+        Thread visitorsVizCsvThread = new Thread(new QueueWorkerHandler(visitorsVizCsvWorker, queue));
         visitorsVizCsvThread.start();
 
-        OffLatticeVisitorsRateCsvWorker visitorsRateCsvWorker = new OffLatticeVisitorsRateCsvWorker(handler.getArgument("-O")+'_'+offLaticeParameters.cimParameters.l +'_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + '_' + "rate" + ".csv", 1,aux);
-        Thread visitorsRateCsvThread = new Thread(new QueueWorkerHandler(visitorsRateCsvWorker,queue));
+        OffLatticeVisitorsRateCsvWorker visitorsRateCsvWorker = new OffLatticeVisitorsRateCsvWorker(handler.getArgument("-O") + '_' + offLaticeParameters.cimParameters.l + '_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + '_' + "rate" + ".csv", aux, visitingAreaRadius, isOpenBoundaryConditions);
+        Thread visitorsRateCsvThread = new Thread(new QueueWorkerHandler(visitorsRateCsvWorker, queue));
         visitorsRateCsvThread.start();
     }
 }
