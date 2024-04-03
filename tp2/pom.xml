@@ -54,9 +54,32 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.2.0</version>
-                <configuration>
-                    <mainClass>ar.edu.itba.ss.Main</mainClass> <!-- Clase principal a ejecutar -->
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <configuration>
+                            <mainClass>ar.edu.itba.ss.Main</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>va-etha</id>
+                        <configuration>
+                            <mainClass>ar.edu.itba.ss.VaEthaMain</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>va-time</id>
+                        <configuration>
+                            <mainClass>ar.edu.itba.ss.VaTimeMain</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>visitors</id>
+                        <configuration>
+                            <mainClass>ar.edu.itba.ss.VisitorsMain</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
