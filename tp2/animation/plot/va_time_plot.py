@@ -1,14 +1,17 @@
-import plotly.graph_objs as go
+import matplotlib.pyplot as plt
 import pandas as pd
 import os
 
-path_to_csv_folder = '../../output/va_time/'
+path_to_csv_folder = '../../output/va_time/50.0_10000/'
 csv_files = [file for file in os.listdir(path_to_csv_folder) if file.endswith('.csv')]
-
-traces = []
 
 n_value = None
 l_value = None
+
+ethas = [0.0,2.0,4.0]
+
+# Configurar el tamaño de la figura para una proporción de 2:1
+plt.figure(figsize=(25, 10))
 
 for csv_file in csv_files:
     file_path = os.path.join(path_to_csv_folder, csv_file)
@@ -19,21 +22,20 @@ for csv_file in csv_files:
         l_value = data['l'].iloc[0]
     etha_value = data['etha'].iloc[0]
 
-    trace = go.Scatter(
-        x=data['time'],
-        y=data['va'],
-        mode='lines',
-        name=f'etha = {etha_value}'
-    )
-    traces.append(trace)
+    if ethas.__contains__(etha_value):
+        plt.plot(data['time'], data['va'], label=f'etha = {etha_value}')
 
-layout = go.Layout(
-    title=f'va en función de time (N = {n_value}, L = {l_value})',
-    xaxis=dict(title='time'),
-    yaxis=dict(title='va'),
-    legend=dict(title='Valores de etha')
-)
+plt.xlabel('Tiempo (s)', fontsize=22, fontname='Times New Roman')
+plt.ylabel('Va', fontsize=22, fontname='Times New Roman')
+plt.title(f'N = {n_value}, L = {l_value}', fontsize=22, fontname='Times New Roman', loc='right')
 
-fig = go.Figure(data=traces, layout=layout)
+# Configurar la leyenda para que aparezca al lado del gráfico
+plt.legend(title='Etha:', fontsize=22, title_fontsize=22, loc='center left', bbox_to_anchor=(1, 0.5))
 
-fig.show()
+plt.xticks(fontsize=22, fontname='Times New Roman')
+plt.yticks(fontsize=22, fontname='Times New Roman')
+
+# Ajustar el layout para acomodar la leyenda fuera del gráfico
+plt.tight_layout()
+
+plt.show()
