@@ -33,17 +33,19 @@ public class VaEthaMain {
         double etha = 0;
         double step = 0.1;
         while (etha <= 5.0){
-            offLaticeParameters.etha = etha;
             offLaticeParameters.particles = OffLaticeUtils.initializeParticles(offLaticeParameters);
+            OffLaticeParameters aux = new OffLaticeParameters(offLaticeParameters);
+
+            aux.etha = etha;
 
             OffLatice offLatice = new OffLatice();
             Simulation<OffLaticeParameters> simOffLatice = new Simulation<>(offLatice);
 
 
-            simOffLatice.run(offLaticeParameters);
+            simOffLatice.run(aux);
             EventsQueue queue = simOffLatice.getEventQueue(OffLaticeState.class);
 
-            OffLaticeVaEthaCsvWorker ethaCsvWorker = new OffLaticeVaEthaCsvWorker(handler.getArgument("-O")+'_'+offLaticeParameters.cimParameters.l +'_' + offLaticeParameters.cimParameters.n + ".csv", 6000,10000,offLaticeParameters);
+            OffLaticeVaEthaCsvWorker ethaCsvWorker = new OffLaticeVaEthaCsvWorker(handler.getArgument("-O")+'_'+offLaticeParameters.cimParameters.l +'_' + offLaticeParameters.cimParameters.n + ".csv", 2500,5000,aux);
             Thread thread = new Thread(new QueueWorkerHandler(ethaCsvWorker,queue));
             thread.start();
 
