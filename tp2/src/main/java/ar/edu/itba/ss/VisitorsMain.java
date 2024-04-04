@@ -33,7 +33,7 @@ public class VisitorsMain {
         ArgumentHandler handler = new ArgumentHandler()
                 .addArgument("-O", (v) -> true, true, OUTPUT_PATH + "_" + formattedDate)
                 .addArgument("-C", (v) -> true, true, CONFIG_PATH)
-                .addArgument("--area-radius", ArgumentHandler::validateDouble, true, "1")
+                .addArgument("--area-radius", ArgumentHandler::validateDouble, true, "0.5")
                 .addArgument("--conditions", (v) -> true, true, "pbc");
         handler.parse(args);
 
