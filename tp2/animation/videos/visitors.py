@@ -12,7 +12,6 @@ from lib.video.video_builder import VideoBuilder
 video_name = "visitors.mp4"
 video_width = 800
 video_height = 800
-grid_size = 10
 visiting_area_color: Sequence[float] = (50, 50, 50)
 
 default_color = (100, 100, 100)
@@ -26,6 +25,8 @@ vector_length = 15
 
 
 def draw_visitors(video_builder: VideoBuilder, data: DataFrame):
+    grid_size = data['l'].iloc[0]
+
     # Render visiting area
 
     center_x = int((data['visiting_area_x'].iloc[0] / grid_size) * video_width)
@@ -132,6 +133,7 @@ def render_visitors(show_stats: bool):
         video_builder.push_frame()
 
     video_builder.render()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Process boolean argument')
