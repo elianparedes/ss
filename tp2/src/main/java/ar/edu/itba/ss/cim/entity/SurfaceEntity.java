@@ -54,7 +54,7 @@ public class SurfaceEntity<T extends Entity> implements Comparable<Object> {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return entity.getId();
     }
 
     @Override

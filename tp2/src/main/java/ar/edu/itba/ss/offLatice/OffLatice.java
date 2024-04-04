@@ -15,6 +15,7 @@ import ar.edu.itba.ss.simulation.events.EventsQueue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class OffLatice implements Algorithm<OffLaticeParameters> {
@@ -23,6 +24,7 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
     public void calculate(OffLaticeParameters params, EventListener eventListener) {
 
         List<MovableSurfaceEntity<Particle>> particles = OffLaticeUtils.initializeParticles(params);
+        //TODO: Hay que emitir las particulas iniciales
 
         for (int i = 0; i < params.maxIter; i++) {
             Algorithm<CellIndexMethodParameters> cim = new CellIndexMethod();
@@ -39,7 +41,7 @@ public class OffLatice implements Algorithm<OffLaticeParameters> {
                 double speedXSum = 0;
                 double speedYSum = 0;
 
-                for (Map.Entry<SurfaceEntity<Particle>, List<SurfaceEntity<Particle>>> entry : map.getParticlesNeighbours().entrySet()) {
+                for (Map.Entry<SurfaceEntity<Particle>, Set<SurfaceEntity<Particle>>> entry : map.getParticlesNeighbours().entrySet()) {
                     double sinAngleSum = Math.sin(((MovableSurfaceEntity<Particle>) entry.getKey()).getAngle());
                     double cosAngleSum = Math.cos(((MovableSurfaceEntity<Particle>) entry.getKey()).getAngle());
                     int neighboursCount = 1;
