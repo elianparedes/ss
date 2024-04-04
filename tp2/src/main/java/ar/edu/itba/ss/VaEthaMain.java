@@ -44,8 +44,8 @@ public class VaEthaMain {
         int timeStart = handler.getIntArgument("--time-start");
         int timeEnd = handler.getIntArgument("--time-end");
 
-        double etha = handler.getDoubleArgument("--etha-step");
-        double ethaStep = handler.getDoubleArgument("--etha-start");
+        double etha = handler.getDoubleArgument("--etha-start");
+        double ethaStep = handler.getDoubleArgument("--etha-step");
         double ethaMax = handler.getDoubleArgument("--etha-max");
 
         while (etha <= ethaMax) {
