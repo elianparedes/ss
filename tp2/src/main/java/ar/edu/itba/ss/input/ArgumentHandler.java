@@ -54,4 +54,30 @@ public class ArgumentHandler {
     public String getArgument(String name) {
         return parsedArguments.get(name);
     }
+
+    public double getDoubleArgument(String name) {
+        return Double.parseDouble(parsedArguments.get(name));
+    }
+
+    public int getIntArgument(String name) {
+        return Integer.parseInt(parsedArguments.get(name));
+    }
+
+    public static boolean validateDouble(String value) {
+        try {
+            Double.parseDouble(value);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean validateInt(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

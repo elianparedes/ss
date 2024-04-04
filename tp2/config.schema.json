@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "cim": {
+            "type": "object",
+            "properties": {
+                "l": { "type": "integer" },
+                "m": { "type": "integer" },
+                "n": { "type": "integer" },
+                "rc": { "type": "integer" },
+                "r": { "type": "number" }
+            },
+            "required": ["l", "m", "n", "rc", "r"]
+        },
+        "speed": { "type": "number" },
+        "max_iterations": { "type": "integer" },
+        "etha": { "type": "number" }
+    },
+    "required": ["cim", "speed", "max_iterations", "etha"]
+}
