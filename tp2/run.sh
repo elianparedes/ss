@@ -122,7 +122,14 @@ simulation)
   elif [ "$variant" = "visitors" ]; then
     echo "[INFO] Running simulation with visitors variant..."
     mvn -q exec:java@visitors -Dexec.args="--area-radius=$area_radius --conditions=$conditions"
+  elif [ "$variant" = "va-rho" ]; then
+    echo "[INFO] Running simulation with visitors variant..."
+    mvn -q exec:java@va-rho -Dexec.args="--particles-start=$particles_start --particles-max=$particles_max --particles-step=$particles_step --time-start=$time_start --time-end=$time_end"
   fi
+  elif [ "$variant" = "va-time-particles" ]; then
+      echo "[INFO] Running simulation with visitors variant..."
+      mvn -q exec:java@va-rho -Dexec.args="--particles-start=$particles_start --particles-max=$particles_max --particles-step=$particles_step"
+    fi
 
   ;;
 

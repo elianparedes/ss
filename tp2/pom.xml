@@ -79,6 +79,18 @@
                             <mainClass>ar.edu.itba.ss.VisitorsMain</mainClass>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>va-rho</id>
+                        <configuration>
+                            <mainClass>ar.edu.itba.ss.VaRhoMain</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>va-time-particles</id>
+                        <configuration>
+                            <mainClass>ar.edu.itba.ss.VaTimeParticlesMain</mainClass>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
