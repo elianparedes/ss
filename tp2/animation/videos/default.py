@@ -9,7 +9,7 @@ from pandas import DataFrame
 from lib.file.csv import get_most_recent_csv
 from lib.video.video_builder import VideoBuilder
 
-video_name = "va-rho-4000-20-2.mp4"
+video_name = "default.mp4"
 video_width = 800
 video_height = 800
 grid_size = 5
