@@ -1,14 +1,15 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# visitors_file = get_most_recent_csv('../../output/visitors-slope-rate/', contains="rates")
-df = pd.read_csv("../../output/visitors/visitors_05_04_2024_00_05_40_5.0_300_0.2_rates.csv")
+from lib.file.csv import get_most_recent_csv
+
+visitors_file = get_most_recent_csv('../../output/visitors-slope-rate/', contains="rates")
+df = pd.read_csv(visitors_file)
 
 plt.figure(figsize=(12, 6))
 
 plt.plot(df['time'], df['visited_count'], linestyle='-', label='Ya visitaron')
 plt.plot(df['time'], df['visiting_count'], linestyle='-', label='Están visitando')
-
 
 plt.xlabel('Tiempo (s)')
 plt.ylabel('Número de partículas')

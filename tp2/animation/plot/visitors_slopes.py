@@ -2,8 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-# visitors_file = get_most_recent_csv('../../output/visitors-slope-rate/', contains="rates")
-df = pd.read_csv("../../output/visitors-slope-rate/visitors_04_04_2024_18_23_00_slope_rate_5.0_300_0.2_rates.csv")
+from lib.file.csv import get_most_recent_csv
+
+visitors_file = get_most_recent_csv('../../output/visitors-slope-rate/', contains="rates")
+df = pd.read_csv(visitors_file)
 
 derivative = df['visited_count'] / df['time']
 

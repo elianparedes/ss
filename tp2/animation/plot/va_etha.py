@@ -17,12 +17,13 @@ l_value = df['l'].unique()[0]
 plt.figure(figsize=(8, 5))
 plt.errorbar(df['etha'], df['va'], yerr=df['stdev'], fmt='o', capsize=5)
 
-plt.xlabel('Eta',fontsize=11)
-plt.ylabel('Va',fontsize=11)
+plt.xlabel('Eta', fontsize=11)
+plt.ylabel('Va', fontsize=11)
 
 plt.subplots_adjust(right=0.7)
 
-plt.text(1.05, 0.5, f'N = {n_value}\nL = {l_value}', transform=plt.gca().transAxes, fontsize=11, fontname='Times New Roman')
+plt.text(1.05, 0.5, f'N = {n_value}\nL = {l_value}', transform=plt.gca().transAxes, fontsize=11,
+         fontname='Times New Roman')
 
 plt.savefig(path_to_csv_folder + 'va-etha' + '-' + str(l_value) + '-' + str(n_value) + '.png')
 plt.show()

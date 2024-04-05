@@ -82,7 +82,6 @@ def draw_stats(video_builder: VideoBuilder, data: DataFrame):
                                          (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1))
 
 
-
 def render_visitors(show_stats: bool):
     visitors_file = '../../output/visitors/visitors_05_04_2024_00_06_17_5.0_300_5.0.csv'
     data = pd.read_csv(visitors_file)
@@ -90,7 +89,8 @@ def render_visitors(show_stats: bool):
     visitors_stats_file = '../../output/visitors/visitors_05_04_2024_00_06_17_5.0_300_5.0_rates.csv'
     stats = pd.read_csv(visitors_stats_file)
 
-    video_builder = VideoBuilder("", f"{data['n'].iloc[0]}_{data['l'].iloc[0]}_5.0_pbc_viz.mp4").set_width(video_width).set_height(video_height)
+    video_builder = VideoBuilder("", f"{data['n'].iloc[0]}_{data['l'].iloc[0]}_5.0_pbc_viz.mp4").set_width(
+        video_width).set_height(video_height)
 
     timesteps = data['time'].unique()
     for timestep in timesteps:

@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 directorio = '../../output/va_rho/'
-df = pd.read_csv(directorio+'va_rho_20.0_2.0.csv', dtype=str)
+df = pd.read_csv(directorio + 'va_rho_20.0_2.0.csv', dtype=str)
 
 df['etha'] = pd.to_numeric(df['etha'], errors='coerce')
 df['va'] = pd.to_numeric(df['va'], errors='coerce')

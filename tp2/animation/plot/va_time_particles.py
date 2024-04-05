@@ -9,7 +9,6 @@ csv_files = [file for file in os.listdir(path_to_csv_folder) if file.endswith('.
 etha_value = None
 l_value = None
 
-
 plt.figure(figsize=(25, 10))
 
 for csv_file in csv_files:

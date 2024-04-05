@@ -3,7 +3,7 @@ import pandas as pd
 
 from lib.file.csv import get_most_recent_csv
 
-visitors_file = get_most_recent_csv('../../output/visitors-slope-rate/', contains="avg")
+visitors_file = get_most_recent_csv('../../output/visitors-slope-rate/')
 df = pd.read_csv(visitors_file)
 
 plt.figure(figsize=(8, 6))
@@ -15,4 +15,3 @@ plt.grid(True)
 plt.tight_layout()
 plt.savefig(f"{df['n'].iloc[0]}_{df['l'].iloc[0]}_slope_etha.png")
 plt.show()
-

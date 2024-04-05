@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
+from lib.file.csv import get_most_recent_csv
 from lib.video.video_builder import VideoBuilder
 
 video_name = "va-rho-4000-20-2.mp4"
@@ -29,27 +30,21 @@ def draw_particles(video_builder: VideoBuilder, data: DataFrame):
         x, y = int((row['x'] / grid_size) * video_width), int(
             (row['y'] / grid_size) * video_height)
 
-        # Render particles
-
         angle = float(row['angle'])
         color = default_color
 
-        # Map the angle to an HSL color value
         hue = int((angle % (2 * np.pi)) * 180 / np.pi)
         saturation = 100
         lightness = 50
 
-        # Convert HSL to RGB for OpenCV
         rgb_color = colorsys.hls_to_rgb(hue / 360, lightness / 100, saturation / 100)
         color = tuple(int(255 * c) for c in rgb_color)
 
-        # Render line to represent the movement direction
         x2 = x + int(vector_length * np.cos(angle))
         y2 = y + int(vector_length * np.sin(angle))
 
         video_builder.draw_frame(lambda frame: cv2.line(frame, (x, y), (x2, y2), vector_color, 1))
 
-        # Render a triangle pointing in the movement direction
         tip_x = x + int(triangle_length * np.cos(angle))
         tip_y = y + int(triangle_length * np.sin(angle))
 
@@ -75,10 +70,11 @@ def draw_stats(video_builder: VideoBuilder, data: DataFrame):
                              cv2.putText(video_builder.current_frame, text,
                                          (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1))
 
-def pbc_visitors(show_stats: bool):
+
+def render(show_stats: bool):
     video_builder = VideoBuilder("", video_name).set_width(video_width).set_height(video_height)
 
-    simulation_file = '../../output/default/default_04_04_2024_21_07_39.csv'
+    simulation_file = get_most_recent_csv('../../output/default')
     data = pd.read_csv(simulation_file)
 
     timesteps = data['time'].unique()
@@ -97,4 +93,4 @@ def pbc_visitors(show_stats: bool):
     video_builder.render()
 
 
-pbc_visitors(False)
+render(False)
