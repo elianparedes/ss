@@ -167,6 +167,16 @@
 							</mainClass>
 						</configuration>
 					</execution>
+					<execution>
+						<id>
+							visitors-slope-etha
+						</id>
+						<configuration>
+							<mainClass>
+								ar.edu.itba.ss.VisitorsSlopeEthaMain
+							</mainClass>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
