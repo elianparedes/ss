@@ -9,7 +9,6 @@ def get_most_recent_csv(folder_path: str, contains: Optional[str] = None) -> Opt
     if not csv_files:
         return None
 
-    # Filter files based on the provided substring if filter_string is not None
     if contains is not None:
         csv_files = [file for file in csv_files if contains in os.path.basename(file)]
 

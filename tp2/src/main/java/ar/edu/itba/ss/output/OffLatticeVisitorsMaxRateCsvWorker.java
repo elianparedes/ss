@@ -29,17 +29,16 @@ public class OffLatticeVisitorsMaxRateCsvWorker extends OffLatticeVisitorsRateCs
         double visitingAreaCenter = this.parameters.cimParameters.l / 2;
         VisitingArea visitingArea = new VisitingArea(visitingAreaCenter, visitingAreaCenter, this.visitingAreaRadius);
 
-        Map<Integer, Boolean> visitorsMap = new HashMap<>();
+
 
 
         CSVBuilder builder = new CSVBuilder();
         String outputPath = this.outputPath;
 
-
-        int totalTime = 0;
         List<Integer> times = new ArrayList<>();
-
         for (EventsQueue queue : queues) {
+            Map<Integer, Boolean> visitorsMap = new HashMap<>();
+
             for (Event<?> e : queue) {
                 OffLaticeState state = (OffLaticeState) e.getPayload();
                 List<MovableSurfaceEntity<Particle>> results = state.getParticles();
@@ -57,7 +56,7 @@ public class OffLatticeVisitorsMaxRateCsvWorker extends OffLatticeVisitorsRateCs
                 if (((double) visitedCount / results.size()) >= maxRate) {
                     int time = state.getTime();
                     times.add(time);
-                    totalTime += time;
+                    System.out.println("time: " + time);
 
                     break;
                 }
@@ -66,8 +65,18 @@ public class OffLatticeVisitorsMaxRateCsvWorker extends OffLatticeVisitorsRateCs
         }
 
         if (!times.isEmpty()) {
-            double timeMean = times.stream().mapToDouble(Integer::doubleValue).average().orElse(0);
-            double timeStdDev = Math.sqrt(times.stream().mapToDouble(time -> Math.pow(time - timeMean, 2)).sum() / (times.size() - 1));
+            double sum = 0;
+            for (double time : times) {
+                sum += time;
+            }
+            double mean = sum / times.size();
+
+            double sumOfSquaredDifferences = 0;
+            for (double slope : times) {
+                sumOfSquaredDifferences += Math.pow(slope - mean, 2);
+            }
+            double variance = sumOfSquaredDifferences / (times.size() - 1);
+            double stdDeviation = Math.sqrt(variance);
 
             try {
                 builder.appendLine(outputPath,
@@ -75,8 +84,8 @@ public class OffLatticeVisitorsMaxRateCsvWorker extends OffLatticeVisitorsRateCs
                         String.valueOf(parameters.cimParameters.l),
                         String.valueOf(maxRate),
                         String.valueOf(parameters.etha),
-                        String.valueOf(timeMean),
-                        String.valueOf(timeStdDev));
+                        String.valueOf(mean),
+                        String.valueOf(stdDeviation));
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

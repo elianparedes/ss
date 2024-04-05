@@ -50,6 +50,7 @@ public class VaRhoMain {
         while (particles <= max){
             offLaticeParameters.cimParameters.n = particles;
             offLaticeParameters.particles = OffLaticeUtils.initializeParticles(offLaticeParameters);
+            System.out.println(offLaticeParameters.particles.size());
             OffLaticeParameters aux = new OffLaticeParameters(offLaticeParameters);
 
             OffLatice offLatice = new OffLatice();

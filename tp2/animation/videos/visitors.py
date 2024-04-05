@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
-from lib.file.csv import get_most_recent_csv
 from lib.video.video_builder import VideoBuilder
 
 video_name = "visitors.mp4"
@@ -75,48 +74,23 @@ def draw_stats(video_builder: VideoBuilder, data: DataFrame):
     timestep = data['time'].values[0]
     visiting_count = data['visiting_count'].values[0]
     visited_count = data['visited_count'].values[0]
-    not_visited_count = data['not_visited_count'].values[0]
 
-    text = f"TIMESTEP: {timestep}, VISITING: {visiting_count}, VISITED: {visited_count}, NOT VISITED: {not_visited_count}"
+    text = f"TIMESTEP: {timestep}, VISITING: {visiting_count}, VISITED: {visited_count}"
 
     video_builder.draw_frame(lambda frame:
                              cv2.putText(video_builder.current_frame, text,
                                          (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1))
 
-    # Render bar chart
-    bar_width = 100
-    bar_height = 100
-
-    scale_factor = bar_height / 100
-
-    visiting_bar_height = int(visiting_count * scale_factor)
-    visited_bar_height = int(visited_count * scale_factor)
-    not_visited_bar_height = int(not_visited_count * scale_factor)
-
-    def render_bars(frame: np.ndarray):
-        # Draw the bars on the chart image
-        cv2.rectangle(frame[8:108, 692:792],
-                      (0, bar_height - visiting_bar_height), (bar_width // 3, bar_height), is_visiting_color, -1)
-
-        cv2.rectangle(frame[8:108, 692:792],
-                      (bar_width // 3, bar_height - visited_bar_height), (2 * bar_width // 3, bar_height),
-                      has_visited_color, -1)
-
-        cv2.rectangle(frame[8:108, 692:792],
-                      (2 * bar_width // 3, bar_height - not_visited_bar_height), (bar_width, bar_height), default_color,
-                      -1)
-
-    video_builder.draw_frame(lambda frame: render_bars(frame))
 
 
 def render_visitors(show_stats: bool):
-    video_builder = VideoBuilder("", video_name).set_width(video_width).set_height(video_height)
-
-    visitors_file = get_most_recent_csv('../../output/visitors/')
+    visitors_file = '../../output/visitors/visitors_05_04_2024_00_06_17_5.0_300_5.0.csv'
     data = pd.read_csv(visitors_file)
 
-    visitors_stats_file = get_most_recent_csv('../../output/visitors/', 'rates')
+    visitors_stats_file = '../../output/visitors/visitors_05_04_2024_00_06_17_5.0_300_5.0_rates.csv'
     stats = pd.read_csv(visitors_stats_file)
+
+    video_builder = VideoBuilder("", f"{data['n'].iloc[0]}_{data['l'].iloc[0]}_5.0_pbc_viz.mp4").set_width(video_width).set_height(video_height)
 
     timesteps = data['time'].unique()
     for timestep in timesteps:

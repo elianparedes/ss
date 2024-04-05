@@ -55,14 +55,16 @@ public class VisitorsTimeEthaMain {
         double ethaMax = handler.getDoubleArgument("--etha-max");
 
         double maxI = 5;
-        while (etha < ethaMax) {
+        while (etha <= ethaMax) {
             offLaticeParameters.etha = etha;
-            offLaticeParameters.particles = OffLaticeUtils.initializeParticles(offLaticeParameters);
+            offLaticeParameters.hasPeriodicBoundaryConditions = true;
             System.out.println(etha);
             List<EventsQueue> simQueues = new ArrayList<>();
 
             double i = 0;
             while (i < maxI) {
+                offLaticeParameters.particles = OffLaticeUtils.initializeParticles(offLaticeParameters);
+
                 OffLatice offLatice = new OffLatice();
                 Simulation<OffLaticeParameters> simOffLatice = new Simulation<>(offLatice);
 
@@ -73,10 +75,8 @@ public class VisitorsTimeEthaMain {
                 i++;
             }
 
-
-            OffLatticeVisitorsMaxRateCsvWorker visitorsMaxRateCsvWorker = new OffLatticeVisitorsMaxRateCsvWorker(handler.getArgument("-O") + ".csv", new OffLaticeParameters(offLaticeParameters), visitingAreaRadius, 0.2);
-            Thread visitorsMaxRateCsv = new Thread(new MultiQueueWorkerHandler(visitorsMaxRateCsvWorker, simQueues));
-            visitorsMaxRateCsv.start();
+            OffLatticeVisitorsMaxRateCsvWorker visitorsMaxRateCsvWorker = new OffLatticeVisitorsMaxRateCsvWorker(handler.getArgument("-O") + ".csv", new OffLaticeParameters(offLaticeParameters), visitingAreaRadius, 0.6);
+            new MultiQueueWorkerHandler(visitorsMaxRateCsvWorker, simQueues).run();
 
             etha += ethaStep;
         }

@@ -1,6 +1,6 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 directorio = '../../output/va_rho/'
 df = pd.read_csv(directorio+'va_rho_20.0_2.0.csv', dtype=str)

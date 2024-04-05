@@ -1,6 +1,7 @@
+import os
+
 import matplotlib.pyplot as plt
 import pandas as pd
-import os
 
 path_to_csv_folder = '../../output/va_time_particles/'
 csv_files = [file for file in os.listdir(path_to_csv_folder) if file.endswith('.csv')]

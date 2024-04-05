@@ -19,7 +19,7 @@ class VideoBuilder:
         self.frames: ndarray = ndarray([])
         self.out = cv2.VideoWriter(
             os.path.join(output_path, name),
-            cv2.VideoWriter.fourcc(*'mp4v'),
+            cv2.VideoWriter.fourcc(*'h264'),
             self.fps,
             (self.width, self.height)
         )

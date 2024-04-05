@@ -113,23 +113,37 @@ simulation)
   if [ "$variant" = "" ]; then
     echo "[INFO] Running simulation..."
     mvn -q exec:java@default
+
   elif [ "$variant" = "va-etha" ]; then
-    echo "[INFO] Running simulation with VA versus etha..."
+    echo "[INFO] Running simulation with va versus etha..."
     mvn -q exec:java@va-etha -Dexec.args="--etha-step=$etha_step --etha-start=$etha_start --etha-max=$etha_max --time-start=$time_start --time-end=$time_end"
+
   elif [ "$variant" = "va-time" ]; then
-    echo "[INFO] Running simulation with VA versus time..."
+    echo "[INFO] Running simulation with va versus time..."
     mvn -q exec:java@va-time -Dexec.args="--etha-step=$etha_step --etha-start=$etha_start --etha-max=$etha_max"
-  elif [ "$variant" = "visitors" ]; then
-    echo "[INFO] Running simulation with visitors variant..."
-    mvn -q exec:java@visitors -Dexec.args="--area-radius=$area_radius --conditions=$conditions"
+
   elif [ "$variant" = "va-rho" ]; then
     echo "[INFO] Running simulation with visitors variant..."
     mvn -q exec:java@va-rho -Dexec.args="--particles-start=$particles_start --particles-max=$particles_max --particles-step=$particles_step --time-start=$time_start --time-end=$time_end"
+
+  elif
+    [ "$variant" = "va-time-particles" ]
+  then
+    echo "[INFO] Running simulation with visitors variant..."
+    mvn -q exec:java@va-rho -Dexec.args="--particles-start=$particles_start --particles-max=$particles_max --particles-step=$particles_step"
+
+  elif
+    [ "$variant" = "visitors" ]
+  then
+    echo "[INFO] Running simulation with visitors variant..."
+    mvn -q exec:java@visitors -Dexec.args="--area-radius=$area_radius --conditions=$conditions"
+
+  elif
+    [ "$variant" = "visitors" ]
+  then
+    echo "[INFO] Running simulation with visitors time versus etha variant..."
+    mvn exec:java@visitors-time-etha -Dexec.args="--area-radius=$area_radius --conditions=$conditions --etha-step=$etha_step --etha-start=$etha_start --etha-max=$etha_max"
   fi
-  elif [ "$variant" = "va-time-particles" ]; then
-      echo "[INFO] Running simulation with visitors variant..."
-      mvn -q exec:java@va-rho -Dexec.args="--particles-start=$particles_start --particles-max=$particles_max --particles-step=$particles_step"
-    fi
 
   ;;
 
