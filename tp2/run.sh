@@ -157,18 +157,18 @@ simulation)
     mvn -q exec:java@va-rho -Dexec.args="--particles-start=$particles_start --particles-max=$particles_max --particles-step=$particles_step --time-start=$time_start --time-end=$time_end"
 
   elif [ "$variant" = "va-time-particles" ]; then
-    echo "[INFO] Running simulation with visitors variant..."
+    echo "[INFO] Running simulation with va time variant..."
     mvn -q exec:java@va-rho -Dexec.args="--particles-start=$particles_start --particles-max=$particles_max --particles-step=$particles_step"
 
   elif [ "$variant" = "visitors" ]; then
     echo "[INFO] Running simulation with visitors variant..."
     mvn -q exec:java@visitors -Dexec.args="--area-radius=$area_radius --conditions=$conditions"
 
-  elif [ "$variant" = "visitors" ]; then
+  elif [ "$variant" = "visitors-time-etha" ]; then
     echo "[INFO] Running simulation with visitors time versus etha variant..."
     mvn exec:java@visitors-time-etha -Dexec.args="--area-radius=$area_radius --conditions=$conditions --etha-step=$etha_step --etha-start=$etha_start --etha-max=$etha_max"
 
-  elif [ "$variant" = "visitors" ]; then
+  elif [ "$variant" = "visitors-slope-etha" ]; then
     echo "[INFO] Running simulation with visitors slope versus etha variant..."
     mvn exec:java@visitors-slope-etha -Dexec.args="--area-radius=$area_radius --conditions=$conditions --etha-step=$etha_step --etha-start=$etha_start --etha-max=$etha_max"
   fi
