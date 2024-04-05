@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('../../output/debugging.csv', dtype=str)
+directorio = '../../output/va_rho/'
+df = pd.read_csv(directorio+'va_rho_20.0_2.0.csv', dtype=str)
 
 df['etha'] = pd.to_numeric(df['etha'], errors='coerce')
 df['va'] = pd.to_numeric(df['va'], errors='coerce')
@@ -26,7 +27,7 @@ plt.figure(figsize=(8, 5))
 plt.errorbar(df_filtered['rho'], df_filtered['va'], yerr=df_filtered['stdev'], fmt='o', capsize=5, label='Va')
 plt.xlabel('Rho', fontsize=11)
 plt.ylabel('Va', fontsize=11)
-plt.title(f'Va vs Rho (Etha = {etha_value}, L = {l_value})', fontsize=12)
 plt.grid(True)
-plt.legend()
+
+plt.savefig(directorio + 'va-rho-eta.png')
 plt.show()

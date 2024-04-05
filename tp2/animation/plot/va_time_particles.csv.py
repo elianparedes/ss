@@ -8,7 +8,6 @@ csv_files = [file for file in os.listdir(path_to_csv_folder) if file.endswith('.
 etha_value = None
 l_value = None
 
-ps = [1.0,3.0,5.0,7.0,9.0]
 
 plt.figure(figsize=(25, 10))
 
@@ -22,18 +21,18 @@ for csv_file in csv_files:
     n_value = data['n'].iloc[0]
     p_value = n_value / (l_value ** 2)
 
-    if p_value in ps:
-        plt.plot(data['time'], data['va'], label=f'P = {p_value:.2f}')
+    plt.plot(data['time'], data['va'], label=f'Rho = {p_value:.2f}')
 
 plt.xlabel('Tiempo (s)', fontsize=22, fontname='Times New Roman')
 plt.ylabel('Va', fontsize=22, fontname='Times New Roman')
 plt.title(f'Etha = {etha_value}, L = {l_value}', fontsize=22, fontname='Times New Roman', loc='right')
 
-plt.legend(title='P:', fontsize=22, title_fontsize=22, loc='center left', bbox_to_anchor=(1, 0.5))
+plt.legend(title='Rho:', fontsize=22, title_fontsize=22, loc='center left', bbox_to_anchor=(1, 0.5))
 
 plt.xticks(fontsize=22, fontname='Times New Roman')
 plt.yticks(fontsize=22, fontname='Times New Roman')
 
 plt.tight_layout()
+plt.savefig(path_to_csv_folder + 'va-time-particles.png')
 
 plt.show()

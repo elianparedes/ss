@@ -55,10 +55,6 @@ public class VaTimeMain {
             simOffLatice.run(aux);
             EventsQueue queue = simOffLatice.getEventQueue(OffLaticeState.class);
 
-            OffLaticeCsvWorker csvWorker = new OffLaticeCsvWorker(handler.getArgument("-O") + ".csv", offLaticeParameters);
-            Thread thread1 = new Thread(new QueueWorkerHandler(csvWorker, queue));
-            thread1.start();
-
             OffLaticeVaTimeCsvWorker timeCsvWorker = new OffLaticeVaTimeCsvWorker(handler.getArgument("-O") + '_' + offLaticeParameters.cimParameters.l + '_' + offLaticeParameters.cimParameters.n + '_' + aux.etha + ".csv", aux);
             Thread thread = new Thread(new QueueWorkerHandler(timeCsvWorker, queue));
             thread.start();

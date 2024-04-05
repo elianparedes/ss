@@ -1,7 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('../../output/va_etha/va_etha_50.0_10000.csv', dtype=str)
+path_to_csv_folder = '../../output/va-etha/'
+file_name = 'va-etha_04_04_2024_03_17_34_31.6_4000.csv'
+df = pd.read_csv(path_to_csv_folder + file_name, dtype=str)
 
 df['etha'] = pd.to_numeric(df['etha'], errors='coerce')
 df['va'] = pd.to_numeric(df['va'], errors='coerce')
@@ -22,4 +24,5 @@ plt.subplots_adjust(right=0.7)
 
 plt.text(1.05, 0.5, f'N = {n_value}\nL = {l_value}', transform=plt.gca().transAxes, fontsize=11, fontname='Times New Roman')
 
+plt.savefig(path_to_csv_folder + 'va-etha' + '-' + str(l_value) + '-' + str(n_value) + '.png')
 plt.show()

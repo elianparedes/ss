@@ -35,8 +35,8 @@ public class VaEthaMain {
                 .addArgument("--etha-step", ArgumentHandler::validateDouble, true, "0.1")
                 .addArgument("--etha-start", ArgumentHandler::validateDouble, true, "0")
                 .addArgument("--etha-max", ArgumentHandler::validateDouble, true, "5")
-                .addArgument("--time-start", ArgumentHandler::validateInt, true, "500")
-                .addArgument("--time-end", ArgumentHandler::validateInt, true, "900");
+                .addArgument("--time-start", ArgumentHandler::validateInt, true, "2500")
+                .addArgument("--time-end", ArgumentHandler::validateInt, true, "5000");
         handler.parse(args);
 
         OffLaticeParameters offLaticeParameters = configReader.readConfig(handler.getArgument("-C"), OffLaticeParameters.class);

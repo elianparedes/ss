@@ -5,7 +5,7 @@
         "cim": {
             "type": "object",
             "properties": {
-                "l": { "type": "integer" },
+                "l": { "type": "number" },
                 "m": { "type": "integer" },
                 "n": { "type": "integer" },
                 "rc": { "type": "integer" },
