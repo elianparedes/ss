@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsParameters> {
 
@@ -57,8 +59,9 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
         return -1 * (dotProductDvDr + Math.sqrt(d)) / (dotProductDvDv);
     }
 
-    private double getMinCollisionTime(Map<MovableSurfaceEntity<Particle>, Map<MovableSurfaceEntity<Particle>, Double>> collisions) {
+    private CollisionState getMinCollisionTime(Map<MovableSurfaceEntity<Particle>, Map<MovableSurfaceEntity<Particle>, Double>> collisions) {
         double minCollisionTime = Double.MAX_VALUE;
+        CollisionState collisionState = new CollisionState(minCollisionTime,null,null);
 
         for (Map.Entry<MovableSurfaceEntity<Particle>, Map<MovableSurfaceEntity<Particle>, Double>> entry : collisions.entrySet()) {
             Map<MovableSurfaceEntity<Particle>, Double> innerMap = entry.getValue();
@@ -68,63 +71,105 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
 
                 if (collisionTime < minCollisionTime) {
                     minCollisionTime = collisionTime;
+                    collisionState.p1 = entry.getKey();
+                    collisionState.p2 = innerEntry.getKey();
+                    collisionState.time = minCollisionTime;
                 }
             }
         }
 
-        return minCollisionTime;
+        return collisionState;
     }
 
-    private List<MovableSurfaceEntity<Particle>> getStateAt(final double t, final List<MovableSurfaceEntity<Particle>> initialState) {
+    private List<MovableSurfaceEntity<Particle>> evolveState(final double t, final List<MovableSurfaceEntity<Particle>> initialState) {
         List<MovableSurfaceEntity<Particle>> newState = new ArrayList<>();
 
         for (MovableSurfaceEntity<Particle> particleInitialState : initialState) {
-            double x = particleInitialState.getX();
-            double y = particleInitialState.getY();
-
-            double xt = particleInitialState.getXSpeed() * t;
-            double yt = particleInitialState.getYSpeed() * t;
-
-            double newX = x + xt;
-            double newY = y + yt;
-
-            MovableSurfaceEntity<Particle> newParticleState = new MovableSurfaceEntity<>(
-                    particleInitialState.getEntity(),
-                    newX, newY,
-                    particleInitialState.getSpeed(), particleInitialState.getAngle()
-            );
-
-            newState.add(newParticleState);
+            newState.add(MovableSurfaceEntity.uniformLinearMotion(particleInitialState,t));
         }
 
         return newState;
     }
 
-    private List<MovableSurfaceEntity<Particle>> getStateAfterCollision(final List<MovableSurfaceEntity<Particle>> stateWhileCollision) {
-        // TODO: Implement
+    private void calculateCollisionsBetweenParticles(Map<MovableSurfaceEntity<Particle>, Map<MovableSurfaceEntity<Particle>, Double>> collisions,
+                                               List<MovableSurfaceEntity<Particle>> toUpdateParticles,List<MovableSurfaceEntity<Particle>> allParticles,
+                                                     double currentTime){
 
-        return new ArrayList<>();
+        for (MovableSurfaceEntity<Particle> current: toUpdateParticles) {
+            for (MovableSurfaceEntity<Particle> other:allParticles) {
+                Map<MovableSurfaceEntity<Particle>, Double> times = collisions.getOrDefault(current, new HashMap<>());
+                times.put(current, getCollisionTime(current, other) + currentTime);
+                collisions.putIfAbsent(current, times);
+            }
+        }
     }
 
     @Override
     public void calculate(MolecularDynamicsParameters params, EventListener eventListener) {
-        double time = 0;
-        List<MovableSurfaceEntity<Particle>> state = params.particles;
-
         Map<MovableSurfaceEntity<Particle>, Map<MovableSurfaceEntity<Particle>, Double>> collisions = new HashMap<>();
 
-        for (MovableSurfaceEntity<Particle> current : params.particles) {
-            for (MovableSurfaceEntity<Particle> other : params.particles) {
-                Map<MovableSurfaceEntity<Particle>, Double> times = collisions.getOrDefault(current, new HashMap<>());
-                times.put(current, getCollisionTime(current, other));
-                collisions.putIfAbsent(current, times);
-            }
-        }
+        //Current time is added to updated collisions
+        double currentTime = 0;
+
+        //Get all collisions between particles
+        calculateCollisionsBetweenParticles(collisions,params.particles,params.particles,currentTime);
+
+        //Get all collisions between particles and fixed objects
+        //TODO
 
         // TODO: Maybe wrap all of this behaviour inside a Box class?
-        double minCollisionTime = getMinCollisionTime(collisions);
-        List<MovableSurfaceEntity<Particle>> stateWhileCollision = getStateAt(minCollisionTime, params.particles);
-        List<MovableSurfaceEntity<Particle>> stateAfterCollision = getStateAfterCollision(stateWhileCollision);
 
+
+        //Get all minTime for each collision case
+        //TODO
+        CollisionState collisionState = getMinCollisionTime(collisions);
+
+        //Take the lower time of all collision cases
+        //TODO
+        double time = collisionState.time;
+        currentTime = time;
+
+        List<MovableSurfaceEntity<Particle>> stateBefore = evolveState(time, params.particles);
+
+        //TODO: Maybe emit an event with the stateBefore
+
+        //Update involved particles speeds
+        MovableSurfaceEntity<Particle> p1After = MovableSurfaceEntity.collisionMotion(collisionState.p1,collisionState.p2);
+        //The order change
+        MovableSurfaceEntity<Particle> p2After = MovableSurfaceEntity.collisionMotion(collisionState.p2,collisionState.p1);
+
+        //To keep immutability, we create new list for new state
+        List<MovableSurfaceEntity<Particle>> stateAfter = stateBefore.stream()
+                .flatMap(particle -> {
+                    if (particle.getEntity().getId().equals(p1After.getEntity().getId()) ) {
+                        return Stream.of(p1After);
+                    } else if (particle.getEntity().getId().equals(p2After.getEntity().getId())) {
+                        return Stream.of(p2After);
+                    } else {
+                        return Stream.of(particle);
+                    }
+                })
+                .collect(Collectors.toList());
+
+
+        //Re-calculate collisions between all particles and the recently changed particles.
+
+        List<MovableSurfaceEntity<Particle>> toUpdateParticles = new ArrayList<>();
+        toUpdateParticles.add(p1After);
+        toUpdateParticles.add(p2After);
+
+        calculateCollisionsBetweenParticles(collisions,toUpdateParticles,params.particles,currentTime);
+    }
+
+    private static class CollisionState{
+        private  double time;
+        private  MovableSurfaceEntity<Particle> p1;
+        private MovableSurfaceEntity<Particle> p2;
+
+        public CollisionState(double time, MovableSurfaceEntity<Particle> p1, MovableSurfaceEntity<Particle> p2) {
+            this.time = time;
+            this.p1 = p1;
+            this.p2 = p2;
+        }
     }
 }
