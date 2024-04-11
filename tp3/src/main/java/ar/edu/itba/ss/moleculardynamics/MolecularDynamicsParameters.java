@@ -8,8 +8,8 @@ import java.util.List;
 
 public class MolecularDynamicsParameters extends AlgorithmParameters {
 
-    public final List<MovableSurfaceEntity<Particle>> particles;
-    public final int maxIterations;
+    public List<MovableSurfaceEntity<Particle>> particles;
+    public  int maxIterations;
 
     public MolecularDynamicsParameters(List<MovableSurfaceEntity<Particle>> particles, int maxIterations) {
         this.particles = particles;
