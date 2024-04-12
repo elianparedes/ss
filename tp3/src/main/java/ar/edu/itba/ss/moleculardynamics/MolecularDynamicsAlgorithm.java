@@ -1,8 +1,11 @@
 package ar.edu.itba.ss.moleculardynamics;
 
+import ar.edu.itba.ss.moleculardynamics.strategies.CollisionStrategiesHandler;
 import ar.edu.itba.ss.simulation.algorithms.Algorithm;
 import ar.edu.itba.ss.simulation.events.EventListener;
+import ar.edu.itba.ss.utils.entity.Entity;
 import ar.edu.itba.ss.utils.entity.MovableSurfaceEntity;
+import ar.edu.itba.ss.utils.entity.SurfaceEntity;
 import ar.edu.itba.ss.utils.models.Particle;
 
 import java.util.ArrayList;
@@ -104,9 +107,28 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
         }
     }
 
+    private void calculateCollisionsWithFixedObjects(Map<MovableSurfaceEntity<Particle>,Map<SurfaceEntity<? extends Entity>, Double>> collisions,
+                                                     List<MovableSurfaceEntity<Particle>> toUpdateParticles, List<SurfaceEntity<? extends Entity>> fixedObjects,
+                                                     double currentTime){
+        CollisionStrategiesHandler handler = new CollisionStrategiesHandler();
+
+        for (MovableSurfaceEntity<Particle> current: toUpdateParticles) {
+            for (SurfaceEntity<? extends Entity> fixedObject: fixedObjects) {
+                Map<SurfaceEntity<? extends Entity>, Double> times = collisions.getOrDefault(current, new HashMap<>());
+                times.put(fixedObject, handler.handle(current,fixedObject) + currentTime);
+                collisions.putIfAbsent(current, times);
+            }
+        }
+    }
+
     @Override
     public void calculate(MolecularDynamicsParameters params, EventListener eventListener) {
+
+        //Between Particles
         Map<MovableSurfaceEntity<Particle>, Map<MovableSurfaceEntity<Particle>, Double>> collisions = new HashMap<>();
+
+        //Between particles and fixed objects
+        Map<MovableSurfaceEntity<Particle>,Map<SurfaceEntity<? extends Entity>, Double>> collisionsWithFixed = new HashMap<>();
 
         //Current time is added to updated collisions
         double currentTime = 0;
@@ -123,8 +145,6 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
 
         //Get all minTime for each collision case
         //TODO
-
-        collisions.forEach((key, value) -> System.out.println(value.values()));
 
         while (currentTime < params.maxIterations) {
             CollisionState collisionState = getMinCollisionTime(collisions);
