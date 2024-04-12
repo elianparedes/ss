@@ -20,4 +20,9 @@ public class Border extends Entity {
     public Point getP2() {
         return p2;
     }
+
+    @Override
+    public String toString() {
+        return String.format("{ p1: %s, p2: %s }", p1, p2);
+    }
 }

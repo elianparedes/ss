@@ -17,8 +17,8 @@ public class CollisionStrategiesHandler {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Entity> Double handle(MovableSurfaceEntity<Particle> particle, SurfaceEntity<T> entity) {
-        CollisionStrategy<T> strategy = (CollisionStrategy<T>) strategies.get(entity.getClass());
+    public <T extends Entity> Double handle(MovableSurfaceEntity<Particle> particle, SurfaceEntity<T> entity, Class<? extends Entity> tClass) {
+        CollisionStrategy<T> strategy = (CollisionStrategy<T>) strategies.get(tClass);
         if (strategy != null) {
             return strategy.handleCollision(particle, entity);
         } else {
