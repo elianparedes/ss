@@ -153,25 +153,23 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
 
         //Get all collisions between particles
         calculateCollisionsBetweenParticles(collisions, params.particles, params.particles, currentTime);
-        List<MovableSurfaceEntity<Particle>> newState = params.particles;
-
-        System.out.println(newState);
 
         //Get all collisions between particles and fixed objects
         calculateCollisionsWithFixedObjects(collisionsWithFixed, params.particles, params.fixedObjects, currentTime);
 
-        double previousTime;
+        List<MovableSurfaceEntity<Particle>> newState = params.particles;
+
+        double previousTime = 0;
+
         while (currentTime < params.maxIterations) {
             CollisionState collisionState = getMinCollisionTime(collisions);
             CollisionWithFixedState collisionWithFixedState = getMinCollisionTimeWithFixed(collisionsWithFixed);
 
-            List<MovableSurfaceEntity<Particle>> toUpdateParticles = new ArrayList<>();
-            previousTime = currentTime;
             currentTime = Math.min(collisionState.time, collisionWithFixedState.time);
 
-            System.out.println(currentTime);
+            List<MovableSurfaceEntity<Particle>> toUpdateParticles = new ArrayList<>();
 
-            List<MovableSurfaceEntity<Particle>> stateBefore = evolveState(currentTime, newState);
+            List<MovableSurfaceEntity<Particle>> stateBefore = evolveState(currentTime-previousTime, newState);
 
             if (currentTime == collisionState.time) {
                 //TODO: Maybe emit an event with the stateBefore
@@ -281,6 +279,8 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
 
             calculateCollisionsBetweenParticles(collisions, toUpdateParticles, params.particles, currentTime);
             calculateCollisionsWithFixedObjects(collisionsWithFixed, toUpdateParticles, params.fixedObjects, currentTime);
+
+            previousTime = currentTime;
         }
     }
 
