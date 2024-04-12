@@ -28,30 +28,28 @@ public class MovableSurfaceEntity<T extends Entity> extends SurfaceEntity<T> {
         return new MovableSurfaceEntity<>(entity.getEntity(), newX, newY, entity.speed, entity.angle);
     }
 
-    public static MovableSurfaceEntity<Particle> collisionMotion(MovableSurfaceEntity<Particle> e1, MovableSurfaceEntity<Particle> e2) {
+    public static MovableSurfaceEntity<Particle> collisionMotion(MovableSurfaceEntity<Particle> e1, MovableSurfaceEntity<Particle> e2, double dotProductDvDr, double sigma, double dX, double dY) {
 
-        double sigma = e1.getEntity().getRadius() + e2.getEntity().getRadius();
-        double[] dR = new double[]{e2.getX() - e1.getX(), e2.getY() - e1.getY()};
-        double[] dV = new double[]{e2.getXSpeed() - e1.getXSpeed(), e2.getYSpeed() - e1.getYSpeed()};
 
-        double dotProductDvDr = dR[0] * dV[0] + dR[1] * dV[1];
+        if(dotProductDvDr >= 0)
+            throw new RuntimeException("Should not happend");
 
         //TODO: Be careful if both particles, in different calls, end up adding Jx and Jy instead of someone subtracting them.
         double J = (2 * e1.getEntity().getMass() * e2.getEntity().getMass() * (dotProductDvDr)) / (sigma * (e1.getEntity().getMass() + e2.getEntity().getMass()));
-        double Jx = (J * (e2.getX() - e1.getX())) / sigma;
-        double Jy = (J * (e2.getY() - e1.getY())) / sigma;
+        double Jx = (J * dX) / sigma;
+        double Jy = (J * dY) / sigma;
 
         double newXSpeed = e1.getXSpeed() + Jx / e1.getEntity().getMass();
         double newYSpeed = e1.getYSpeed() + Jy / e1.getEntity().getMass();
 
         double newSpeed = Math.sqrt(newXSpeed * newXSpeed + newYSpeed * newYSpeed);
-        double newAngle = Math.atan(newYSpeed / newXSpeed);
+        double newAngle = Math.atan2(newYSpeed,newXSpeed);
 
         return new MovableSurfaceEntity<>(e1.getEntity(), e1.getX(), e1.getY(), newSpeed, newAngle);
     }
 
     public static MovableSurfaceEntity<Particle> collisionWithFixed(MovableSurfaceEntity<Particle> p, SurfaceEntity<Border> fixed) {
-        double newAngle = Math.atan(-p.getXSpeed() / p.getYSpeed());
+        double newAngle = Math.atan2(-p.getXSpeed() , p.getYSpeed());
         return new MovableSurfaceEntity<>(p.getEntity(), p.getX(), p.getY(), p.getSpeed(), newAngle);
     }
 
@@ -84,12 +82,12 @@ public class MovableSurfaceEntity<T extends Entity> extends SurfaceEntity<T> {
     }
 
     public void setAngle(double speedX, double speedY) {
-        this.angle = Math.atan(speedY / speedX);
+        this.angle = Math.atan2(speedY , speedX);
     }
 
     @Override
     public String toString() {
-        return String.format("{ x: %.2f, y: %.2f, angle: %.2f, speed: %.2f, entity: %s }", this.getX(), this.getY(), this.angle,
+        return String.format("{ x: %.4f, y: %.4f, angle: %.4f, speed: %.4f, entity: %s }", this.getX(), this.getY(), this.angle,
                 this.speed, this.getEntity());
     }
 

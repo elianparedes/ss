@@ -19,23 +19,20 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
         List<MovableSurfaceEntity<Particle>> particles = new ArrayList<>();
 
         for (int i = 0; i < n; i++) {
-            double x = Math.random() * (l - 2 * radius) + radius;
-            double y = Math.random() * (l - 2 * radius) + radius;
-            double angle = Math.random() * Math.PI * 2;
-
+            double x, y;
             boolean notValid;
             do {
+                x = Math.random() * (l - 2 * radius) + radius;
+                y = Math.random() * (l - 2 * radius) + radius;
+
                 final double finalX = x;
                 final double finalY = y;
-                notValid = particles.stream().anyMatch(p -> Math.pow(finalX - p.getX(), 2) + Math.pow(finalY - p.getY(), 2) <= Math.pow(radius + p.getEntity().getRadius(), 2));
-
-                if (notValid) {
-                    x = Math.random() * (l - 2 * radius) + radius;
-                    y = Math.random() * (l - 2 * radius) + radius;
-                }
+                notValid = particles.stream().anyMatch(p ->
+                        Math.pow(finalX - p.getX(), 2) + Math.pow(finalY - p.getY(), 2) <= Math.pow(radius + p.getEntity().getRadius(), 2))
+                        || x - radius < 0 || x + radius > l || y - radius < 0 || y + radius > l;
             } while (notValid);
 
-            particles.add(new MovableSurfaceEntity<>(new Particle(radius, mass), x, y, speed, angle));
+            particles.add(new MovableSurfaceEntity<>(new Particle(radius, mass), x, y, speed, Math.random() * Math.PI * 2));
         }
 
         return particles;
@@ -119,9 +116,11 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
 
         for (MovableSurfaceEntity<Particle> current : toUpdateParticles) {
             for (MovableSurfaceEntity<Particle> other : allParticles) {
-                Map<MovableSurfaceEntity<Particle>, Double> times = collisions.getOrDefault(current, new HashMap<>());
-                times.put(other, getCollisionTime(current, other) + currentTime);
-                collisions.putIfAbsent(current, times);
+                if(!current.equals(other)) {
+                    Map<MovableSurfaceEntity<Particle>, Double> times = collisions.getOrDefault(current, new HashMap<>());
+                    times.put(other, getCollisionTime(current, other) + currentTime);
+                    collisions.putIfAbsent(current, times);
+                }
             }
         }
     }
@@ -156,6 +155,8 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
         calculateCollisionsBetweenParticles(collisions, params.particles, params.particles, currentTime);
         List<MovableSurfaceEntity<Particle>> newState = params.particles;
 
+        System.out.println(newState);
+
         //Get all collisions between particles and fixed objects
         calculateCollisionsWithFixedObjects(collisionsWithFixed, params.particles, params.fixedObjects, currentTime);
 
@@ -169,19 +170,57 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
             currentTime = Math.min(collisionState.time, collisionWithFixedState.time);
 
             System.out.println(currentTime);
-            if (currentTime == previousTime) {
-                throw new RuntimeException();
-            }
 
             List<MovableSurfaceEntity<Particle>> stateBefore = evolveState(currentTime, newState);
 
             if (currentTime == collisionState.time) {
                 //TODO: Maybe emit an event with the stateBefore
 
+                MovableSurfaceEntity<Particle> p1Before = null;
+                for (MovableSurfaceEntity<Particle> p : stateBefore) {
+                    if (p.getEntity().getId().equals(collisionState.p1.getEntity().getId())) {
+                        p1Before = p;
+                        break;  // Detiene el bucle una vez que se encuentra el elemento
+                    }
+                }
+
+                if (p1Before != null) {
+                    // Elemento encontrado
+                } else {
+                    // Elemento no encontrado
+                }
+
+                MovableSurfaceEntity<Particle> p2Before = null;
+                for (MovableSurfaceEntity<Particle> p : stateBefore) {
+                    if (p.getEntity().getId().equals(collisionState.p2.getEntity().getId())) {
+                        p2Before = p;
+                        break;  // Detiene el bucle una vez que se encuentra el elemento
+                    }
+                }
+
+                if (p2Before != null) {
+                    // Elemento encontrado
+                } else {
+                    // Elemento no encontrado
+                }
+
+                double sigma = collisionState.p1.getEntity().getRadius() + collisionState.p1.getEntity().getRadius();
+
+                double dX = collisionState.p2.getX() - collisionState.p1.getX();
+                double dY = collisionState.p2.getY() - collisionState.p1.getY();
+
+                double[] dR = new double[]{dX,dY};
+                double[] dV = new double[]{collisionState.p2.getXSpeed() - collisionState.p1.getXSpeed(), collisionState.p2.getYSpeed() - collisionState.p1.getYSpeed()};
+
+                double dotProductDvDr = dR[0] * dV[0] + dR[1] * dV[1];
+
+                System.out.println("collStateP1: " + collisionState.p1);
+                System.out.println("collStateP2: " + collisionState.p2);
+
                 //Update involved particles speeds
-                MovableSurfaceEntity<Particle> p1After = MovableSurfaceEntity.collisionMotion(collisionState.p1, collisionState.p2);
+                MovableSurfaceEntity<Particle> p1After = MovableSurfaceEntity.collisionMotion(p1Before, p2Before , dotProductDvDr,sigma,dX,dY);
                 //The order change
-                MovableSurfaceEntity<Particle> p2After = MovableSurfaceEntity.collisionMotion(collisionState.p2, collisionState.p1);
+                MovableSurfaceEntity<Particle> p2After = MovableSurfaceEntity.collisionMotion(p2Before, p1Before , dotProductDvDr,sigma,-1*dX,-1*dY);
 
                 collisions.remove(p1After);
                 collisions.remove(p2After);
@@ -192,9 +231,36 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
                 toUpdateParticles.add(p1After);
                 toUpdateParticles.add(p2After);
 
-            } else if (currentTime == collisionWithFixedState.time) {
-                MovableSurfaceEntity<Particle> pAfter = MovableSurfaceEntity.collisionWithFixed(collisionWithFixedState.p, collisionWithFixedState.fixed);
+                System.out.println("p1after: " + p1After);
+                System.out.println("p2After: " + p2After);
 
+            } else if (currentTime == collisionWithFixedState.time) {
+                MovableSurfaceEntity<Particle> pBefore = null;
+
+                for (MovableSurfaceEntity<Particle> p: newState) {
+                    if(p.getEntity().getId().equals(collisionWithFixedState.p.getEntity().getId())){
+                        System.out.println(p);
+                        break;
+                    }
+                }
+
+                System.out.println("stateFixed: "+ collisionWithFixedState.p);
+                for (MovableSurfaceEntity<Particle> p : stateBefore) {
+                    if (p.getEntity().getId().equals(collisionWithFixedState.p.getEntity().getId())) {
+                        pBefore = p;
+                        break;  // Detiene el bucle una vez que se encuentra el elemento
+                    }
+                }
+
+                if (pBefore != null) {
+                    // Elemento encontrado
+                } else {
+                    // Elemento no encontrado
+                }
+                System.out.println("pBefore: " + pBefore);
+                MovableSurfaceEntity<Particle> pAfter = MovableSurfaceEntity.collisionWithFixed(pBefore, collisionWithFixedState.fixed);
+
+                System.out.println("pAfter: " + pAfter);
                 collisionsWithFixed.remove(pAfter);
                 collisions.remove(pAfter);
 
@@ -202,15 +268,14 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
             }
 
             newState = stateBefore.stream()
-                    .flatMap(particle -> {
-                        if (toUpdateParticles.contains(particle)) {
-                            Optional<MovableSurfaceEntity<Particle>> matchingParticle = toUpdateParticles.stream()
-                                    .filter(p -> Objects.equals(p.getEntity().getId(), particle.getEntity().getId()))
-                                    .findFirst();
-                            return matchingParticle.stream(); // Return the matching element if present
-                        } else {
-                            return Stream.empty(); // Return an empty stream for elements that don't match
-                        }
+                    .map(particle -> {
+                        // Buscar una partícula correspondiente en toUpdateParticles
+                        Optional<MovableSurfaceEntity<Particle>> matchingParticle = toUpdateParticles.stream()
+                                .filter(p -> Objects.equals(p.getEntity().getId(), particle.getEntity().getId()))
+                                .findFirst();
+
+                        // Si se encuentra, devolver la partícula actualizada; de lo contrario, devolver la original
+                        return matchingParticle.orElse(particle);
                     })
                     .collect(Collectors.toList());
 
