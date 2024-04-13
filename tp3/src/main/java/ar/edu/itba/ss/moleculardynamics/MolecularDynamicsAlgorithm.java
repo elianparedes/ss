@@ -2,6 +2,7 @@ package ar.edu.itba.ss.moleculardynamics;
 
 import ar.edu.itba.ss.moleculardynamics.strategies.CollisionStrategiesHandler;
 import ar.edu.itba.ss.simulation.algorithms.Algorithm;
+import ar.edu.itba.ss.simulation.events.Event;
 import ar.edu.itba.ss.simulation.events.EventListener;
 import ar.edu.itba.ss.utils.collision.Collision;
 import ar.edu.itba.ss.utils.entity.MovableSurfaceEntity;
@@ -27,8 +28,7 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
                 final double finalX = x;
                 final double finalY = y;
                 notValid = particles.stream().anyMatch(p ->
-                        Math.pow(finalX - p.getX(), 2) + Math.pow(finalY - p.getY(), 2) <= Math.pow(radius + p.getEntity().getRadius(), 2))
-                        || x - radius < 0 || x + radius > l || y - radius < 0 || y + radius > l;
+                        Math.pow(finalX - p.getX(), 2) + Math.pow(finalY - p.getY(), 2) <= Math.pow(radius + p.getEntity().getRadius(), 2));
             } while (notValid);
 
             particles.add(new MovableSurfaceEntity<>(new Particle(radius, mass), x, y, speed, Math.random() * Math.PI * 2));
@@ -40,8 +40,17 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
     private List<MovableSurfaceEntity<Particle>> evolveState(final double t, final List<MovableSurfaceEntity<Particle>> initialState) {
         List<MovableSurfaceEntity<Particle>> newState = new ArrayList<>();
 
-        for (MovableSurfaceEntity<Particle> particleInitialState : initialState) {
-            newState.add(MovableSurfaceEntity.uniformLinearMotion(particleInitialState, t));
+        for (MovableSurfaceEntity<Particle> particle : initialState) {
+            double x = particle.getX();
+            double y = particle.getY();
+
+            double vx = particle.getXSpeed();
+            double vy = particle.getYSpeed();
+
+            x = x + vx * t;
+            y = y + vy * t;
+
+            newState.add(new MovableSurfaceEntity<>(particle.getEntity(), x, y, particle.getSpeed(), particle.getAngle()));
         }
 
         return newState;
@@ -81,22 +90,24 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
     @Override
     public void calculate(MolecularDynamicsParameters params, EventListener eventListener) {
         List<MovableSurfaceEntity<Particle>> currentState = params.particles;
+        Queue<Collision> imminentCollisions = predictImminentCollisions(currentState, params.fixedObjects);
 
-        double previousTime = 0;
-        double currentTime = 0;
-        while (currentTime < params.maxIterations) {
-            Queue<Collision> imminentCollisions = predictImminentCollisions(currentState, params.fixedObjects);
-
+        int i = 0;
+        double t = 0;
+        while (i < params.maxIterations) {
             if (!imminentCollisions.isEmpty()) {
                 Collision imminentCollision = imminentCollisions.poll();
 
-                currentTime = imminentCollision.getTime();
-                List<MovableSurfaceEntity<Particle>> stateBeforeCollision = evolveState(currentTime - previousTime, currentState);
-                previousTime = currentTime;
+                double dt = imminentCollision.getTime();
+                List<MovableSurfaceEntity<Particle>> stateBeforeCollision = evolveState(dt, currentState);
+                t += dt;
 
                 List<MovableSurfaceEntity<Particle>> collidingParticles = imminentCollision.computeCollision();
                 currentState = collideState(stateBeforeCollision, collidingParticles);
-                
+
+                imminentCollisions = predictImminentCollisions(currentState, params.fixedObjects);
+                eventListener.emit(new Event<>(new MolecularDynamicsState(currentState, t)));
+                i++;
             }
         }
     }

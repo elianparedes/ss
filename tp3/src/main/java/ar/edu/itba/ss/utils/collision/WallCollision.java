@@ -23,8 +23,21 @@ public class WallCollision extends Collision {
 
         if (this.particlesInvolved.size() == 1) {
             MovableSurfaceEntity<Particle> p = this.particlesInvolved.get(0);
+            double vx = p.getXSpeed();
+            double vy = p.getYSpeed();
 
-            collidingParticle.add(MovableSurfaceEntity.collisionWithFixed(p, this.border));
+            Border border = this.border.getEntity();
+
+            if (border.getP1().getX() == border.getP2().getX()) {
+                // Vertical Wall
+                vx = -vx;
+            } else if (border.getP1().getY() == border.getP2().getY()) {
+                // Horizontal Wall
+                vy = -vy;
+            }
+
+            double newAngle = Math.atan2(vy, vx);
+            collidingParticle.add(new MovableSurfaceEntity<>(p.getEntity(), p.getX(), p.getY(), p.getSpeed(), newAngle));
         }
 
         return collidingParticle;
