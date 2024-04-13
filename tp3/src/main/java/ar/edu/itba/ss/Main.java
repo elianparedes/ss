@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Main {
 
-    private static final int N = 50;
+    private static final int N = 200;
     private static final double L = 0.1;
 
     private static final double RP = 0.001;
@@ -26,15 +26,15 @@ public class Main {
 
     public static void main(String[] args) {
 
+        List<MovableSurfaceEntity<Particle>> particles = MolecularDynamicsAlgorithm.generateRandomParticles(
+                L, N, RP, SPEED, MASS
+        );
+
         List<SurfaceEntity<Border>> fixedObjects = new ArrayList<>();
         fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, 0), new Point(0, L)), 0, 0));
         fixedObjects.add(new SurfaceEntity<>(new Border(new Point(L, 0), new Point(L, L)), L, L / 2));
         fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, 0), new Point(L, 0)), L / 2, 0));
         fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, L), new Point(L, L)), L / 2, L));
-
-        List<MovableSurfaceEntity<Particle>> particles = MolecularDynamicsAlgorithm.generateRandomParticles(
-                L, N, RP, SPEED, MASS
-        );
 
         MolecularDynamicsParameters params = new MolecularDynamicsParameters(
                 particles,
