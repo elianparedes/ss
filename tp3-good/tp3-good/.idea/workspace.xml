@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b470b1f0-4863-42a5-b5b0-48624be68516" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../tp3/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/input/ArgumentHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/input/JsonConfigReader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/moleculardynamics/MolecularDynamicsAlgorithm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/moleculardynamics/MolecularDynamicsParameters.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/moleculardynamics/strategies/BorderCollisionStrategy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/moleculardynamics/strategies/CollisionStrategiesHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/moleculardynamics/strategies/CollisionStrategy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/output/CSVBuilder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/Simulation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/algorithms/Algorithm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/algorithms/AlgorithmParameters.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/events/Event.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/events/EventListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/events/EventProcessor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/events/EventsQueue.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/worker/MultiQueueWorker.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/worker/MultiQueueWorkerHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/worker/QueueWorker.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/simulation/worker/QueueWorkerHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/utils/entity/Entity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/utils/entity/MovableSurfaceEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/utils/entity/SurfaceEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/utils/geometry/Cell.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/utils/geometry/Grid.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/utils/geometry/Point.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/utils/models/Border.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/main/java/ar/edu/itba/ss/utils/models/Particle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tp3/src/test/java/ar/edu/itba/ss/moleculardynamics/TestMolecularDynamicsAlgorithm.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="2f1U2tKr9kCuJ8srXts2rpAKaZJ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "//wsl$/Ubuntu/home/saula/ss/tp3",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="\\wsl$\Ubuntu\home\saula\ss\tp3-good\tp3-good\src\main\java\ar\edu\itba\ss" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="tp3" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="tp3" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="tp3" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b470b1f0-4863-42a5-b5b0-48624be68516" name="Changes" comment="" />
+      <created>1712967876261</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712967876261</updated>
+      <workItem from="1712967877368" duration="9963000" />
+      <workItem from="1713048023875" duration="4767000" />
+      <workItem from="1713290486793" duration="817000" />
+      <workItem from="1713380242948" duration="692000" />
+      <workItem from="1713411754396" duration="363000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/MolecularUtils.java</url>
+          <line>9</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ar/edu/itba/ss/MolecularUtils.java</url>
+          <line>54</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="collisions" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>
