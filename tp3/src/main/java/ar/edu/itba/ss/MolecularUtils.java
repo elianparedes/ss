@@ -9,6 +9,8 @@ public class MolecularUtils {
     public static List<Particle> generateRandomParticles(MolecularParams params){
         List<Particle> particles = new ArrayList<>();
 
+        Particle fixed = params.getFixedParticle();
+
         for (int i = 0; i < params.getN() ; i++) {
             double x , y;
             boolean notValid;
@@ -20,7 +22,8 @@ public class MolecularUtils {
                 final double finalX = x;
                 final double finalY = y;
 
-                notValid = particles.stream().anyMatch(p -> Math.pow(finalX - p.getX(),2) + Math.pow(finalY-p.getY(),2) <= Math.pow(params.getRadius() + p.getRadius(),2));
+                notValid = particles.stream().anyMatch(p -> Math.pow(finalX - p.getX(),2) + Math.pow(finalY-p.getY(),2) <= Math.pow(params.getRadius() + p.getRadius(),2))
+                        || Math.pow(finalX - fixed.getX(),2) + Math.pow(finalY-fixed.getY(),2) <= Math.pow(params.getRadius() + fixed.getRadius(),2);
             }while (notValid);
 
             double angle = Math.random()*2*Math.PI;
@@ -64,9 +67,16 @@ public class MolecularUtils {
             for (Edge edge: edges){
                 collisions.add(EdgeCollision.getCollision(current,edge));
             }
+
         }
 
         return collisions;
+    }
+
+    public static void addCollisionWithFixedParticle(TreeSet<Collision> collisions, List<Particle> particles, Particle fixed, double Cn, double Ct){
+        for (Particle current:particles) {
+            collisions.add(FixedParticleCollision.getCollision(current,fixed,Cn,Ct));
+        }
     }
 
     public static List<Particle> evolveParticles(List<Particle> particles, double time){
@@ -80,7 +90,7 @@ public class MolecularUtils {
         return evolvedParticles;
     }
 
-    public static List<Particle> applyOperator(Collision c , Particle piBefore, Particle pjBefore){
+    public static List<Particle> applyOperator(ParticlesCollision c , Particle piBefore, Particle pjBefore){
 
         List<Particle> result = new ArrayList<>();
         if(c instanceof ParticlesCollision){
@@ -110,7 +120,7 @@ public class MolecularUtils {
         throw new RuntimeException("No operator for collision: " + c.getClass());
     }
 
-    public static List<Particle> applyOperator(Collision c , Particle pBefore){
+    public static List<Particle> applyOperator(EdgeCollision c , Particle pBefore){
         List<Particle> result = new ArrayList<>();
 
         if(c instanceof EdgeCollision){
@@ -127,6 +137,31 @@ public class MolecularUtils {
                 result.add(new Particle(particle.getId(),pBefore.getX(), pBefore.getY(), particle.getVx(), -1*particle.getVy(), particle.getRadius(), particle.getMass()));
                 return result;
             }
+        }
+
+        throw new RuntimeException("No operator for collision: " + c.getClass());
+    }
+
+    public static List<Particle> applyOperator(FixedParticleCollision c, Particle pBefore){
+        List<Particle> result = new ArrayList<>();
+
+        if(c instanceof FixedParticleCollision){
+            FixedParticleCollision collision = (FixedParticleCollision) c;
+            double angle = collision.getPi().getSpeedAngle();
+            double Vx = collision.getPi().getVx();
+            double Vy = collision.getPi().getVy();
+            double cos = Math.cos(angle);
+            double sen = Math.sin(angle);
+            double Cn = collision.getCn();
+            double Ct = collision.getCt();
+
+            double newVx = (-1*Cn*cos*cos + Ct*sen*sen)*Vx -(Cn+Ct)*sen*cos*Vy;
+            double newVy = -1*(Cn+Ct)*sen*cos*Vx + (-1*Cn*sen*sen + Ct*cos*cos)*Vy;
+
+            Particle newParticle = new Particle(pBefore.getId(),pBefore.getX(), pBefore.getY(), newVx, newVy, pBefore.getRadius(), pBefore.getMass());
+            result.add(newParticle);
+
+            return result;
         }
 
         throw new RuntimeException("No operator for collision: " + c.getClass());

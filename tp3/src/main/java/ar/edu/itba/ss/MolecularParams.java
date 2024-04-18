@@ -15,13 +15,22 @@ public class MolecularParams extends AlgorithmParameters {
 
     private final double radius;
 
-    public MolecularParams(int n, double l, double mass, double speed, double radius, int maxIter) {
+    private final Particle fixedParticle;
+
+    private final double Cn;
+
+    private final double Ct;
+
+    public MolecularParams(int n, double l, double mass, double speed, double radius, int maxIter, Particle fixedParticle, double cn, double ct) {
         this.n = n;
         this.l = l;
         this.mass = mass;
         this.speed = speed;
         this.radius = radius;
         this.maxIter = maxIter;
+        this.fixedParticle = fixedParticle;
+        Cn = cn;
+        Ct = ct;
     }
 
     public int getN() {
@@ -46,5 +55,17 @@ public class MolecularParams extends AlgorithmParameters {
 
     public int getMaxIter() {
         return maxIter;
+    }
+
+    public Particle getFixedParticle() {
+        return fixedParticle;
+    }
+
+    public double getCn() {
+        return Cn;
+    }
+
+    public double getCt() {
+        return Ct;
     }
 }

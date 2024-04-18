@@ -17,6 +17,7 @@ public class MolecularDynamics implements Algorithm<MolecularParams> {
 
         while(time < params.getMaxIter()){
             TreeSet<Collision> collisions = MolecularUtils.getInitialCollisions(initial,edges);
+            MolecularUtils.addCollisionWithFixedParticle(collisions,initial,params.getFixedParticle(),params.getCn(),params.getCt());
             Collision collision = Optional.ofNullable(collisions.pollFirst()).orElseThrow(RuntimeException::new);
 
             double previousTime = time;
@@ -26,7 +27,14 @@ public class MolecularDynamics implements Algorithm<MolecularParams> {
 
             List<Particle> afterCollision;
 
-            if(collision instanceof ParticlesCollision){
+            if(collision instanceof FixedParticleCollision){
+                FixedParticleCollision fixedCollision = (FixedParticleCollision) collision;
+                Particle pBefore = MolecularUtils.findById(beforeCollision,fixedCollision.getPi().getId());
+                afterCollision = MolecularUtils.applyOperator(fixedCollision,pBefore);
+                //System.out.println(String.format("%s : { %s, %s , %s }",fixedCollision.getClass(),time,fixedCollision.getPi(),fixedCollision.getFixed()));
+            }
+
+            else if(collision instanceof ParticlesCollision){
 
                 ParticlesCollision particlesCollision = (ParticlesCollision) collision;
                 Particle piBefore = MolecularUtils.findById(beforeCollision,particlesCollision.getPi().getId());

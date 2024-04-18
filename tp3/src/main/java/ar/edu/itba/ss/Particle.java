@@ -68,6 +68,10 @@ public class Particle {
         return id;
     }
 
+    public double getSpeedAngle(){
+        return Math.atan2(Vy,Vx);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == this)
