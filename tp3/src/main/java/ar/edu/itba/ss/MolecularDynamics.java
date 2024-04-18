@@ -1,6 +1,7 @@
 package ar.edu.itba.ss;
 
 import ar.edu.itba.ss.simulation.algorithms.Algorithm;
+import ar.edu.itba.ss.simulation.events.Event;
 import ar.edu.itba.ss.simulation.events.EventListener;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class MolecularDynamics implements Algorithm<MolecularParams> {
                 FixedParticleCollision fixedCollision = (FixedParticleCollision) collision;
                 Particle pBefore = MolecularUtils.findById(beforeCollision,fixedCollision.getPi().getId());
                 afterCollision = MolecularUtils.applyOperator(fixedCollision,pBefore);
-                //System.out.println(String.format("%s : { %s, %s , %s }",fixedCollision.getClass(),time,fixedCollision.getPi(),fixedCollision.getFixed()));
+                System.out.println(String.format("%s : { %s, %s , %s }",fixedCollision.getClass(),time,fixedCollision.getPi(),fixedCollision.getFixed()));
             }
 
             else if(collision instanceof ParticlesCollision){
@@ -42,7 +43,7 @@ public class MolecularDynamics implements Algorithm<MolecularParams> {
 
                 afterCollision = MolecularUtils.applyOperator(particlesCollision,piBefore,pjBefore);
 
-                //System.out.println(String.format("%s : { %s, %s , %s }",particlesCollision.getClass(),time,particlesCollision.getPi(),particlesCollision.getPj()));
+                System.out.println(String.format("%s : { %s, %s , %s }",particlesCollision.getClass(),time,particlesCollision.getPi(),particlesCollision.getPj()));
             }
 
              else if(collision instanceof EdgeCollision){
@@ -51,15 +52,19 @@ public class MolecularDynamics implements Algorithm<MolecularParams> {
 
                 afterCollision = MolecularUtils.applyOperator(edgeCollision,pBefore);
 
-                //System.out.println(String.format("%s : { %s, %s , %s }",edgeCollision.getClass(),time,edgeCollision.getP(),edgeCollision.getEdge()));
+                System.out.println(String.format("%s : { %s, %s , %s }",edgeCollision.getClass(),time,edgeCollision.getP(),edgeCollision.getEdge()));
             }
 
              else {
                  throw new RuntimeException("Collision type: " + collision.getClass() + " not supported");
             }
 
+             eventListener.emit(new Event<>(new MolecularState(initial, time)));
+
              initial = MolecularUtils.copyAndReplace(beforeCollision,afterCollision);
 
         }
+
+        eventListener.emit(new Event<>(new MolecularState(initial, time)));
     }
 }

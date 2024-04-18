@@ -5,7 +5,7 @@ import ar.edu.itba.ss.simulation.algorithms.AlgorithmParameters;
 public class MolecularParams extends AlgorithmParameters {
     private final int n;
 
-    private final int maxIter;
+    private final double maxIter;
 
     private final double l;
 
@@ -21,7 +21,7 @@ public class MolecularParams extends AlgorithmParameters {
 
     private final double Ct;
 
-    public MolecularParams(int n, double l, double mass, double speed, double radius, int maxIter, Particle fixedParticle, double cn, double ct) {
+    public MolecularParams(int n, double l, double mass, double speed, double radius, double maxIter, Particle fixedParticle, double cn, double ct) {
         this.n = n;
         this.l = l;
         this.mass = mass;
@@ -53,7 +53,7 @@ public class MolecularParams extends AlgorithmParameters {
         return radius;
     }
 
-    public int getMaxIter() {
+    public double getMaxIter() {
         return maxIter;
     }
 
