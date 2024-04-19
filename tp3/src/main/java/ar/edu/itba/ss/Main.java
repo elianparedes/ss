@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Main {
 
-    private static final int N = 5;
+    private static final int N = 200;
     private static final double L = 0.1;
 
     private static final double RP = 0.001;
@@ -62,7 +62,7 @@ public class Main {
 
         CSVBuilder builder = new CSVBuilder();
         try {
-            builder.appendLine("output/test.csv", "time", "id", "x", "y", "radius");
+            builder.appendLine("output/test.csv", "time", "id", "x", "y", "vx", "vy", "radius");
             for (Event<?> e : events) {
                 MolecularDynamicsState state = (MolecularDynamicsState) e.getPayload();
                 List<MovableSurfaceEntity<Particle>> p = state.getParticles();
@@ -74,6 +74,8 @@ public class Main {
                             String.valueOf(particle.getEntity().getId()),
                             String.valueOf(particle.getX()),
                             String.valueOf(particle.getY()),
+                            String.valueOf(particle.getXSpeed()),
+                            String.valueOf(particle.getYSpeed()),
                             String.valueOf(particle.getEntity().getRadius())
                     );
                 }

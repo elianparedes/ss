@@ -23,11 +23,15 @@ public class BallCollision extends Collision {
         if (this.particlesInvolved.size() == 1) {
             MovableSurfaceEntity<Particle> particle = this.particlesInvolved.get(0);
 
-            double angle = particle.getAngle();
+            SurfaceEntity<Ball> ball = this.ball;
+
             double vx = particle.getXSpeed();
             double vy = particle.getYSpeed();
-            double cos = Math.cos(angle);
-            double sen = Math.sin(angle);
+
+            double distance= Math.sqrt(Math.pow(ball.getX()-particle.getX(),2) + Math.pow(ball.getY()-particle.getY(),2));
+
+            double cos = (ball.getX()-particle.getX()) / distance;
+            double sen = (ball.getY()-particle.getY()) / distance;
             double cn = 1;
             double ct = 1;
 
