@@ -2,6 +2,7 @@ package ar.edu.itba.ss.utils.collision;
 
 import ar.edu.itba.ss.utils.entity.MovableSurfaceEntity;
 import ar.edu.itba.ss.utils.entity.SurfaceEntity;
+import ar.edu.itba.ss.utils.models.Ball;
 import ar.edu.itba.ss.utils.models.Border;
 import ar.edu.itba.ss.utils.models.Particle;
 
@@ -13,12 +14,36 @@ public abstract class Collision implements Comparable<Collision> {
     double time;
 
     SurfaceEntity<Border> border;
+    SurfaceEntity<Ball> ball;
 
     List<MovableSurfaceEntity<Particle>> particlesInvolved;
 
     public Collision(double time) {
         this.time = time;
         this.particlesInvolved = new ArrayList<>();
+    }
+
+    public static BallCollision predictCollision(SurfaceEntity<Ball> ball, MovableSurfaceEntity<Particle> particle) {
+        double dx = ball.getX() - particle.getX();
+        double dy = ball.getY() - particle.getY();
+
+        double dVx = 0 - particle.getXSpeed();
+        double dVy = 0 - particle.getYSpeed();
+
+        double dVdR = dx * dVx + dy * dVy;
+        if (dVdR > 0) return new BallCollision(Double.MAX_VALUE, particle, ball);
+
+        double dVdV = dVx * dVx + dVy * dVy;
+        if (dVdV == 0) return new BallCollision(Double.MAX_VALUE, particle, ball);
+
+        double dRdR = dx * dx + dy * dy;
+
+        double sigma = particle.getEntity().getRadius() + ball.getEntity().getRadius();
+        double d = (dVdR * dVdR) - dVdV * (dRdR - sigma * sigma);
+
+        if (d < 0) return new BallCollision(Double.MAX_VALUE, particle, ball);
+
+        return new BallCollision(-(dVdR + Math.sqrt(d)) / dVdV, particle, ball);
     }
 
     public static WallCollision predictCollision(MovableSurfaceEntity<Particle> particle, SurfaceEntity<Border> b) {
@@ -45,7 +70,6 @@ public abstract class Collision implements Comparable<Collision> {
             else if (particle.getYSpeed() < 0)
                 collisionTime = (particle.getEntity().getRadius() - particle.getY()) / particle.getYSpeed();
         }
-
 
         return new WallCollision(collisionTime, particle, b);
     }

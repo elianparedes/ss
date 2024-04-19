@@ -17,7 +17,7 @@ public class TestMolecularDynamicsAlgorithm {
 
     @Test
     public void testAlgorithmCollisionTime(){
-        MolecularDynamicsParameters parameters = new MolecularDynamicsParameters(MolecularDynamicsAlgorithm.generateRandomParticles(L,N,RP,SPEED,MASS),MAX_IT);
+        MolecularDynamicsParameters parameters = new MolecularDynamicsParameters(MolecularDynamicsAlgorithm.generateRandomParticles(L,N,RP,SPEED,MASS), null, null, MAX_IT);
         MolecularDynamicsAlgorithm algorithm = new MolecularDynamicsAlgorithm();
         algorithm.calculate(parameters,event -> {});
     }
