@@ -9,20 +9,17 @@
       <change afterPath="$PROJECT_DIR$/../../tp2/animation/plot/300_7.0_0.2_PBC_rates.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../tp2/animation/plot/300_7.0_slope_etha.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../tp2/animation/videos/default.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/file/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/file/csv.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/video/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/video/builder.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/videos/pressure.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/videos/pressure_wball.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/utils/collision/BallCollision.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/utils/models/Ball.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/compute/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/compute/pressure.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plot/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plot/pressure_vs_dt.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/videos/default.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/videos/movable_ball.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/videos/pressure_wball.py" beforeDir="false" afterPath="$PROJECT_DIR$/videos/pressure_wball.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/moleculardynamics/MolecularDynamicsAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/moleculardynamics/MolecularDynamicsAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/moleculardynamics/MolecularDynamicsParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/moleculardynamics/MolecularDynamicsParameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/utils/collision/Collision.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/utils/collision/Collision.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/ar/edu/itba/ss/moleculardynamics/TestMolecularDynamicsAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/java/ar/edu/itba/ss/moleculardynamics/TestMolecularDynamicsAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/output/CSVBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ar/edu/itba/ss/output/CSVBuilder.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,21 +49,24 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "refactor/particle-collisions-simulation",
-    "last_opened_file_path": "/Users/elianparedes/Projects/ss/tp3/animations",
+    "last_opened_file_path": "/Users/elianparedes/Projects/ss/tp3/animations/videos",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/videos" />
+      <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/compute" />
       <recent name="$PROJECT_DIR$/lib/video" />
     </key>
   </component>
@@ -154,7 +154,7 @@
       <updated>1712980796212</updated>
       <workItem from="1712980797319" duration="7768000" />
       <workItem from="1713417755585" duration="15278000" />
-      <workItem from="1713504175047" duration="2586000" />
+      <workItem from="1713504175047" duration="19304000" />
     </task>
     <servers />
   </component>
@@ -163,8 +163,11 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/animations$builder.coverage" NAME="builder Coverage Results" MODIFIED="1713472875301" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/lib/video" />
-    <SUITE FILE_PATH="coverage/animations$pressure_wball.coverage" NAME="pressure_wball Coverage Results" MODIFIED="1713506927257" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/videos" />
+    <SUITE FILE_PATH="coverage/animations$pressure_wball.coverage" NAME="pressure_wball Coverage Results" MODIFIED="1713542039601" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/videos" />
+    <SUITE FILE_PATH="coverage/animations$pressure_count.coverage" NAME="pressure_count Coverage Results" MODIFIED="1713548877828" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/videos" />
+    <SUITE FILE_PATH="coverage/animations$pressure_vs_dt.coverage" NAME="pressure_vs_dt Coverage Results" MODIFIED="1713553830095" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/plot" />
+    <SUITE FILE_PATH="coverage/animations$main.coverage" NAME="main Coverage Results" MODIFIED="1713537886242" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/animations$default.coverage" NAME="default Coverage Results" MODIFIED="1713418971546" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/videos" />
-    <SUITE FILE_PATH="coverage/animations$pressure.coverage" NAME="pressure Coverage Results" MODIFIED="1713504345281" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/videos" />
+    <SUITE FILE_PATH="coverage/animations$pressure.coverage" NAME="pressure Coverage Results" MODIFIED="1713552982128" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/compute" />
   </component>
 </project>

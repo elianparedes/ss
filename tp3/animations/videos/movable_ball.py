@@ -89,8 +89,6 @@ def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: Dat
 
         particle_color = default_color
         if id in colliding_particles:
-            # collided_particles.append(id)
-
             if collision_type == PARTICLES_COLLISION:
                 particle_color = is_visiting_color
             if collision_type == WALL_COLLISION:
