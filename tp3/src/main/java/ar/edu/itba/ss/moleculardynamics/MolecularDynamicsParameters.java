@@ -16,14 +16,17 @@ public class MolecularDynamicsParameters extends AlgorithmParameters {
 
     public List<SurfaceEntity<Border>> fixedObjects;
 
-    public SurfaceEntity<Ball> ball;
+    public MovableSurfaceEntity<Particle> ball;
+
+    public boolean movable;
 
     public  int maxIterations;
 
-    public MolecularDynamicsParameters(List<MovableSurfaceEntity<Particle>> particles,  List<SurfaceEntity<Border>> fixedObjects, SurfaceEntity<Ball> ball, int maxIterations) {
+    public MolecularDynamicsParameters(List<MovableSurfaceEntity<Particle>> particles,  List<SurfaceEntity<Border>> fixedObjects, MovableSurfaceEntity<Particle> ball, int maxIterations, boolean movable) {
         this.particles = particles;
         this.fixedObjects = fixedObjects;
         this.maxIterations = maxIterations;
         this.ball = ball;
+        this.movable = movable;
     }
 }

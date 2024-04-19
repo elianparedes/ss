@@ -14,7 +14,7 @@ public abstract class Collision implements Comparable<Collision> {
     double time;
 
     SurfaceEntity<Border> border;
-    SurfaceEntity<Ball> ball;
+    MovableSurfaceEntity<Particle> ball;
 
     List<MovableSurfaceEntity<Particle>> particlesInvolved;
 
@@ -23,27 +23,27 @@ public abstract class Collision implements Comparable<Collision> {
         this.particlesInvolved = new ArrayList<>();
     }
 
-    public static BallCollision predictCollision(SurfaceEntity<Ball> ball, MovableSurfaceEntity<Particle> particle) {
+    public static BallCollision predictCollision(MovableSurfaceEntity<Particle> ball, MovableSurfaceEntity<Particle> particle, boolean movable) {
         double dx = ball.getX() - particle.getX();
         double dy = ball.getY() - particle.getY();
 
-        double dVx = 0 - particle.getXSpeed();
-        double dVy = 0 - particle.getYSpeed();
+        double dVx = ball.getXSpeed() - particle.getXSpeed();
+        double dVy = ball.getYSpeed() - particle.getYSpeed();
 
         double dVdR = dx * dVx + dy * dVy;
-        if (dVdR > 0) return new BallCollision(Double.MAX_VALUE, particle, ball);
+        if (dVdR > 0) return new BallCollision(Double.MAX_VALUE, particle, ball,movable);
 
         double dVdV = dVx * dVx + dVy * dVy;
-        if (dVdV == 0) return new BallCollision(Double.MAX_VALUE, particle, ball);
+        if (dVdV == 0) return new BallCollision(Double.MAX_VALUE, particle, ball,movable);
 
         double dRdR = dx * dx + dy * dy;
 
         double sigma = particle.getEntity().getRadius() + ball.getEntity().getRadius();
         double d = (dVdR * dVdR) - dVdV * (dRdR - sigma * sigma);
 
-        if (d < 0) return new BallCollision(Double.MAX_VALUE, particle, ball);
+        if (d < 0) return new BallCollision(Double.MAX_VALUE, particle, ball,movable);
 
-        return new BallCollision(-(dVdR + Math.sqrt(d)) / dVdV, particle, ball);
+        return new BallCollision(-(dVdR + Math.sqrt(d)) / dVdV, particle, ball,movable);
     }
 
     public static WallCollision predictCollision(MovableSurfaceEntity<Particle> particle, SurfaceEntity<Border> b) {

@@ -33,9 +33,11 @@ public class Main {
 
     private static final int MAX_IT = 5000;
 
+    private static final boolean MOVABLE = true;
+
     public static void main(String[] args) {
 
-        SurfaceEntity<Ball> ball = new SurfaceEntity<>(new Ball(RB, MASS), L / 2, L /2);
+        MovableSurfaceEntity<Particle> ball = new MovableSurfaceEntity<>(new Particle(RB, MASS), L / 2, L /2,0,0);
 
         List<MovableSurfaceEntity<Particle>> particles = MolecularDynamicsAlgorithm.generateRandomParticles(
                 L, N, RP, SPEED, MASS, ball
@@ -51,7 +53,8 @@ public class Main {
                 particles,
                 fixedObjects,
                 ball,
-                MAX_IT
+                MAX_IT,
+                MOVABLE
         );
 
         MolecularDynamicsAlgorithm algorithm = new MolecularDynamicsAlgorithm();
@@ -67,6 +70,7 @@ public class Main {
                 MolecularDynamicsState state = (MolecularDynamicsState) e.getPayload();
                 List<MovableSurfaceEntity<Particle>> p = state.getParticles();
 
+                System.out.println(state.getBall());
                 for (MovableSurfaceEntity<Particle> particle : p) {
                     builder.appendLine(
                             "output/test.csv",
@@ -79,6 +83,13 @@ public class Main {
                             String.valueOf(particle.getEntity().getRadius())
                     );
                 }
+                builder.appendLine(String.valueOf(state.getTime()),
+                        String.valueOf(state.getBall().getEntity().getId()),
+                        String.valueOf(state.getBall().getX()),
+                        String.valueOf(state.getBall().getY()),
+                        String.valueOf(state.getBall().getXSpeed()),
+                        String.valueOf(state.getBall().getYSpeed()),
+                        String.valueOf(state.getBall().getEntity().getRadius()));
             }
 
 
