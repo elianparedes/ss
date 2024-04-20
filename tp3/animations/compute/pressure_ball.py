@@ -48,6 +48,23 @@ def get_colliding_particles(state: DataFrame, prevState: DataFrame):
     return colliding_particles
 
 
+def calculate_normal_v(ball, particle):
+    ballX = ball['x'].iloc[0]
+    ballY = ball['y'].iloc[0]
+
+    particleX = particle['x']
+    particleY = particle['y']
+
+    particleVx = particle['vx']
+    particleVy = particle['vy']
+
+    rp_ro = np.subtract([particleX, particleY], [ballX, ballY])
+    rp_ro_norm = np.linalg.norm(rp_ro)
+
+    n = rp_ro / rp_ro_norm
+    return particleVx * n[0] + particleVy * n[1]
+
+
 def calculate_pressure(states: list[DataFrame]):
     prevState = states[0]
     pressure_values = []
@@ -57,27 +74,22 @@ def calculate_pressure(states: list[DataFrame]):
 
         prevState = state
 
-        if collision_type != WALL_COLLISION:
+        if collision_type != BALL_COLLISION:
             continue
 
-        for (previousParticle, currentParticle) in colliding_particles:
-            previousVx = previousParticle['vx']
-            previousVy = previousParticle['vy']
+        print('is ball collision')
 
-            currentVx = currentParticle['vx']
-            currentVy = currentParticle['vy']
+        ball = state[state['id'] == 1]
+        prevParticle, currentParticle = colliding_particles[0]
 
-            if previousVx != currentVx:
-                pressure = np.abs(previousVx - currentVx)
-            elif previousVy != currentVy:
-                pressure = np.abs(previousVy - currentVy)
-            else:
-                raise ValueError('This should not happen')
+        vi = calculate_normal_v(ball, prevParticle)
+        vf = calculate_normal_v(ball, currentParticle)
 
-            pressure_values.append(pressure)
+        pressure = np.abs(vf - vi)
+        pressure_values.append(pressure)
 
     sum = np.sum(pressure_values)
-    return sum / (0.4 * DT)
+    return sum / (2 * np.pi * 0.005 * DT)
 
 
 def get_dt(data: DataFrame):
@@ -92,6 +104,8 @@ def get_dt(data: DataFrame):
 def compute():
     simulation_file = '../../output/test-v1-250-5k-wball.csv'
     data = pd.read_csv(simulation_file)
+
+    print(get_dt(data))
 
     timesteps = data['time'].unique()
     pressure_values = []
@@ -108,6 +122,7 @@ def compute():
             pressure = calculate_pressure(timesteps_window)
             intervals_values.append(intervalNumber * DT)
             pressure_values.append(pressure)
+            print(len(timesteps_window))
             timesteps_window = []
             intervalNumber += 1
 
@@ -115,7 +130,7 @@ def compute():
     df['pressure'] = pressure_values
     df['interval'] = intervals_values
 
-    df.to_csv('pressure.csv', index=False)
+    df.to_csv('pressure_ball.csv', index=False)
 
     return df
 

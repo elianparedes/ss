@@ -1,7 +1,9 @@
 import colorsys
+import math
 from typing import Sequence
 
 import cv2
+import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
@@ -22,37 +24,66 @@ triangle_base_ratio = 2.5
 vector_color = (255, 255, 255)
 vector_length = 15
 
+# List to store IDs of collided particles
+collided_particles = []
+collided_ball = []
 
-def check_big_particle_collision(square_size, particle_position, particle_radius):
-    square_width, square_height = square_size
+WALL_COLLISION = 1
+PARTICLES_COLLISION = 2
+BALL_COLLISION = 3
 
-    particle_x, particle_y = particle_position
+def get_collision_type(colliding_particles):
+    if len(colliding_particles) == 2:
+        return PARTICLES_COLLISION
+    else:
+        return WALL_COLLISION
 
-    if particle_x - particle_radius <= 0 or particle_x + particle_radius >= square_width:
-        return True
+def get_colliding_particles(state: DataFrame, prevState: DataFrame):
+    colliding_particles = []
 
-    if particle_y - particle_radius <= 0 or particle_y + particle_radius >= square_height:
-        return True
+    for ((i, current), (j, previous)) in zip(state.iterrows(), prevState.iterrows()):
+        currentVx = current['vx']
+        currentVy = current['vy']
+        previousVx = previous['vx']
+        previousVy = previous['vy']
 
-    return False
+        if currentVx != previousVx or currentVy != previousVy:
+            colliding_particles.append(current['id'])
+
+    return colliding_particles
 
 
-def draw_particles(video_builder: VideoBuilder, data: DataFrame):
-    for index, row in data.iterrows():
+def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: DataFrame):
+    global collided_particles  # Access the global list of collided particles
+    global collided_ball
+
+    colliding_particles = get_colliding_particles(state, prevState)
+    collision_type = get_collision_type(colliding_particles)
+
+    for index, row in state.iterrows():
         x, y = int((row['x'] / grid_size) * video_width), int(
             (row['y'] / grid_size) * video_height)
 
-        is_colliding_w_big_particle = check_big_particle_collision((grid_size, grid_size), (row['x'], row['y']), 0.001)
+        id = row['id']
 
-        if is_colliding_w_big_particle:
-            video_builder.draw_frame(lambda frame: cv2.circle(frame, (x, y), int((0.001 / grid_size) * video_width), (255, 255, 255), -1))
-        else:
-            video_builder.draw_frame(lambda frame: cv2.circle(frame, (x, y), int((0.001 / grid_size) * video_width), (255, 255, 255), 1))
+        particle_color = default_color
+        if id in colliding_particles:
+            # collided_particles.append(id)
+
+            if collision_type == PARTICLES_COLLISION:
+                particle_color = is_visiting_color
+            if collision_type == WALL_COLLISION:
+                particle_color = has_visited_color
+
+        video_builder.draw_frame(
+            lambda frame: cv2.circle(frame, (x, y), int((0.001 / grid_size) * video_width), particle_color, -1))
+
 
 
 def draw_ball(video_builder: VideoBuilder):
     video_builder.draw_frame(
-        lambda frame: cv2.circle(frame, (int(video_width / 2), int(video_height / 2)),  int((0.005 / grid_size) * video_width), (255, 255, 255), 2))
+        lambda frame: cv2.circle(frame, (int(video_width / 2), int(video_height / 2)),
+                                 int((0.005 / grid_size) * video_width), (255, 255, 255), 2))
 
 
 def render():
@@ -62,15 +93,19 @@ def render():
     data = pd.read_csv(simulation_file)
 
     timesteps = data['time'].unique()
+    previous_time = timesteps[0]
     for i, timestep in enumerate(timesteps):
         timestep_data = data[data['time'] == timestep]
+        previous_timestep_data = data[data['time'] == previous_time]
 
         video_builder.create_frame()
 
         draw_ball(video_builder)
-        draw_particles(video_builder, timestep_data)
+        draw_particles(video_builder, timestep_data, previous_timestep_data)
 
         video_builder.push_frame()
+
+        previous_time = timestep
 
     video_builder.render()
 
