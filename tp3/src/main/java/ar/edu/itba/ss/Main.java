@@ -52,7 +52,6 @@ public class Main {
         params.fixedObjects = fixedObjects;
         params.ball = ball;
 
-
         MolecularDynamicsAlgorithm algorithm = new MolecularDynamicsAlgorithm();
         Simulation<MolecularDynamicsParameters> simulation = new Simulation<>(algorithm);
         simulation.run(params);
@@ -68,6 +67,7 @@ public class Main {
                 throw new RuntimeException("No se pudo eliminar el archivo existente: " + filePath);
             }
         }
+
         try {
             builder.appendLine(filePath, "time", "id", "x", "y", "vx", "vy", "radius");
             for (Event<?> e : events) {
