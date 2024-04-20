@@ -98,7 +98,8 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
                 imminentCollisions.add(Collision.predictCollision(current, border));
             }
 
-            imminentCollisions.add(Collision.predictCollision(ball, current,movable));
+            if(!movable)
+                imminentCollisions.add(Collision.predictCollision(ball, current,movable));
         }
 
         return imminentCollisions;
@@ -108,9 +109,10 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
     public void calculate(MolecularDynamicsParameters params, EventListener eventListener) {
         boolean movable = params.movable;
         List<MovableSurfaceEntity<Particle>> currentState = params.particles;
+        if(movable) currentState.add(params.ball);
+
         Queue<Collision> imminentCollisions = predictImminentCollisions(currentState, params.fixedObjects, params.ball, movable);
 
-        MovableSurfaceEntity<Particle> ball = params.ball;
 
         int i = 0;
         double t = 0;
@@ -120,20 +122,15 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
 
                 double dt = imminentCollision.getTime();
                 List<MovableSurfaceEntity<Particle>> stateBeforeCollision = evolveState(dt, currentState, imminentCollision.getParticlesInvolved());
+
                 t += dt;
 
-
                 List<MovableSurfaceEntity<Particle>> collidingParticles = imminentCollision.computeCollision();
-                if(imminentCollision instanceof BallCollision){
-                    MovableSurfaceEntity<Particle> newBall = collidingParticles.get(1);
-                    collidingParticles.remove(newBall);
-                    ball = newBall;
-                }
 
                 currentState = collideState(stateBeforeCollision, collidingParticles);
 
-                imminentCollisions = predictImminentCollisions(currentState, params.fixedObjects, ball,movable);
-                eventListener.emit(new Event<>(new MolecularDynamicsState(currentState, ball, t)));
+                imminentCollisions = predictImminentCollisions(currentState, params.fixedObjects,params.ball,movable);
+                eventListener.emit(new Event<>(new MolecularDynamicsState(currentState, t)));
                 i++;
 
 

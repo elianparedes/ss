@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Main {
 
-    private static final int N = 200;
+    private static final int N = 400;
     private static final double L = 0.1;
 
     private static final double RP = 0.001;
@@ -37,7 +37,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        MovableSurfaceEntity<Particle> ball = new MovableSurfaceEntity<>(new Particle(RB, MASS), L / 2, L /2,0,0);
+        MovableSurfaceEntity<Particle> ball = new MovableSurfaceEntity<>(new Particle(RB, 3), L / 2, L /2,0,0);
 
         List<MovableSurfaceEntity<Particle>> particles = MolecularDynamicsAlgorithm.generateRandomParticles(
                 L, N, RP, SPEED, MASS, ball
@@ -70,26 +70,31 @@ public class Main {
                 MolecularDynamicsState state = (MolecularDynamicsState) e.getPayload();
                 List<MovableSurfaceEntity<Particle>> p = state.getParticles();
 
-                System.out.println(state.getBall());
+                MovableSurfaceEntity<Particle> ballState = ball;
                 for (MovableSurfaceEntity<Particle> particle : p) {
-                    builder.appendLine(
-                            "output/test.csv",
-                            String.valueOf(state.getTime()),
-                            String.valueOf(particle.getEntity().getId()),
-                            String.valueOf(particle.getX()),
-                            String.valueOf(particle.getY()),
-                            String.valueOf(particle.getXSpeed()),
-                            String.valueOf(particle.getYSpeed()),
-                            String.valueOf(particle.getEntity().getRadius())
-                    );
+                    if(particle.getEntity().getId() == ball.getEntity().getId()){
+                        ballState = particle;
+                    } else {
+                        builder.appendLine(
+                                "output/test.csv",
+                                String.valueOf(state.getTime()),
+                                String.valueOf(particle.getEntity().getId()),
+                                String.valueOf(particle.getX()),
+                                String.valueOf(particle.getY()),
+                                String.valueOf(particle.getXSpeed()),
+                                String.valueOf(particle.getYSpeed()),
+                                String.valueOf(particle.getEntity().getRadius())
+                        );
+                    }
                 }
-                builder.appendLine(String.valueOf(state.getTime()),
-                        String.valueOf(state.getBall().getEntity().getId()),
-                        String.valueOf(state.getBall().getX()),
-                        String.valueOf(state.getBall().getY()),
-                        String.valueOf(state.getBall().getXSpeed()),
-                        String.valueOf(state.getBall().getYSpeed()),
-                        String.valueOf(state.getBall().getEntity().getRadius()));
+                System.out.println(ballState);
+                builder.appendLine("output/test.csv",String.valueOf(state.getTime()),
+                        String.valueOf(ballState.getEntity().getId()),
+                        String.valueOf(ballState.getX()),
+                        String.valueOf(ballState.getY()),
+                        String.valueOf(ballState.getXSpeed()),
+                        String.valueOf(ballState.getYSpeed()),
+                        String.valueOf(ballState.getEntity().getRadius()));
             }
 
 

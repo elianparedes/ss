@@ -95,7 +95,7 @@ def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: Dat
                 particle_color = has_visited_color
 
         video_builder.draw_frame(
-            lambda frame: cv2.circle(frame, (x, y), int((0.001 / grid_size) * video_width), particle_color, -1))
+            lambda frame: cv2.circle(frame, (x, y), int((row['radius'] / grid_size) * video_width), particle_color, -1))
 
 
 
@@ -119,7 +119,7 @@ def render():
 
         video_builder.create_frame()
 
-        draw_ball(video_builder)
+        #draw_ball(video_builder)
         draw_particles(video_builder, timestep_data, previous_timestep_data)
 
         video_builder.push_frame()
