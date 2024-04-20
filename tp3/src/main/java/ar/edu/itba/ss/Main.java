@@ -14,9 +14,11 @@ import ar.edu.itba.ss.utils.models.Ball;
 import ar.edu.itba.ss.utils.models.Border;
 import ar.edu.itba.ss.utils.models.Particle;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Main {
 
@@ -64,19 +66,27 @@ public class Main {
         EventsQueue events = simulation.getEventQueue(MolecularDynamicsState.class);
 
         CSVBuilder builder = new CSVBuilder();
+
+        String filePath = "output/test.csv";
+        File file = new File(filePath);
+        if (file.exists()) {
+            if (!file.delete()) {
+                throw new RuntimeException("No se pudo eliminar el archivo existente: " + filePath);
+            }
+        }
         try {
-            builder.appendLine("output/test.csv", "time", "id", "x", "y", "vx", "vy", "radius");
+            builder.appendLine(filePath, "time", "id", "x", "y", "vx", "vy", "radius");
             for (Event<?> e : events) {
                 MolecularDynamicsState state = (MolecularDynamicsState) e.getPayload();
                 List<MovableSurfaceEntity<Particle>> p = state.getParticles();
 
                 MovableSurfaceEntity<Particle> ballState = ball;
                 for (MovableSurfaceEntity<Particle> particle : p) {
-                    if(particle.getEntity().getId() == ball.getEntity().getId()){
+                    if(MOVABLE && Objects.equals(particle.getEntity().getId(), ball.getEntity().getId())){
                         ballState = particle;
                     } else {
                         builder.appendLine(
-                                "output/test.csv",
+                                filePath,
                                 String.valueOf(state.getTime()),
                                 String.valueOf(particle.getEntity().getId()),
                                 String.valueOf(particle.getX()),
@@ -88,7 +98,7 @@ public class Main {
                     }
                 }
                 System.out.println(ballState);
-                builder.appendLine("output/test.csv",String.valueOf(state.getTime()),
+                builder.appendLine(filePath,String.valueOf(state.getTime()),
                         String.valueOf(ballState.getEntity().getId()),
                         String.valueOf(ballState.getX()),
                         String.valueOf(ballState.getY()),

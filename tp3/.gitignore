@@ -44,4 +44,4 @@ build/
 /output/*
 
 ### Videos ###
-/animations/videos/
+/animations/videos/*.mp4
