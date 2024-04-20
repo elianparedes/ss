@@ -45,3 +45,8 @@ build/
 
 ### Videos ###
 /animations/videos/*.mp4
+
+## Output
+**/*.csv
+**/*.mp4
+**/*.png
