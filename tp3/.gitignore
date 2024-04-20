@@ -39,3 +39,9 @@ build/
 
 ### Env files ###
 *.env
+
+### Outputs ###
+/output/*
+
+### Videos ###
+/animations/videos/
