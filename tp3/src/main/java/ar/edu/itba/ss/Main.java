@@ -1,5 +1,7 @@
 package ar.edu.itba.ss;
 
+import ar.edu.itba.ss.input.ArgumentHandler;
+import ar.edu.itba.ss.input.JsonConfigReader;
 import ar.edu.itba.ss.moleculardynamics.MolecularDynamicsAlgorithm;
 import ar.edu.itba.ss.moleculardynamics.MolecularDynamicsParameters;
 import ar.edu.itba.ss.moleculardynamics.MolecularDynamicsState;
@@ -21,43 +23,35 @@ import java.util.List;
 import java.util.Objects;
 
 public class Main {
+    public final static String CONFIG_PATH = "config.json";
 
-    private static final int N = 400;
-    private static final double L = 0.1;
+    public final static String OUTPUT_PATH = "output/test.csv";
 
-    private static final double RP = 0.001;
+    public static void main(String[] args) throws IOException {
 
-    private static final double RB = 0.005;
+        ArgumentHandler handler = new ArgumentHandler()
+                .addArgument("-O", (v) -> true, true, OUTPUT_PATH)
+                .addArgument("-C", (v) -> true, true, CONFIG_PATH);
+        handler.parse(args);
 
-    private static final double MASS = 1;
-
-    private static final double SPEED = 0.01;
-
-    private static final int MAX_IT = 5000;
-
-    private static final boolean MOVABLE = true;
-
-    public static void main(String[] args) {
-
-        MovableSurfaceEntity<Particle> ball = new MovableSurfaceEntity<>(new Particle(RB, 3), L / 2, L /2,0,0);
+        JsonConfigReader configReader = new JsonConfigReader();
+        MolecularDynamicsParameters params = configReader.readConfig(handler.getArgument("-C"), MolecularDynamicsParameters.class);
+        MovableSurfaceEntity<Particle> ball = new MovableSurfaceEntity<>(new Particle(params.rb, params.massB), params.l/ 2, params.l/2,0,0);
 
         List<MovableSurfaceEntity<Particle>> particles = MolecularDynamicsAlgorithm.generateRandomParticles(
-                L, N, RP, SPEED, MASS, ball
+                params.l, params.n, params.rp, params.speed, params.massP, ball
         );
 
         List<SurfaceEntity<Border>> fixedObjects = new ArrayList<>();
-        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, 0), new Point(0, L)), 0, 0));
-        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(L, 0), new Point(L, L)), L, L / 2));
-        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, 0), new Point(L, 0)), L / 2, 0));
-        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, L), new Point(L, L)), L / 2, L));
+        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, 0), new Point(0, params.l)), 0, 0));
+        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(params.l, 0), new Point(params.l, params.l)), params.l, params.l / 2));
+        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, 0), new Point(params.l, 0)), params.l/ 2, 0));
+        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, params.l), new Point(params.l, params.l)), params.l/ 2, params.l));
 
-        MolecularDynamicsParameters params = new MolecularDynamicsParameters(
-                particles,
-                fixedObjects,
-                ball,
-                MAX_IT,
-                MOVABLE
-        );
+        params.particles = particles;
+        params.fixedObjects = fixedObjects;
+        params.ball = ball;
+
 
         MolecularDynamicsAlgorithm algorithm = new MolecularDynamicsAlgorithm();
         Simulation<MolecularDynamicsParameters> simulation = new Simulation<>(algorithm);
@@ -67,7 +61,7 @@ public class Main {
 
         CSVBuilder builder = new CSVBuilder();
 
-        String filePath = "output/test.csv";
+        String filePath = handler.getArgument("-O");
         File file = new File(filePath);
         if (file.exists()) {
             if (!file.delete()) {
@@ -82,7 +76,7 @@ public class Main {
 
                 MovableSurfaceEntity<Particle> ballState = ball;
                 for (MovableSurfaceEntity<Particle> particle : p) {
-                    if(MOVABLE && Objects.equals(particle.getEntity().getId(), ball.getEntity().getId())){
+                    if(params.movable && Objects.equals(particle.getEntity().getId(), ball.getEntity().getId())){
                         ballState = particle;
                     } else {
                         builder.appendLine(
