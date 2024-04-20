@@ -28,36 +28,17 @@ vector_length = 15
 collided_particles = []
 collided_ball = []
 
-# Define a dictionary to store previous positions and velocities
-prev_state = {}
-
-def check_collision(x_particle, y_particle, radius_particle, x_circle, y_circle, radius_circle):
-    distance = math.sqrt((x_particle - x_circle) ** 2 + (y_particle - y_circle) ** 2)
-    return distance <= radius_particle + radius_circle
-
-
-def check_wall_collision(square_size, particle_position, particle_radius):
-    square_width, square_height = square_size
-
-    particle_x, particle_y = particle_position
-
-    if particle_x - particle_radius <= 0 or particle_x + particle_radius >= square_width:
-        return True
-
-    if particle_y - particle_radius <= 0 or particle_y + particle_radius >= square_height:
-        return True
-
-    return False
-
 WALL_COLLISION = 1
 PARTICLES_COLLISION = 2
 BALL_COLLISION = 3
+
 
 def get_collision_type(colliding_particles):
     if len(colliding_particles) == 2:
         return PARTICLES_COLLISION
     else:
         return WALL_COLLISION
+
 
 def get_colliding_particles(state: DataFrame, prevState: DataFrame):
     colliding_particles = []
@@ -93,12 +74,11 @@ def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: Dat
 
             if collision_type == PARTICLES_COLLISION:
                 particle_color = is_visiting_color
-            if collision_type == WALL_COLLISION:
-                particle_color = has_visited_color
+            # if collision_type == WALL_COLLISION:
+            #     particle_color = has_visited_color
 
         video_builder.draw_frame(
             lambda frame: cv2.circle(frame, (x, y), int((0.001 / grid_size) * video_width), particle_color, -1))
-
 
 
 def draw_ball(video_builder: VideoBuilder):
@@ -121,7 +101,7 @@ def render():
 
         video_builder.create_frame()
 
-        draw_ball(video_builder)
+        # draw_ball(video_builder)
         draw_particles(video_builder, timestep_data, previous_timestep_data)
 
         video_builder.push_frame()
