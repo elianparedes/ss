@@ -133,7 +133,7 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
                 eventListener.emit(new Event<>(new MolecularDynamicsState(currentState, t)));
                 i++;
 
-
+                System.out.println(i);
             }
         }
     }
