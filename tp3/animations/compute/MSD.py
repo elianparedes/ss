@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import numpy as np
 
-DT = 0.0004
+DT = 0.0002
 
 
 def calculate_dt(csv_name: str):
