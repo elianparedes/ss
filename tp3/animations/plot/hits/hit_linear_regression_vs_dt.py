@@ -17,7 +17,6 @@ def plot_linear_regression(polies, intervals, hits):
 
     for (index, (p, x, y)) in enumerate(zip(polies, intervals, hits)):
         plt.plot(x, y, '--', linewidth=1, label=f'Colisiones {index + 1}')
-        # plt.plot(x, p(x), color='red', label='Linear regression')
 
         slope, intercept, r_value, p_value, std_err = linregress(x, y)
         slopes.append(slope)
@@ -25,8 +24,6 @@ def plot_linear_regression(polies, intervals, hits):
 
     mean_slope = np.mean(slopes)
     mean_std_error = np.mean(std_errors)
-
-    print(mean_slope, mean_std_error)
 
     mean_coefficients = np.mean([p.coefficients for p in polies], axis=0)
     mean_poly = np.poly1d(mean_coefficients)
@@ -57,14 +54,5 @@ for file in csv_files:
     polies.append(poly)
     intervals.append(x)
     hits.append(y)
-
-# df = pd.read_csv(csv_files[1])
-# x = df['interval']
-# y = df['all_hits']
-# coefficients = np.polyfit(x, y, 1)
-# poly = np.poly1d(coefficients)
-# polies.append(poly)
-# intervals.append(x)
-# hits.append(y)
 
 plot_linear_regression(polies, intervals, hits)

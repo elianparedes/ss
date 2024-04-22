@@ -1,7 +1,7 @@
 import os
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 DT = 0.0002
 
@@ -15,7 +15,7 @@ def calculate_dt(csv_name: str):
         return
 
     ball_collisions = []
-    previous_row = ball_data.iloc[0]  # Asume que al menos hay una fila con id=1
+    previous_row = ball_data.iloc[0]
 
     for index, row in ball_data.iloc[1:].iterrows():
         vx = row['vx']
@@ -29,7 +29,6 @@ def calculate_dt(csv_name: str):
         previous_row = row
 
     if len(ball_collisions) > 1:
-        print(len(ball_collisions))
         diff = np.diff(ball_collisions)
         print("Average time between collisions:", np.mean(diff))
     else:
@@ -66,8 +65,6 @@ def compute(csv_name: str, output_csv_name):
 
 input_directory = '../../output/msd/v10/'
 output_directory = './msd/v10/'
-
-#calculate_dt(input_directory+'msd_1.csv')
 
 for filename in os.listdir(input_directory):
     if filename.endswith('.csv'):

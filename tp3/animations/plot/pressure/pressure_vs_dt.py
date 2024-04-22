@@ -1,6 +1,6 @@
-from compute.pressure import compute
 import matplotlib.pyplot as plt
-import pandas as pd
+
+from compute.pressure.pressure import compute
 
 df = compute()
 plt.figure(figsize=(12, 6))

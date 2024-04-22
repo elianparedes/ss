@@ -1,15 +1,6 @@
-import colorsys
-import math
-from ctypes import Array
-from typing import Sequence
-
-import cv2
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-
-from lib.video.builder import VideoBuilder
-
 
 collided_particles = set()
 all_hits = 0
@@ -69,7 +60,6 @@ def calculate_hits(states: list[DataFrame]):
                 unique_hits += 1
                 collided_particles.add(current_id)
 
-
     return all_hits, unique_hits
 
 
@@ -90,8 +80,6 @@ def compute(fileName):
     data = pd.read_csv(simulation_file)
     dt, _ = get_dt(data)
     dt *= 100
-
-    print(dt)
 
     timesteps = data['time'].unique()
     all_hits_values = []
@@ -125,6 +113,7 @@ def compute(fileName):
     collided_particles = set()
 
     return df
+
 
 compute(fileName='hits_30k_1.csv')
 compute(fileName='hits_30k_2.csv')

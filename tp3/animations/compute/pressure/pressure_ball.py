@@ -1,14 +1,6 @@
-import colorsys
-import math
-from ctypes import Array
-from typing import Sequence
-
-import cv2
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-
-from lib.video.builder import VideoBuilder
 
 DT = 0.0004
 
@@ -104,8 +96,6 @@ def compute():
     simulation_file = '../../../output/l0.1-n300-i20000-s10-mfalse.csv'
     data = pd.read_csv(simulation_file)
 
-    print(get_dt(data))
-
     timesteps = data['time'].unique()
     pressure_values = []
     intervals_values = []
@@ -121,7 +111,6 @@ def compute():
             pressure = calculate_pressure(timesteps_window)
             intervals_values.append(intervalNumber * DT)
             pressure_values.append(pressure)
-            print(len(timesteps_window))
             timesteps_window = []
             intervalNumber += 1
 

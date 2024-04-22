@@ -1,9 +1,6 @@
-import colorsys
-import math
 from typing import Sequence
 
 import cv2
-import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
@@ -24,7 +21,6 @@ triangle_base_ratio = 2.5
 vector_color = (255, 255, 255)
 vector_length = 15
 
-# List to store IDs of collided particles
 collided_particles = []
 collided_ball = []
 
@@ -32,11 +28,13 @@ WALL_COLLISION = 1
 PARTICLES_COLLISION = 2
 BALL_COLLISION = 3
 
+
 def get_collision_type(colliding_particles):
     if len(colliding_particles) == 2:
         return PARTICLES_COLLISION
     else:
         return WALL_COLLISION
+
 
 def get_colliding_particles(state: DataFrame, prevState: DataFrame):
     colliding_particles = []
@@ -54,7 +52,7 @@ def get_colliding_particles(state: DataFrame, prevState: DataFrame):
 
 
 def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: DataFrame):
-    global collided_particles  # Access the global list of collided particles
+    global collided_particles
     global collided_ball
 
     colliding_particles = get_colliding_particles(state, prevState)
@@ -68,8 +66,6 @@ def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: Dat
 
         particle_color = default_color
         if id in colliding_particles:
-            # collided_particles.append(id)
-
             if collision_type == PARTICLES_COLLISION:
                 particle_color = is_visiting_color
             if collision_type == WALL_COLLISION:
@@ -77,7 +73,6 @@ def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: Dat
 
         video_builder.draw_frame(
             lambda frame: cv2.circle(frame, (x, y), int((0.001 / grid_size) * video_width), particle_color, -1))
-
 
 
 def draw_ball(video_builder: VideoBuilder):

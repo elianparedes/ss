@@ -2,6 +2,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.stats import linregress
 
+
 def plot_msd(csv_filename):
     data = pd.read_csv(csv_filename)
 
@@ -22,6 +23,7 @@ def plot_msd(csv_filename):
     plt.legend()
     plt.grid(True)
     plt.show()
+
 
 csv_filename = '../compute/msd/v1/processed_msd_1.csv'
 plot_msd(csv_filename)

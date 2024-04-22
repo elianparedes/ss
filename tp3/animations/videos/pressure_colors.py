@@ -44,7 +44,6 @@ def get_collision_type(colliding_particles):
     y = current['y']
 
     if (x - 0.05) ** 2 + (y - 0.05) ** 2 <= (0.005 + 0.003) ** 2:
-        print('ball')
         return BALL_COLLISION
     else:
         return WALL_COLLISION
@@ -78,7 +77,6 @@ def update_collision_lists(current_data, prev_data, collided_with_wall, collided
 
         if collision_type == WALL_COLLISION:
             if particle_id not in collided_with_wall:
-
                 collided_with_wall.append(particle_id)
         elif collision_type == BALL_COLLISION:
             if particle_id not in collided_with_ball:
@@ -91,21 +89,19 @@ def draw_particles(video_builder: VideoBuilder, state: DataFrame, collided_with_
             (row['y'] / grid_size) * video_height)
         id = row['id']
 
-        # Determinar el color de la partícula
-        # if id in collided_with_wall:
-        #     particle_color = (255,0,0)  # Define este color
-        if id in collided_with_ball:
-            particle_color = (255, 55, 174)  # Define este color
-            collided_with_ball[id] =  collided_with_ball[id] - 1
+        if id in collided_with_wall:
+            particle_color = (255, 0, 0)
+        elif id in collided_with_ball:
+            particle_color = (255, 55, 174)
+            collided_with_ball[id] = collided_with_ball[id] - 1
 
             if collided_with_ball[id] == 0:
                 del collided_with_ball[id]
         else:
-            particle_color = (100, 100, 100)  # Define un color por defecto
+            particle_color = (100, 100, 100)
 
         if id == 1:
             particle_color = (255, 255, 255)
-        # Dibujar la partícula
         video_builder.draw_frame(
             lambda frame: cv2.circle(frame, (x, y), int((row['radius'] / grid_size) * video_width), particle_color, -1))
 
@@ -127,7 +123,7 @@ def render():
     previous_time = timesteps[0]
 
     collided_with_wall = []
-    collided_with_ball = {}
+    collided_with_ball = []
 
     j = 1
     dt = 0.0004
@@ -137,11 +133,10 @@ def render():
 
         video_builder.create_frame()
 
-        # if timestep > dt * j:
-        #     print('entre')
-        #     collided_with_wall.clear()
-        #     collided_with_ball.clear()
-        #     j += 1
+        if timestep > dt * j:
+            collided_with_wall.clear()
+            collided_with_ball.clear()
+            j += 1
         if timestep != timesteps[0]:
             update_collision_lists(timestep_data, previous_timestep_data, collided_with_wall, collided_with_ball)
 

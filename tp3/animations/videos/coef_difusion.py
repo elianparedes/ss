@@ -1,9 +1,7 @@
-import colorsys
 import math
 from typing import Sequence
 
 import cv2
-import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
@@ -24,12 +22,10 @@ triangle_base_ratio = 2.5
 vector_color = (255, 255, 255)
 vector_length = 15
 
-# List to store IDs of collided particles
 collided_particles = []
 collided_ball = []
-
-# Define a dictionary to store previous positions and velocities
 prev_state = {}
+
 
 def check_collision(x_particle, y_particle, radius_particle, x_circle, y_circle, radius_circle):
     distance = math.sqrt((x_particle - x_circle) ** 2 + (y_particle - y_circle) ** 2)
@@ -49,10 +45,10 @@ def check_wall_collision(square_size, particle_position, particle_radius):
 
     return False
 
+
 WALL_COLLISION = 1
 PARTICLES_COLLISION = 2
 BALL_COLLISION = 3
-
 
 trajectory_positions = {}
 
@@ -62,6 +58,7 @@ def get_collision_type(colliding_particles):
         return PARTICLES_COLLISION
     else:
         return WALL_COLLISION
+
 
 def get_colliding_particles(state: DataFrame, prevState: DataFrame):
     colliding_particles = []
@@ -79,11 +76,9 @@ def get_colliding_particles(state: DataFrame, prevState: DataFrame):
 
 
 def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: DataFrame):
-    global collided_particles  # Access the global list of collided particles
+    global collided_particles
     global collided_ball
     global trajectory_positions
-
-    colliding_particles = get_colliding_particles(state, prevState)
 
     for index, row in state.iterrows():
         x, y = int((row['x'] / grid_size) * video_width), int(
@@ -93,7 +88,7 @@ def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: Dat
 
         id = row['id']
         if int(id) == 1:
-            particle_color = (255,255,255)
+            particle_color = (255, 255, 255)
 
         video_builder.draw_frame(
             lambda frame: cv2.circle(frame, (x, y), int((row['radius'] / grid_size) * video_width), particle_color,
@@ -105,11 +100,9 @@ def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: Dat
 
             for i in range(1, len(trajectory_positions[id])):
                 video_builder.draw_frame(
-                    lambda frame: cv2.line(frame, trajectory_positions[id][i - 1], trajectory_positions[id][i], (0, 0, 255), 2)
+                    lambda frame: cv2.line(frame, trajectory_positions[id][i - 1], trajectory_positions[id][i],
+                                           (0, 0, 255), 2)
                 )
-
-
-
 
 
 def draw_ball(video_builder: VideoBuilder):
@@ -134,7 +127,6 @@ def render():
 
         video_builder.create_frame()
 
-        #draw_ball(video_builder)
         draw_particles(video_builder, timestep_data, previous_timestep_data)
 
         video_builder.push_frame()

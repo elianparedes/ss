@@ -5,11 +5,13 @@ import numpy as np
 import pandas as pd
 from matplotlib.ticker import AutoLocator
 
-from plot.plot_utils import configure_plot_presets, plot_set_right_legends
+from plot.plot_utils import configure_plot_presets
+
 
 def plot_slopes_means(slopes_means, slopes_stds, temperatures):
     configure_plot_presets(plt)
-    plt.errorbar(x=temperatures, y=slopes_means, yerr=slopes_stds, capsize=5, markersize='10', label='Pendiente $m_{ct}$', fmt='o', color='red')
+    plt.errorbar(x=temperatures, y=slopes_means, yerr=slopes_stds, capsize=5, markersize='10',
+                 label='Pendiente $m_{ct}$', fmt='o', color='red')
 
     plt.xlabel('Temperatura (U.A.)')
     plt.ylabel('Pendiente $m_{ct}$')
@@ -35,8 +37,6 @@ csv_folders = [
 csv_files = []
 for folder in csv_folders:
     csv_files.append(glob.glob(folder + "*.csv"))
-
-
 
 slopes_means = []
 slopes_stds = []

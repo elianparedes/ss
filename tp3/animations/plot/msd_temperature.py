@@ -1,17 +1,19 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+
 import plot_utils as pltutils
 
 pltutils.configure_plot_presets(plt)
-pltutils.plot_cientific_notation(-2,2,plt)
+pltutils.plot_scientific_notation(-2, 2, plt)
 df = pd.read_csv('../compute/msd/slope_speed.csv')
 
-df['T'] = df['speed']**2
+df['T'] = df['speed'] ** 2
 
 colors = ['blue', 'green', 'red', 'purple']
 
 for i, row in df.iterrows():
-    plt.errorbar(row['T'], row['d'], yerr=row['error'], fmt='o', ecolor=colors[i], capsize=3, linestyle='None', marker='o', markersize=8, color=colors[i], label=f'T={row["T"]}')
+    plt.errorbar(row['T'], row['d'], yerr=row['error'], fmt='o', ecolor=colors[i], capsize=3, linestyle='None',
+                 marker='o', markersize=8, color=colors[i], label=f'T={row["T"]}')
 
 plt.xlabel('Temperatura (U.A)')
 plt.ylabel('Coef. de Difusión')

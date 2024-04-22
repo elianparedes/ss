@@ -5,15 +5,16 @@ import numpy as np
 import pandas as pd
 from matplotlib.ticker import AutoLocator
 
-from plot.plot_utils import configure_plot_presets, plot_set_right_legends
+from plot.plot_utils import configure_plot_presets
 
 percentage = 0.4
 n = 300
 
+
 def plot_slopes_means(slopes_means, slopes_stds, temperatures):
     global percentage
     configure_plot_presets(plt)
-    plt.errorbar(x=temperatures, y=slopes_means, yerr=slopes_stds, capsize=5, markersize='10', fmt='o',color='green')
+    plt.errorbar(x=temperatures, y=slopes_means, yerr=slopes_stds, capsize=5, markersize='10', fmt='o', color='green')
 
     plt.xlabel('Temperatura (U.A.)')
     plt.ylabel('$t_{40\%}$ (s)')
@@ -22,7 +23,7 @@ def plot_slopes_means(slopes_means, slopes_stds, temperatures):
     plt.xticks(temperatures)
     plt.grid(True)
     plt.tight_layout()
-    plt.subplots_adjust(right=0.75)  # Adjust the value as needed
+    plt.subplots_adjust(right=0.75)
     plt.savefig("hit_percentage_vs_temperature.png")
 
     plt.show()
@@ -38,8 +39,6 @@ csv_folders = [
 csv_files = []
 for folder in csv_folders:
     csv_files.append(glob.glob(folder + "*.csv"))
-
-
 
 times_means = []
 times_stds = []
@@ -57,7 +56,6 @@ for pile in csv_files:
                 times_to_percentage = np.append(times_to_percentage, x)
                 break
 
-    print(len(times_to_percentage))
     times_means.append(times_to_percentage.mean())
     times_stds.append(times_to_percentage.std())
 
