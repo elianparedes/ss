@@ -2,7 +2,6 @@ package ar.edu.itba.ss.utils.collision;
 
 import ar.edu.itba.ss.utils.entity.MovableSurfaceEntity;
 import ar.edu.itba.ss.utils.entity.SurfaceEntity;
-import ar.edu.itba.ss.utils.models.Ball;
 import ar.edu.itba.ss.utils.models.Border;
 import ar.edu.itba.ss.utils.models.Particle;
 
@@ -31,19 +30,19 @@ public abstract class Collision implements Comparable<Collision> {
         double dVy = ball.getYSpeed() - particle.getYSpeed();
 
         double dVdR = dx * dVx + dy * dVy;
-        if (dVdR > 0) return new BallCollision(Double.MAX_VALUE, particle, ball,movable);
+        if (dVdR > 0) return new BallCollision(Double.MAX_VALUE, particle, ball, movable);
 
         double dVdV = dVx * dVx + dVy * dVy;
-        if (dVdV == 0) return new BallCollision(Double.MAX_VALUE, particle, ball,movable);
+        if (dVdV == 0) return new BallCollision(Double.MAX_VALUE, particle, ball, movable);
 
         double dRdR = dx * dx + dy * dy;
 
         double sigma = particle.getEntity().getRadius() + ball.getEntity().getRadius();
         double d = (dVdR * dVdR) - dVdV * (dRdR - sigma * sigma);
 
-        if (d < 0) return new BallCollision(Double.MAX_VALUE, particle, ball,movable);
+        if (d < 0) return new BallCollision(Double.MAX_VALUE, particle, ball, movable);
 
-        return new BallCollision(-(dVdR + Math.sqrt(d)) / dVdV, particle, ball,movable);
+        return new BallCollision(-(dVdR + Math.sqrt(d)) / dVdV, particle, ball, movable);
     }
 
     public static WallCollision predictCollision(MovableSurfaceEntity<Particle> particle, SurfaceEntity<Border> b) {
@@ -56,9 +55,8 @@ public abstract class Collision implements Comparable<Collision> {
                 double l = (border.getP2().getY() - border.getP1().getY());
 
                 collisionTime = (l - particle.getX() - particle.getEntity().getRadius()) / particle.getXSpeed();
-            }
-            else if (particle.getXSpeed() < 0)
-                collisionTime =  (particle.getEntity().getRadius() - particle.getX()) / particle.getXSpeed();
+            } else if (particle.getXSpeed() < 0)
+                collisionTime = (particle.getEntity().getRadius() - particle.getX()) / particle.getXSpeed();
 
 
         } else if (border.getP2().getY() == border.getP1().getY()) {
@@ -66,8 +64,7 @@ public abstract class Collision implements Comparable<Collision> {
             if (particle.getYSpeed() > 0) {
                 double l = (border.getP2().getX() - border.getP1().getX());
                 collisionTime = (l - particle.getY() - particle.getEntity().getRadius()) / particle.getYSpeed();
-            }
-            else if (particle.getYSpeed() < 0)
+            } else if (particle.getYSpeed() < 0)
                 collisionTime = (particle.getEntity().getRadius() - particle.getY()) / particle.getYSpeed();
         }
 

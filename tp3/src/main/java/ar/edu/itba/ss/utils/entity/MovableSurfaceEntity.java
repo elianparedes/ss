@@ -1,8 +1,5 @@
 package ar.edu.itba.ss.utils.entity;
 
-import ar.edu.itba.ss.utils.models.Border;
-import ar.edu.itba.ss.utils.models.Particle;
-
 public class MovableSurfaceEntity<T extends Entity> extends SurfaceEntity<T> {
 
     private double speed;

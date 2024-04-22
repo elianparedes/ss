@@ -3,6 +3,7 @@ package ar.edu.itba.ss.simulation.events;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
 public class EventProcessor {
     private final Map<Class<?>, Consumer<Object>> handlers = new HashMap<>();
 

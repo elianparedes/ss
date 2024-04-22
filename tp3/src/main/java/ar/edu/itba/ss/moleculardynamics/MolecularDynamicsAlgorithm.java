@@ -3,11 +3,9 @@ package ar.edu.itba.ss.moleculardynamics;
 import ar.edu.itba.ss.simulation.algorithms.Algorithm;
 import ar.edu.itba.ss.simulation.events.Event;
 import ar.edu.itba.ss.simulation.events.EventListener;
-import ar.edu.itba.ss.utils.collision.BallCollision;
 import ar.edu.itba.ss.utils.collision.Collision;
 import ar.edu.itba.ss.utils.entity.MovableSurfaceEntity;
 import ar.edu.itba.ss.utils.entity.SurfaceEntity;
-import ar.edu.itba.ss.utils.models.Ball;
 import ar.edu.itba.ss.utils.models.Border;
 import ar.edu.itba.ss.utils.models.Particle;
 
@@ -98,8 +96,8 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
                 imminentCollisions.add(Collision.predictCollision(current, border));
             }
 
-            if(!movable)
-                imminentCollisions.add(Collision.predictCollision(ball, current,movable));
+            if (!movable)
+                imminentCollisions.add(Collision.predictCollision(ball, current, movable));
         }
 
         return imminentCollisions;
@@ -109,7 +107,7 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
     public void calculate(MolecularDynamicsParameters params, EventListener eventListener) {
         boolean movable = params.movable;
         List<MovableSurfaceEntity<Particle>> currentState = params.particles;
-        if(movable) currentState.add(params.ball);
+        if (movable) currentState.add(params.ball);
 
         Queue<Collision> imminentCollisions = predictImminentCollisions(currentState, params.fixedObjects, params.ball, movable);
 
@@ -129,7 +127,7 @@ public class MolecularDynamicsAlgorithm implements Algorithm<MolecularDynamicsPa
 
                 currentState = collideState(stateBeforeCollision, collidingParticles);
 
-                imminentCollisions = predictImminentCollisions(currentState, params.fixedObjects,params.ball,movable);
+                imminentCollisions = predictImminentCollisions(currentState, params.fixedObjects, params.ball, movable);
                 eventListener.emit(new Event<>(new MolecularDynamicsState(currentState, t)));
                 i++;
 

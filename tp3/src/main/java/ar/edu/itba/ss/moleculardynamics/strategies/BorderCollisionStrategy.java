@@ -11,7 +11,7 @@ public class BorderCollisionStrategy implements CollisionStrategy<Border> {
         Border border = entity.getEntity();
         if (border.getP1().getX() == border.getP2().getX()) {
             double dirVect = border.getP1().getX() - particle.getX();
-            dirVect += dirVect < 0 ? particle.getEntity().getRadius() : -1*particle.getEntity().getRadius();
+            dirVect += dirVect < 0 ? particle.getEntity().getRadius() : -1 * particle.getEntity().getRadius();
             if (particle.getXSpeed() * dirVect < 0) {
                 return Double.MAX_VALUE;
             }
@@ -22,7 +22,7 @@ public class BorderCollisionStrategy implements CollisionStrategy<Border> {
 
         } else if (border.getP2().getY() == border.getP1().getY()) {
             double dirVect = border.getP1().getY() - particle.getY();
-            dirVect += dirVect < 0 ? particle.getEntity().getRadius() : -1*particle.getEntity().getRadius();
+            dirVect += dirVect < 0 ? particle.getEntity().getRadius() : -1 * particle.getEntity().getRadius();
 
             if (particle.getYSpeed() * dirVect < 0) {
                 return Double.MAX_VALUE;

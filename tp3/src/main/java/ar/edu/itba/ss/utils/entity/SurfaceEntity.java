@@ -60,8 +60,8 @@ public class SurfaceEntity<T extends Entity> implements Comparable<Object> {
     @Override
     public int compareTo(Object o) {
         SurfaceEntity<?> other = (SurfaceEntity<?>) o;
-        if(Double.compare(other.y,this.y) == 0){
-            return Double.compare(this.x,other.x);
+        if (Double.compare(other.y, this.y) == 0) {
+            return Double.compare(this.x, other.x);
         }
         return Double.compare(this.y, other.y);
     }

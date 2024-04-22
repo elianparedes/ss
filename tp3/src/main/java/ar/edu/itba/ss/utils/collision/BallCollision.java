@@ -1,8 +1,6 @@
 package ar.edu.itba.ss.utils.collision;
 
 import ar.edu.itba.ss.utils.entity.MovableSurfaceEntity;
-import ar.edu.itba.ss.utils.entity.SurfaceEntity;
-import ar.edu.itba.ss.utils.models.Ball;
 import ar.edu.itba.ss.utils.models.Particle;
 
 import java.util.ArrayList;

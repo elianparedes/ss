@@ -2,7 +2,7 @@ package ar.edu.itba.ss.simulation.worker;
 
 import ar.edu.itba.ss.simulation.events.EventsQueue;
 
-public class QueueWorkerHandler implements Runnable{
+public class QueueWorkerHandler implements Runnable {
 
     private final QueueWorker worker;
     private final EventsQueue queue;

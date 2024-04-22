@@ -12,7 +12,6 @@ import ar.edu.itba.ss.simulation.events.EventsQueue;
 import ar.edu.itba.ss.utils.entity.MovableSurfaceEntity;
 import ar.edu.itba.ss.utils.entity.SurfaceEntity;
 import ar.edu.itba.ss.utils.geometry.Point;
-import ar.edu.itba.ss.utils.models.Ball;
 import ar.edu.itba.ss.utils.models.Border;
 import ar.edu.itba.ss.utils.models.Particle;
 
@@ -36,7 +35,7 @@ public class Main {
 
         JsonConfigReader configReader = new JsonConfigReader();
         MolecularDynamicsParameters params = configReader.readConfig(handler.getArgument("-C"), MolecularDynamicsParameters.class);
-        MovableSurfaceEntity<Particle> ball = new MovableSurfaceEntity<>(new Particle(params.rb, params.massB), params.l/ 2, params.l/2,0,0);
+        MovableSurfaceEntity<Particle> ball = new MovableSurfaceEntity<>(new Particle(params.rb, params.massB), params.l / 2, params.l / 2, 0, 0);
 
         List<MovableSurfaceEntity<Particle>> particles = MolecularDynamicsAlgorithm.generateRandomParticles(
                 params.l, params.n, params.rp, params.speed, params.massP, ball
@@ -45,8 +44,8 @@ public class Main {
         List<SurfaceEntity<Border>> fixedObjects = new ArrayList<>();
         fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, 0), new Point(0, params.l)), 0, 0));
         fixedObjects.add(new SurfaceEntity<>(new Border(new Point(params.l, 0), new Point(params.l, params.l)), params.l, params.l / 2));
-        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, 0), new Point(params.l, 0)), params.l/ 2, 0));
-        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, params.l), new Point(params.l, params.l)), params.l/ 2, params.l));
+        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, 0), new Point(params.l, 0)), params.l / 2, 0));
+        fixedObjects.add(new SurfaceEntity<>(new Border(new Point(0, params.l), new Point(params.l, params.l)), params.l / 2, params.l));
 
         params.particles = particles;
         params.fixedObjects = fixedObjects;
@@ -64,7 +63,7 @@ public class Main {
         File file = new File(filePath);
         if (file.exists()) {
             if (!file.delete()) {
-                throw new RuntimeException("No se pudo eliminar el archivo existente: " + filePath);
+                throw new RuntimeException("Cannot delete existing file: " + filePath);
             }
         }
 
@@ -76,7 +75,7 @@ public class Main {
 
                 MovableSurfaceEntity<Particle> ballState = ball;
                 for (MovableSurfaceEntity<Particle> particle : p) {
-                    if(params.movable && Objects.equals(particle.getEntity().getId(), ball.getEntity().getId())){
+                    if (params.movable && Objects.equals(particle.getEntity().getId(), ball.getEntity().getId())) {
                         ballState = particle;
                     } else {
                         builder.appendLine(
@@ -91,8 +90,8 @@ public class Main {
                         );
                     }
                 }
-                System.out.println(ballState);
-                builder.appendLine(filePath,String.valueOf(state.getTime()),
+
+                builder.appendLine(filePath, String.valueOf(state.getTime()),
                         String.valueOf(ballState.getEntity().getId()),
                         String.valueOf(ballState.getX()),
                         String.valueOf(ballState.getY()),

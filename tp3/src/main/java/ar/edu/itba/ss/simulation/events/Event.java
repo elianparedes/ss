@@ -3,6 +3,7 @@ package ar.edu.itba.ss.simulation.events;
 public class Event<T> {
 
     private final T payload;
+
     public Event(T payload) {
         this.payload = payload;
     }

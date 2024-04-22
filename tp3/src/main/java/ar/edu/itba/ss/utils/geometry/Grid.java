@@ -16,7 +16,7 @@ public class Grid<T extends Entity> {
     public Grid(double size, int numCells) {
         this.size = size;
         this.numCells = numCells;
-        double cellSize = (double) size / numCells;
+        double cellSize = size / numCells;
 
         this.cells = new ArrayList<>(numCells);
         for (int i = 0; i < numCells; i++) {
@@ -59,6 +59,7 @@ public class Grid<T extends Entity> {
 
         return neighbours;
     }
+
     public List<Cell<T>> getPeriodicNeighbours(Cell<T> cell, int[][] offsets) {
         int i = cell.getI();
         int j = cell.getJ();

@@ -10,7 +10,7 @@ public class MultiQueueWorkerHandler implements Runnable {
     private final List<EventsQueue> queues;
 
 
-    public MultiQueueWorkerHandler(MultiQueueWorker worker, List<EventsQueue>  queues) {
+    public MultiQueueWorkerHandler(MultiQueueWorker worker, List<EventsQueue> queues) {
         this.worker = worker;
         this.queues = queues;
     }

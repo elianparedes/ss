@@ -1,10 +1,8 @@
 package ar.edu.itba.ss.moleculardynamics;
 
 import ar.edu.itba.ss.simulation.algorithms.AlgorithmParameters;
-import ar.edu.itba.ss.utils.entity.Entity;
 import ar.edu.itba.ss.utils.entity.MovableSurfaceEntity;
 import ar.edu.itba.ss.utils.entity.SurfaceEntity;
-import ar.edu.itba.ss.utils.models.Ball;
 import ar.edu.itba.ss.utils.models.Border;
 import ar.edu.itba.ss.utils.models.Particle;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
