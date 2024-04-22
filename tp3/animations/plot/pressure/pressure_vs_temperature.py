@@ -6,10 +6,10 @@ from plot.plot_utils import configure_plot_presets, plot_scientific_notation, pl
 
 # Pressure
 pressure_files = [
-    '../compute/pressure/l0.1-n300-i20000-s1-mfalse-pressure.csv',
-    '../compute/pressure/l0.1-n300-i20000-s3-mfalse-pressure.csv',
-    '../compute/pressure/l0.1-n300-i20000-s6-mfalse-pressure.csv',
-    '../compute/pressure/l0.1-n300-i20000-s10-mfalse-pressure.csv'
+    '../../compute/pressure/l0.1-n300-i20000-s1-mfalse-pressure.csv',
+    '../../compute/pressure/l0.1-n300-i20000-s3-mfalse-pressure.csv',
+    '../../compute/pressure/l0.1-n300-i20000-s6-mfalse-pressure.csv',
+    '../../compute/pressure/l0.1-n300-i20000-s10-mfalse-pressure.csv'
 ]
 
 pressure_dfs = []
@@ -24,10 +24,10 @@ for pressure_df in pressure_dfs:
 
 # Pressure over ball
 pressure_ball_files = [
-    '../compute/pressure/l0.1-n300-i20000-s1-mfalse-pressure_ball.csv',
-    '../compute/pressure/l0.1-n300-i20000-s3-mfalse-pressure_ball.csv',
-    '../compute/pressure/l0.1-n300-i20000-s6-mfalse-pressure_ball.csv',
-    '../compute/pressure/l0.1-n300-i20000-s10-mfalse-pressure_ball.csv'
+    '../../compute/pressure/l0.1-n300-i20000-s1-mfalse-pressure_ball.csv',
+    '../../compute/pressure/l0.1-n300-i20000-s3-mfalse-pressure_ball.csv',
+    '../../compute/pressure/l0.1-n300-i20000-s6-mfalse-pressure_ball.csv',
+    '../../compute/pressure/l0.1-n300-i20000-s10-mfalse-pressure_ball.csv'
 ]
 
 pressure_ball_dfs = []
@@ -49,8 +49,8 @@ for speed in speeds:
 
 configure_plot_presets(plt)
 
-plt.errorbar(x=temperatures, y=pressure_means, yerr=pressure_stds, capsize=5, label='Sobre las paredes $P$', fmt='o')
-plt.errorbar(x=temperatures, y=pressure_ball_means, yerr=pressure_ball_stds, capsize=5, label='Sobre el obstáculo $P_o$', fmt='o')
+plt.errorbar(x=temperatures, y=pressure_means, yerr=pressure_stds, capsize=5, label='Sobre las paredes $P$', fmt='o', elinewidth=2, markersize='8')
+plt.errorbar(x=temperatures, y=pressure_ball_means, yerr=pressure_ball_stds, capsize=5, label='Sobre el obstáculo $P_o$', fmt='o', elinewidth=2,  markersize='8')
 
 plt.xlabel('Temperatura (U.A)')
 plt.ylabel('Presión (Pa·m)')
@@ -60,7 +60,7 @@ plt.gca().xaxis.set_major_locator(AutoLocator())  # Adjust the interval as neede
 
 plot_scientific_notation(-2, 2, plt)
 plot_set_right_legends(plt)
-plt.gcf().text(0.78, 0.5, "\n$N = 300$\n$V = \{1 ,3, 6, 10\} \, (m/s)$")
+plt.gcf().text(0.78, 0.5, "\n$N = 300$\n$V \in \{1 ,3, 6, 10\} \, (m/s)$")
 
 plt.xticks(temperatures)
 plt.grid(True)

@@ -13,12 +13,12 @@ n = 300
 def plot_slopes_means(slopes_means, slopes_stds, temperatures):
     global percentage
     configure_plot_presets(plt)
-    plt.errorbar(x=temperatures, y=slopes_means, yerr=slopes_stds, capsize=5, markersize='10', label='Pendiente $m_{ct}$', fmt='o')
+    plt.errorbar(x=temperatures, y=slopes_means, yerr=slopes_stds, capsize=5, markersize='10', fmt='o',color='green')
 
     plt.xlabel('Temperatura (U.A.)')
     plt.ylabel('$t_{40\%}$ (s)')
     plt.gca().xaxis.set_major_locator(AutoLocator())
-    plt.gcf().text(0.77, 0.5, "\n$N = 300$\n$V = \{1 ,3, 6, 10\} \, (m/s)$\n$It_{max}=30000$")
+    plt.gcf().text(0.77, 0.5, "\n$N = 300$\n$V \in \{1 ,3, 6, 10\} \, (m/s)$\n$It_{max}=30000$")
     plt.xticks(temperatures)
     plt.grid(True)
     plt.tight_layout()
