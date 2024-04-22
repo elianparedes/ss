@@ -18,7 +18,6 @@ visiting_area_color: Sequence[float] = (50, 50, 50)
 default_color = (100, 100, 100)
 has_visited_color = (0, 0, 255)
 is_visiting_color = (223.78, 49.086, 48.442)
-ball_color = (255,255,255)
 triangle_length = 8
 triangle_base_ratio = 2.5
 
@@ -54,6 +53,10 @@ WALL_COLLISION = 1
 PARTICLES_COLLISION = 2
 BALL_COLLISION = 3
 
+
+trajectory_positions = {}
+
+
 def get_collision_type(colliding_particles):
     if len(colliding_particles) == 2:
         return PARTICLES_COLLISION
@@ -78,25 +81,34 @@ def get_colliding_particles(state: DataFrame, prevState: DataFrame):
 def draw_particles(video_builder: VideoBuilder, state: DataFrame, prevState: DataFrame):
     global collided_particles  # Access the global list of collided particles
     global collided_ball
+    global trajectory_positions
 
     colliding_particles = get_colliding_particles(state, prevState)
-    collision_type = get_collision_type(colliding_particles)
 
     for index, row in state.iterrows():
         x, y = int((row['x'] / grid_size) * video_width), int(
             (row['y'] / grid_size) * video_height)
 
-        id = row['id']
-
         particle_color = default_color
-        if id in colliding_particles:
-            if collision_type == PARTICLES_COLLISION:
-                particle_color = is_visiting_color
-            if collision_type == WALL_COLLISION:
-                particle_color = has_visited_color
+
+        id = row['id']
+        if int(id) == 1:
+            particle_color = (255,255,255)
 
         video_builder.draw_frame(
-            lambda frame: cv2.circle(frame, (x, y), int((row['radius'] / grid_size) * video_width), particle_color, -1))
+            lambda frame: cv2.circle(frame, (x, y), int((row['radius'] / grid_size) * video_width), particle_color,
+                                     -1))
+        if int(id) == 1:
+            if id not in trajectory_positions:
+                trajectory_positions[id] = []
+            trajectory_positions[id].append((x, y))
+
+            for i in range(1, len(trajectory_positions[id])):
+                video_builder.draw_frame(
+                    lambda frame: cv2.line(frame, trajectory_positions[id][i - 1], trajectory_positions[id][i], (0, 0, 255), 2)
+                )
+
+
 
 
 
@@ -109,12 +121,14 @@ def draw_ball(video_builder: VideoBuilder):
 def render():
     video_builder = VideoBuilder("", video_name).set_width(video_width).set_height(video_height)
 
-    simulation_file = '../../output/msd/v10/msd_1.csv'
+    simulation_file = '../../output/msd/v10/msd_3.csv'
     data = pd.read_csv(simulation_file)
 
     timesteps = data['time'].unique()
     previous_time = timesteps[0]
-    for i, timestep in enumerate(timesteps):
+
+    video_builder.set_fps(120)
+    for i, timestep in enumerate(timesteps[:5000]):
         timestep_data = data[data['time'] == timestep]
         previous_timestep_data = data[data['time'] == previous_time]
 

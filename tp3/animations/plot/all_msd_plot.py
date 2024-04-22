@@ -40,7 +40,7 @@ def plot_all_msds(directory,output_csv_file):
     plt.xlabel('Tiempo (s)')
     plt.ylabel('DCM (m$^2$)')
 
-    plt.gcf().text(0.76, 0.5, "\n$N = 300$\n$V = 1 \, m/s$\n$\Delta t = 0.02 \, s$")
+    plt.gcf().text(0.76, 0.5, "\n$N = 300$\n$V = 10 \, m/s$\n$\Delta t = 0.0002 \, s$")
 
     plt.grid(True)
 

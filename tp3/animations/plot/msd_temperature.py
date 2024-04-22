@@ -11,10 +11,10 @@ df['T'] = df['speed']**2
 colors = ['blue', 'green', 'red', 'purple']
 
 for i, row in df.iterrows():
-    plt.errorbar(row['T'], row['m'], yerr=row['error'], fmt='o', ecolor=colors[i], capsize=3, linestyle='None', marker='o', markersize=8, color=colors[i], label=f'T={row["T"]}')
+    plt.errorbar(row['T'], row['d'], yerr=row['error'], fmt='o', ecolor=colors[i], capsize=3, linestyle='None', marker='o', markersize=8, color=colors[i], label=f'T={row["T"]}')
 
-plt.xlabel('Temperatura (m$^2$/s$^2$)')
-plt.ylabel('Pendiente')
+plt.xlabel('Temperatura (U.A)')
+plt.ylabel('Coef. de Difusión')
 
 plt.legend(title="Temperaturas")
 
