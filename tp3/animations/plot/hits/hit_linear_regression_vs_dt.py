@@ -9,8 +9,8 @@ from plot.plot_utils import plot_set_right_legends
 
 
 def plot_linear_regression(polies, intervals, hits):
-    plt.figure(figsize=(14, 7))
-    plt.rcParams.update({'font.size': 16})
+    plt.figure(figsize=(14, 10))
+    plt.rcParams.update({'font.size': 20})
 
     slopes = []
     std_errors = []
@@ -34,7 +34,7 @@ def plot_linear_regression(polies, intervals, hits):
              color='red', linestyle='--', linewidth='3')
 
     plot_set_right_legends(plt)
-    plt.gcf().text(0.79, 0.5, f"\n$N = 300$\n$V = 1 \, m/s$\n$\Delta t = {intervals[0][1]:.3f} \, s$")
+    plt.gcf().text(0.74, 0.5, f"\n$N = 300$\n$V = 1 \, m/s$\n$\Delta t = {intervals[0][1]:.3f} \, s$")
     plt.xlabel('Tiempo (s)')
     plt.ylabel('Nro. de colisiones vs tiempo')
     plt.tight_layout()
