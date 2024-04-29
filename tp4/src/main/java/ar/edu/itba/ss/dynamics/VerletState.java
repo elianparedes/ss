@@ -6,9 +6,15 @@ public class VerletState {
     private final Vector position;
     private final Vector speed;
 
-    public VerletState(Vector position, Vector speed) {
+    private final double time;
+
+    private final double dt;
+
+    public VerletState(Vector position, Vector speed, double time, double dt) {
         this.position = position;
         this.speed = speed;
+        this.time = time;
+        this.dt = dt;
     }
 
     public Vector getPosition() {
@@ -17,5 +23,11 @@ public class VerletState {
 
     public Vector getSpeed() {
         return speed;
+    }
+
+    public double getTime() {return time;}
+
+    public double getDt() {
+        return dt;
     }
 }
