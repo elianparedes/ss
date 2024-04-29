@@ -4,11 +4,15 @@ from typing import Callable, Any
 import cv2
 import numpy as np
 from numpy import ndarray
+from dotenv import load_dotenv
 
 DEFAULT_VIDEO_WIDTH = 800
 DEFAULT_VIDEO_HEIGHT = 800
-DEFAULT_VIDEO_FPS = 140
+DEFAULT_VIDEO_FPS = 60
 
+env_path = os.path.join(os.path.dirname(__file__), '..', '..', '.env')
+load_dotenv(dotenv_path=env_path)
+codec = os.getenv('RENDER_CODEC', 'h264')
 
 class VideoBuilder:
     def __init__(self, output_path: str, name: str):
@@ -19,7 +23,7 @@ class VideoBuilder:
         self.frames: ndarray = ndarray([])
         self.out = cv2.VideoWriter(
             os.path.join(output_path, name),
-            cv2.VideoWriter.fourcc(*'h264'),
+            cv2.VideoWriter.fourcc(*codec),
             self.fps,
             (self.width, self.height)
         )
