@@ -22,6 +22,11 @@ public class Vector {
         return new Vector(x*scalar,y*scalar);
     }
 
+    public Vector multiply(Vector vector){
+        return new Vector(x* vector.x,y* vector.x);
+    }
+
+
     public Vector sum(Vector vector){
         return new Vector(x + vector.x , y + vector.y);
     }
@@ -29,6 +34,8 @@ public class Vector {
     public Vector sub(Vector vector){
         return new Vector(x - vector.x, y - vector.y);
     }
+
+    public Vector divide(double scalar) {return new Vector(x /  scalar, y / scalar);}
 
     @Override
     public String toString() {

@@ -1,11 +1,10 @@
-package ar.edu.itba.ss.dynamics;
+package ar.edu.itba.ss.algorithms.verlet;
 
+import ar.edu.itba.ss.algorithms.AlgorithmState;
 import ar.edu.itba.ss.models.Vector;
 import ar.edu.itba.ss.simulation.algorithms.Algorithm;
 import ar.edu.itba.ss.simulation.events.Event;
 import ar.edu.itba.ss.simulation.events.EventListener;
-
-import java.math.BigDecimal;
 
 public class VerletAlgorithm implements Algorithm<VerletParameters> {
     @Override
@@ -22,7 +21,7 @@ public class VerletAlgorithm implements Algorithm<VerletParameters> {
                     .sum(params.getForce().apply(currentPos, currentSpeed).multiply((params.getDt() * params.getDt()) / params.getMass()));
             currentSpeed = nextPos.sub(previousPos).multiply(1 / (2 * params.getDt()));
 
-            eventListener.emit(new Event<>(new VerletState(currentPos, currentSpeed, time, params.getDt())));
+            eventListener.emit(new Event<>(new AlgorithmState(currentPos, time, params.getDt())));
 
             previousPos = currentPos;
             currentPos = nextPos;

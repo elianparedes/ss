@@ -1,10 +1,8 @@
-package ar.edu.itba.ss.dynamics;
+package ar.edu.itba.ss.algorithms.verlet;
 
 import ar.edu.itba.ss.models.Force;
 import ar.edu.itba.ss.models.Vector;
 import ar.edu.itba.ss.simulation.algorithms.AlgorithmParameters;
-
-import java.math.BigDecimal;
 
 public class VerletParameters extends AlgorithmParameters {
 

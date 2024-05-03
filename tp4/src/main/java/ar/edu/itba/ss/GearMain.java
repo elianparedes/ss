@@ -1,8 +1,8 @@
 package ar.edu.itba.ss;
 
 import ar.edu.itba.ss.algorithms.AlgorithmState;
-import ar.edu.itba.ss.algorithms.verlet.VerletAlgorithm;
-import ar.edu.itba.ss.algorithms.verlet.VerletParameters;
+import ar.edu.itba.ss.algorithms.gear.GearAlgorithm;
+import ar.edu.itba.ss.algorithms.gear.GearParameters;
 import ar.edu.itba.ss.models.Force;
 import ar.edu.itba.ss.models.Vector;
 import ar.edu.itba.ss.output.CSVBuilder;
@@ -11,7 +11,7 @@ import ar.edu.itba.ss.simulation.events.EventsQueue;
 
 import java.io.IOException;
 
-public class Main {
+public class GearMain {
 
     /**
      * Algorithm constants
@@ -24,7 +24,7 @@ public class Main {
      * Delta time step and starting values for algorithm benchmarks
      */
     private static final double DT_STEP = 0.00005;
-    private static final double DT_START = 0.0000001;
+    private static final double DT_START = 0.0001;
 
     /**
      * Max benchmark iterations
@@ -47,6 +47,7 @@ public class Main {
         return (int) Math.ceil((dt * MAX_ITERATIONS_REF) / DT_REF);
     }
 
+
     public static void main(String[] args) {
 
         Force force = new Force() {
@@ -62,41 +63,41 @@ public class Main {
         };
 
         double dt = DT_START;
-        for (int i = 0; i < BENCHMARK_MAX_ITERATIONS; i++) {
-            Vector initialPos = new Vector(POSITION_START, 0);
-            Vector initialSpeed = new Vector(-GAMMA / 2 * MASS, 0);
-            Vector previous = initialPos.sum(initialSpeed.multiply(-1 * dt));
 
-            int maxIterations = getMaxIterationsForDt(dt);
+        double[] alphaValues = new double[]{(3.0 / 16.0), (251.0 / 360), 1.0, (11.0 / 18.0), (1.0 / 6.0), (1.0 / 60.0)};
 
-            VerletParameters parameters = new VerletParameters(initialPos, previous, initialSpeed, force, MASS, dt, maxIterations);
-            VerletAlgorithm algorithm = new VerletAlgorithm();
+        Vector initialPos = new Vector(POSITION_START, 0);
+        Vector initialSpeed = new Vector(-GAMMA / 2 * MASS, 0);
+        Vector initialAcceleration = force.apply(initialPos, initialSpeed).divide(MASS);
 
-            EventsQueue eventsQueue = new EventsQueue();
-            algorithm.calculate(parameters, eventsQueue::add);
+        int maxIterations = getMaxIterationsForDt(dt);
 
-            String fileName = String.format("output/i%s.csv", i);
+        GearParameters parameters = new GearParameters(initialSpeed, initialAcceleration, initialPos, alphaValues, force, MASS, dt, maxIterations);
+        GearAlgorithm algorithm = new GearAlgorithm();
 
-            CSVBuilder builder = new CSVBuilder();
-            try {
-                builder.appendLine(fileName, "dt", "time", "x", "y");
-                for (Event<?> e : eventsQueue) {
-                    AlgorithmState state = (AlgorithmState) e.getPayload();
+        EventsQueue eventsQueue = new EventsQueue();
+        algorithm.calculate(parameters, eventsQueue::add);
 
-                    builder.appendLine(
-                            fileName,
-                            String.valueOf(state.getDt()),
-                            String.valueOf(state.getTime()),
-                            String.valueOf(state.getPosition().getX()),
-                            String.valueOf(state.getPosition().getY())
-                    );
-                }
+        String fileName = String.format("output/i%s.csv", 1);
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        CSVBuilder builder = new CSVBuilder();
+        try {
+            builder.appendLine(fileName, "dt", "time", "x", "y");
+            for (Event<?> e : eventsQueue) {
+                AlgorithmState state = (AlgorithmState) e.getPayload();
+
+                builder.appendLine(
+                        fileName,
+                        String.valueOf(state.getDt()),
+                        String.valueOf(state.getTime()),
+                        String.valueOf(state.getPosition().getX()),
+                        String.valueOf(state.getPosition().getY())
+                );
             }
 
-            dt += DT_STEP;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
     }
 }

@@ -1,18 +1,16 @@
-package ar.edu.itba.ss.dynamics;
+package ar.edu.itba.ss.algorithms;
 
 import ar.edu.itba.ss.models.Vector;
 
-public class VerletState {
+public class AlgorithmState {
     private final Vector position;
-    private final Vector speed;
 
     private final double time;
 
     private final double dt;
 
-    public VerletState(Vector position, Vector speed, double time, double dt) {
+    public AlgorithmState(Vector position, double time, double dt) {
         this.position = position;
-        this.speed = speed;
         this.time = time;
         this.dt = dt;
     }
@@ -21,9 +19,6 @@ public class VerletState {
         return position;
     }
 
-    public Vector getSpeed() {
-        return speed;
-    }
 
     public double getTime() {return time;}
 
