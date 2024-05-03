@@ -1,11 +1,9 @@
-package ar.edu.itba.ss.dynamics;
+package ar.edu.itba.ss.algorithms.verlet;
 
 import ar.edu.itba.ss.models.Vector;
 import ar.edu.itba.ss.simulation.algorithms.Algorithm;
 import ar.edu.itba.ss.simulation.events.Event;
 import ar.edu.itba.ss.simulation.events.EventListener;
-
-import java.math.BigDecimal;
 
 public class VerletAlgorithm implements Algorithm<VerletParameters> {
     @Override

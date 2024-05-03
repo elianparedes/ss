@@ -1,4 +1,4 @@
-package ar.edu.itba.ss.dynamics;
+package ar.edu.itba.ss.algorithms.verlet;
 
 import ar.edu.itba.ss.models.Vector;
 
