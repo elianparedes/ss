@@ -17,8 +17,8 @@ path = '../../output/'
 csv_file = 'i1.csv'
 
 data = pd.read_csv(path + csv_file)
-time_values = data['time'][:100]
-position_values = data['x'][:100]
+time_values = data['time'][:1000]
+position_values = data['x'][:1000]
 
 plt.figure(figsize=(10, 6))
 plt.plot(time_values, position_values)

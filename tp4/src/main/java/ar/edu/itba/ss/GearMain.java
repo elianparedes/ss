@@ -67,7 +67,7 @@ public class GearMain {
         double[] alphaValues = new double[]{(3.0 / 16.0), (251.0 / 360), 1.0, (11.0 / 18.0), (1.0 / 6.0), (1.0 / 60.0)};
 
         Vector initialPos = new Vector(POSITION_START, 0);
-        Vector initialSpeed = new Vector(-GAMMA / 2 * MASS, 0);
+        Vector initialSpeed = new Vector(-GAMMA / (2 * MASS), 0);
         Vector initialAcceleration = force.apply(initialPos, initialSpeed).divide(MASS);
 
         int maxIterations = getMaxIterationsForDt(dt);

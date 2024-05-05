@@ -34,16 +34,16 @@ public class GearAlgorithm implements Algorithm<GearParameters> {
             }
 
             // Evaluate
-            Vector dA = (force.apply(r.get(0), r.get(1))).sub(force.apply(newR.get(0), newR.get(1))).divide(mass);
+            Vector futureA = force.apply(newR.get(0), newR.get(1)).divide(mass);
+            Vector dA = futureA.sub(newR.get(2));
             Vector dR2 = dA.multiply(factor(dt, 2));
 
             // Correct
             for(int j = 0; j < r.size(); j++) {
-                if (alpha.length == r.size())
-                    newR.set(j, newR.get(j).sum(dR2.multiply(alpha[j]).divide(factor(dt, j))));
+                newR.set(j, newR.get(j).sum(dR2.multiply(alpha[j]).divide(factor(dt, j))));
             }
 
-            eventListener.emit(new Event<>(new AlgorithmState(r.get(0), time, params.getDt())));
+            eventListener.emit(new Event<>(new AlgorithmState(newR.get(5), time, params.getDt())));
 
             r = newR;
             time += dt;
