@@ -41,15 +41,10 @@ public class BeemanMain {
             }
         };
         Vector initialPos = new Vector(POSITION_START, 0);
-        System.out.println(initialPos.getX());
         Vector initialSpeed = new Vector(-GAMMA / (2 * MASS), 0);
-        System.out.println(initialSpeed.getX());
         Vector previousPos = initialPos.sum(initialSpeed.multiply(-1 * DT)).sum(force.apply(initialPos, initialSpeed).multiply((DT * DT) / (2 * MASS)));
-        System.out.println(previousPos);
         Vector previousSpeed = initialSpeed.sum(force.apply(initialPos, initialSpeed).multiply((-1*DT) / MASS));
-        System.out.println(previousSpeed);
         Vector previousAcceleration = force.apply(previousPos, previousSpeed).multiply(1 / MASS);
-        System.out.println(previousAcceleration);
         Vector currentAcceleration = force.apply(initialPos, initialSpeed).multiply(1 / MASS);
 
         BeemanParameters parameters = new BeemanParameters(MASS,DT,MAX_ITERATIONS_REF,initialPos,initialSpeed,previousAcceleration,currentAcceleration,force, ForceType.POS_SPEED_FORCE);

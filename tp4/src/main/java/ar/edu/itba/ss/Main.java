@@ -1,9 +1,12 @@
 package ar.edu.itba.ss;
 
 import ar.edu.itba.ss.algorithms.AlgorithmState;
+import ar.edu.itba.ss.algorithms.beeman.BeemanAlgorithm;
+import ar.edu.itba.ss.algorithms.beeman.BeemanParameters;
 import ar.edu.itba.ss.algorithms.verlet.VerletAlgorithm;
 import ar.edu.itba.ss.algorithms.verlet.VerletParameters;
 import ar.edu.itba.ss.models.Force;
+import ar.edu.itba.ss.models.ForceType;
 import ar.edu.itba.ss.models.Vector;
 import ar.edu.itba.ss.output.CSVBuilder;
 import ar.edu.itba.ss.simulation.events.Event;
@@ -64,34 +67,48 @@ public class Main {
         double dt = DT_START;
         for (int i = 0; i < BENCHMARK_MAX_ITERATIONS; i++) {
             Vector initialPos = new Vector(POSITION_START, 0);
-            Vector initialSpeed = new Vector(-GAMMA / 2 * MASS, 0);
-            Vector previous = initialPos.sum(initialSpeed.multiply(-1 * dt));
+            Vector initialSpeed = new Vector(-GAMMA / (2 * MASS), 0);
+            Vector previousPos = initialPos.sum(initialSpeed.multiply(-1 * dt)).sum(force.apply(initialPos, initialSpeed).multiply((dt * dt) / (2 * MASS)));
+            Vector previousSpeed = initialSpeed.sum(force.apply(initialPos, initialSpeed).multiply((-1 * dt) / MASS));
+            Vector previousAcceleration = force.apply(previousPos, previousSpeed).multiply(1 / MASS);
+            Vector currentAcceleration = force.apply(initialPos, initialSpeed).multiply(1 / MASS);
 
             int maxIterations = getMaxIterationsForDt(dt);
 
-            VerletParameters parameters = new VerletParameters(initialPos, previous, initialSpeed, force, MASS, dt, maxIterations);
+            VerletParameters parameters = new VerletParameters(initialPos, previousPos, initialSpeed, force, MASS, dt, maxIterations);
             VerletAlgorithm algorithm = new VerletAlgorithm();
 
             EventsQueue eventsQueue = new EventsQueue();
             algorithm.calculate(parameters, eventsQueue::add);
 
+            BeemanParameters beemanParameters = new BeemanParameters(MASS, dt, maxIterations, initialPos, initialSpeed, previousAcceleration, currentAcceleration, force, ForceType.POS_SPEED_FORCE);
+            BeemanAlgorithm beemanAlgorithm = new BeemanAlgorithm();
+            EventsQueue beemanEventsQueue = new EventsQueue();
+
+            beemanAlgorithm.calculate(beemanParameters, beemanEventsQueue::add);
+
             String fileName = String.format("output/i%s.csv", i);
 
             CSVBuilder builder = new CSVBuilder();
             try {
-                builder.appendLine(fileName, "dt", "time", "x", "y");
-                for (Event<?> e : eventsQueue) {
-                    AlgorithmState state = (AlgorithmState) e.getPayload();
+                builder.appendLine(fileName, "dt", "time", "verlet", "beeman");
+                for (int j = 0; j < maxIterations; j++) {
+                    //Verlet
+                    AlgorithmState state = (AlgorithmState) eventsQueue.get(j).getPayload();
+                    String verlet = String.valueOf(state.getPosition().getX());
+
+                    //Beeman
+                    state = (AlgorithmState) beemanEventsQueue.get(j).getPayload();
+                    String beeman = String.valueOf(state.getPosition().getX());
 
                     builder.appendLine(
                             fileName,
                             String.valueOf(state.getDt()),
                             String.valueOf(state.getTime()),
-                            String.valueOf(state.getPosition().getX()),
-                            String.valueOf(state.getPosition().getY())
+                            verlet,
+                            beeman
                     );
                 }
-
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

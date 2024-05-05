@@ -28,7 +28,11 @@ csv_files = [
     'i9.csv'
 ]
 
-mqe_values = []
+algorithms = ['verlet','beeman']
+
+mqe_values = {}
+for algorithm in algorithms:
+    mqe_values[algorithm] = []
 dt_values = []
 
 for csv_file in csv_files:
@@ -36,14 +40,21 @@ for csv_file in csv_files:
     df = pd.read_csv(path + csv_file)
     time_values = df['time']
     dt = df['dt'].iloc[0]
-    predicted_values = df['x']
     expected_values = damped_harmonic_oscillator(amplitude, k, gamma, mass, time_values)
-    mqe = np.mean((expected_values - predicted_values) ** 2)
-    mqe_values.append(mqe)
+    for algorithm in algorithms:
+        predicted_values = df[algorithm]
+        mqe = np.mean((expected_values - predicted_values) ** 2)
+        mqe_values[algorithm].append(mqe)
+
     dt_values.append(dt)
 
 plt.figure(figsize=(10, 6))
-plt.scatter(dt_values, mqe_values)
+plt.yscale('log')
+colors = ['blue', 'orange']
+
+for i, algorithm in enumerate(algorithms):
+    plt.scatter(dt_values, mqe_values[algorithm], label=algorithm.capitalize(), color=colors[i])
+
 plt.xlabel('dt')
 plt.ylabel('mqe')
 plt.grid(True)
