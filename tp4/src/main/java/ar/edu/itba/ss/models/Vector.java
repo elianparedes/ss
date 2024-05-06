@@ -37,6 +37,14 @@ public class Vector {
 
     public Vector divide(double scalar) {return new Vector(x /  scalar, y / scalar);}
 
+    public double norm2(){
+        return x*x + y*y;
+    }
+
+    public double angle(){
+        return Math.atan2(y,x);
+    }
+
     @Override
     public String toString() {
         return String.format("( %f ; %f)", x, y);

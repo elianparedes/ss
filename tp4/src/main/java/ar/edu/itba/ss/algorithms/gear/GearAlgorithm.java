@@ -24,35 +24,9 @@ public class GearAlgorithm implements Algorithm<GearParameters> {
         double[] alpha = params.getAlpha();
 
         for (int i = 0; i < params.getMaxIterations(); i++) {
-
             time = i*dt;
-
-            // Predict
-            List<Vector> newR = new ArrayList<>(r);
-            for (int j = 0; j < r.size(); j++) {
-                for (int k = j+1; k < r.size(); k++) {
-                    newR.set(j, newR.get(j).sum(r.get(k).multiply(factor(dt, k - j))));
-                }
-            }
-
-            // Evaluate
-            Vector futureA = force.apply(newR.get(0), newR.get(1)).divide(mass);
-            Vector dA = futureA.sub(newR.get(2));
-            Vector dR2 = dA.multiply(factor(dt, 2));
-
-            // Correct
-            for(int j = 0; j < r.size(); j++) {
-                newR.set(j, newR.get(j).sum(dR2.multiply(alpha[j]).divide(factor(dt, j))));
-            }
-
             eventListener.emit(new Event<>(new AlgorithmState(r.get(0), time, params.getDt())));
-
-            r = newR;
+            r = GearAlgorithmStep.calculateStep(dt,r,force,mass,alpha);
         }
-    }
-
-    private double factor(double dt, int k){
-        if(k == 0) return 1;
-        return Math.pow(dt, k) / AuxiliarMath.factorial(k);
     }
 }
