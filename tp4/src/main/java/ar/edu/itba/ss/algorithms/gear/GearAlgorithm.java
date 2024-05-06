@@ -19,16 +19,18 @@ public class GearAlgorithm implements Algorithm<GearParameters> {
         Force force = params.getForce();
 
         double dt = params.getDt();
-        double time = 0;
+        double time;
         double mass = params.getMass();
         double[] alpha = params.getAlpha();
 
         for (int i = 0; i < params.getMaxIterations(); i++) {
 
+            time = i*dt;
+
             // Predict
             List<Vector> newR = new ArrayList<>(r);
             for (int j = 0; j < r.size(); j++) {
-                for (int k = j; k < r.size(); k++) {
+                for (int k = j+1; k < r.size(); k++) {
                     newR.set(j, newR.get(j).sum(r.get(k).multiply(factor(dt, k - j))));
                 }
             }
@@ -43,10 +45,9 @@ public class GearAlgorithm implements Algorithm<GearParameters> {
                 newR.set(j, newR.get(j).sum(dR2.multiply(alpha[j]).divide(factor(dt, j))));
             }
 
-            eventListener.emit(new Event<>(new AlgorithmState(newR.get(5), time, params.getDt())));
+            eventListener.emit(new Event<>(new AlgorithmState(r.get(0), time, params.getDt())));
 
             r = newR;
-            time += dt;
         }
     }
 
