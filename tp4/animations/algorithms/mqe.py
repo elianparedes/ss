@@ -28,7 +28,7 @@ csv_files = [
     'i9.csv'
 ]
 
-algorithms = ['verlet','beeman']
+algorithms = ['verlet','beeman','gear']
 
 mqe_values = {}
 for algorithm in algorithms:
@@ -50,7 +50,7 @@ for csv_file in csv_files:
 
 plt.figure(figsize=(10, 6))
 plt.yscale('log')
-colors = ['blue', 'orange']
+colors = ['blue', 'orange','green']
 
 for i, algorithm in enumerate(algorithms):
     plt.scatter(dt_values, mqe_values[algorithm], label=algorithm.capitalize(), color=colors[i])
