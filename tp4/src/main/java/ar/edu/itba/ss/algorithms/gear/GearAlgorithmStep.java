@@ -31,7 +31,7 @@ public class GearAlgorithmStep {
         return newR;
     }
 
-    private static double factor(double dt, int k){
+    public static double factor(double dt, int k){
         if(k == 0) return 1;
         return Math.pow(dt, k) / AuxiliarMath.factorial(k);
     }
