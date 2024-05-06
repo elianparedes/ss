@@ -3,6 +3,8 @@ package ar.edu.itba.ss;
 import ar.edu.itba.ss.algorithms.AlgorithmState;
 import ar.edu.itba.ss.algorithms.beeman.BeemanAlgorithm;
 import ar.edu.itba.ss.algorithms.beeman.BeemanParameters;
+import ar.edu.itba.ss.algorithms.gear.GearAlgorithm;
+import ar.edu.itba.ss.algorithms.gear.GearParameters;
 import ar.edu.itba.ss.algorithms.verlet.VerletAlgorithm;
 import ar.edu.itba.ss.algorithms.verlet.VerletParameters;
 import ar.edu.itba.ss.models.Force;
@@ -72,26 +74,34 @@ public class Main {
             Vector previousSpeed = initialSpeed.sum(force.apply(initialPos, initialSpeed).multiply((-1 * dt) / MASS));
             Vector previousAcceleration = force.apply(previousPos, previousSpeed).multiply(1 / MASS);
             Vector currentAcceleration = force.apply(initialPos, initialSpeed).multiply(1 / MASS);
+            double[] alphaValues = new double[]{(3.0 / 16.0), (251.0 / 360), 1.0, (11.0 / 18.0), (1.0 / 6.0), (1.0 / 60.0)};
 
             int maxIterations = getMaxIterationsForDt(dt);
 
+            //Verlet
             VerletParameters parameters = new VerletParameters(initialPos, previousPos, initialSpeed, force, MASS, dt, maxIterations);
             VerletAlgorithm algorithm = new VerletAlgorithm();
-
             EventsQueue eventsQueue = new EventsQueue();
             algorithm.calculate(parameters, eventsQueue::add);
 
+            //Beeman
             BeemanParameters beemanParameters = new BeemanParameters(MASS, dt, maxIterations, initialPos, initialSpeed, previousAcceleration, currentAcceleration, force, ForceType.POS_SPEED_FORCE);
             BeemanAlgorithm beemanAlgorithm = new BeemanAlgorithm();
             EventsQueue beemanEventsQueue = new EventsQueue();
-
             beemanAlgorithm.calculate(beemanParameters, beemanEventsQueue::add);
+
+            //Gear Predictor
+            GearParameters gearParameters = new GearParameters(initialSpeed, currentAcceleration, initialPos, alphaValues, force, MASS, dt, maxIterations);
+            GearAlgorithm gearAlgorithm = new GearAlgorithm();
+
+            EventsQueue gearEventsQueue = new EventsQueue();
+            gearAlgorithm.calculate(gearParameters, gearEventsQueue::add);
 
             String fileName = String.format("output/i%s.csv", i);
 
             CSVBuilder builder = new CSVBuilder();
             try {
-                builder.appendLine(fileName, "dt", "time", "verlet", "beeman");
+                builder.appendLine(fileName, "dt", "time", "verlet", "beeman", "gear");
                 for (int j = 0; j < maxIterations; j++) {
                     //Verlet
                     AlgorithmState state = (AlgorithmState) eventsQueue.get(j).getPayload();
@@ -101,12 +111,17 @@ public class Main {
                     state = (AlgorithmState) beemanEventsQueue.get(j).getPayload();
                     String beeman = String.valueOf(state.getPosition().getX());
 
+                    //Gear
+                    state = (AlgorithmState) gearEventsQueue.get(j).getPayload();
+                    String gear = String.valueOf(state.getPosition().getX());
+
                     builder.appendLine(
                             fileName,
                             String.valueOf(state.getDt()),
                             String.valueOf(state.getTime()),
                             verlet,
-                            beeman
+                            beeman,
+                            gear
                     );
                 }
             } catch (IOException e) {
