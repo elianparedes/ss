@@ -11,7 +11,7 @@ from lib.video.builder import VideoBuilder
 video_name = "default.mp4"
 video_width = 800
 video_height = 800
-grid_size = 1 * 10 ** 16
+grid_size = 1 * 10 ** 9
 visiting_area_color: Sequence[float] = (50, 50, 50)
 
 
@@ -23,7 +23,7 @@ def draw_particles(video_builder: VideoBuilder, data: DataFrame):
         x += video_width // 2
         y += video_height // 2
 
-        video_builder.draw_frame(lambda frame: cv2.circle(frame, (x, y), int((1 * 10 ** 14 / grid_size) * video_width), (255, 255, 255), -1))
+        video_builder.draw_frame(lambda frame: cv2.circle(frame, (x, y), int((1 * 10 ** 7 / grid_size) * video_width), (255, 255, 255), -1))
 
 def render():
     video_builder = VideoBuilder("", video_name).set_width(video_width).set_height(video_height)

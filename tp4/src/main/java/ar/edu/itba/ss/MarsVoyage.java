@@ -1,6 +1,5 @@
 package ar.edu.itba.ss;
 
-import ar.edu.itba.ss.algorithms.AlgorithmState;
 import ar.edu.itba.ss.models.Particle;
 import ar.edu.itba.ss.models.Vector;
 import ar.edu.itba.ss.output.CSVBuilder;
@@ -17,7 +16,7 @@ public class MarsVoyage {
 
     private static final int MAX_ITERATIONS = 730;
     private static final double DT_STEP = 86400;
-    private static final double GRAVITY_CONSTANT = 6.693 * Math.pow(10, -11);
+    private static final double GRAVITY_CONSTANT = 6.693 * Math.pow(10, -20);
 
     /**
      * Sun
@@ -53,12 +52,13 @@ public class MarsVoyage {
 
         double dt = DT_STEP;
         double time = 0;
-        List<Particle> state = updateParticlesState(particles); // Previous state
+        List<Particle> state = updateParticlesState(particles);
+
         for (int i = 0; i < MAX_ITERATIONS; i++) {
             time = dt * i;
 
             // Predict
-            List<Particle> predictedState = new ArrayList<>(); // Predicted state
+            List<Particle> predictedState = new ArrayList<>();
             for (Particle particle : state) {
                 List<Vector> r = particle.getR();
                 List<Vector> newR = new ArrayList<>(r);
@@ -132,9 +132,6 @@ public class MarsVoyage {
                             String.valueOf(particleState.getPosition().getY())
                     );
                 }
-
-
-
             }
 
         } catch (IOException e) {
@@ -148,20 +145,20 @@ public class MarsVoyage {
         for (Particle current : particles) {
             List<Vector> forces = new ArrayList<>();
             for (Particle other : particles) {
-                if (!current.equals(other)) {
-                    forces.add(calculateForce(current.getPosition().sub(other.getPosition()),
+                if (!current.equals(other) && !current.getName().equals("sun")) {
+                    forces.add(calculateForce(other.getPosition().sub(current.getPosition()),
                             current.getMass(),
                             other.getMass()));
                 }
             }
 
-            Particle updatedBody = new Particle(current.getName(), current.getMass());
+            Particle updatedParticle = new Particle(current.getName(), current.getMass(), new ArrayList<>(current.getR()));
 
-            updatedBody.setVelocity(current.getVelocity());
-            updatedBody.setPosition(current.getPosition());
-            updatedBody.setAcceleration(sumForces(forces).divide(current.getMass()));
+            updatedParticle.setVelocity(current.getVelocity());
+            updatedParticle.setPosition(current.getPosition());
+            updatedParticle.setAcceleration(sumForces(forces).divide(current.getMass()));
 
-            updatedParticles.add(updatedBody);
+            updatedParticles.add(updatedParticle);
         }
 
         return updatedParticles;
