@@ -48,14 +48,14 @@ public class TimeParameters {
     }
 
     public double getStart() {
-        double start = TimeUnits.fromString(startUnits).toSeconds(this.start);
-        double dt = getDt();
-        if(dt > start)
-            throw new RuntimeException("dt must be less than start");
-        return start;
+        return TimeUnits.fromString(startUnits).toSeconds(this.start);
     }
 
     public String getStartUnits() {
         return startUnits;
+    }
+
+    public double getRawStart() {
+        return this.start;
     }
 }

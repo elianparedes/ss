@@ -7,11 +7,13 @@ public class Particle {
 
     private final String name;
     private final double mass;
+    private final double radius;
     private final List<Vector> r;
 
-    public Particle(String name, double mass, Vector position, Vector velocity) {
+    public Particle(String name, double mass, double radius, Vector position, Vector velocity) {
         this.name = name;
         this.mass = mass;
+        this.radius = radius;
         this.r = Collections.nCopies(6, 0)
                 .stream().map((value) -> new Vector(value, value))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -19,15 +21,17 @@ public class Particle {
         this.r.set(1, velocity);
     }
 
-    public Particle(String name, double mass, List<Vector> r) {
+    public Particle(String name, double mass, double radius, List<Vector> r) {
         this.name = name;
         this.mass = mass;
+        this.radius = radius;
         this.r = r;
     }
 
-    public Particle(String name, double mass) {
+    public Particle(String name, double mass, double radius) {
         this.name = name;
         this.mass = mass;
+        this.radius = radius;
         this.r = Collections.nCopies(6, 0)
                 .stream().map((value) -> new Vector(value, value))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -80,6 +84,10 @@ public class Particle {
         if (index < 0 || index >= r.size()) throw new IndexOutOfBoundsException();
 
         return r.set(index, value);
+    }
+
+    public double getRadius() {
+        return radius;
     }
 
     @Override

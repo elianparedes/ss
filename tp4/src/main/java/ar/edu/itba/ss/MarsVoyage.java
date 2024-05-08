@@ -2,11 +2,9 @@ package ar.edu.itba.ss;
 
 import ar.edu.itba.ss.input.JsonConfigReader;
 import ar.edu.itba.ss.models.Particle;
+import ar.edu.itba.ss.models.TimeParameters;
 import ar.edu.itba.ss.models.Vector;
 import ar.edu.itba.ss.output.CSVBuilder;
-import ar.edu.itba.ss.simulation.events.Event;
-import ar.edu.itba.ss.simulation.events.EventsQueue;
-import ar.edu.itba.ss.models.TimeParameters;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,30 +14,29 @@ import static ar.edu.itba.ss.algorithms.gear.GearAlgorithmStep.factor;
 
 public class MarsVoyage {
 
-    private static final int MAX_ITERATIONS = 365*2*24*2;
-    private static final double DT_STEP = 86400/24*2;
     private static final double GRAVITY_CONSTANT = 6.693 * Math.pow(10, -20);
 
     /**
      * Sun
      */
     private static final double SUN_MASS = 1.989 * Math.pow(10, 30);
+    private static final double SUN_RADIUS = 696340 * Math.pow(10, 3);
 
     /**
      * Earth
      */
     private static final double EARTH_MASS = 5.972 * Math.pow(10, 24);
+    private static final double EARTH_RADIUS = 6371 * Math.pow(10, 3);;
     private static final double EARTH_X = -1.219024854566760E+08;
     private static final double EARTH_Y = -8.830999621339682E+07;
     private static final double EARTH_VX = 1.698154915953803E+01;
     private static final double EARTH_VY = -2.422995800936565E+01;
 
-    private static final double EARTH_RADIUS = 6378;
-
     /**
      * Mars
      */
     private static final double MARS_MASS = 6.39 * Math.pow(10, 23);
+    private static final double MARS_RADIUS = 3389.5 * Math.pow(10, 3);;
     private static final double MARS_X = 1.758500774292310E+08;
     private static final double MARS_Y = -1.086968363813986E+08;
     private static final double MARS_VX = 1.365943796448699E+01;
@@ -68,11 +65,19 @@ public class MarsVoyage {
         double start = timeParameters.getStart();
         double dt = timeParameters.getDt();
 
-        EventsQueue events = new EventsQueue();
+        // Initialize CSV File
+        String fileName = String.format("output/dt-%s-start-%s.csv", dt, timeParameters.getRawStart() + timeParameters.getStartUnits());
+        CSVBuilder builder = new CSVBuilder();
+        try {
+            builder.appendLine(fileName, "dt", "time", "name", "radius", "mass", "velocity", "x", "y");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         List<Particle> particles = new ArrayList<>();
-        particles.add(new Particle("sun", SUN_MASS, new Vector(0,0), new Vector(0,0)));
-        particles.add(new Particle("earth", EARTH_MASS, new Vector(EARTH_X, EARTH_Y), new Vector(EARTH_VX, EARTH_VY)));
-        particles.add(new Particle("mars", MARS_MASS, new Vector(MARS_X, MARS_Y), new Vector(MARS_VX, MARS_VY)));
+        particles.add(new Particle("sun", SUN_MASS, SUN_RADIUS, new Vector(0,0), new Vector(0,0)));
+        particles.add(new Particle("earth", EARTH_MASS, EARTH_RADIUS, new Vector(EARTH_X, EARTH_Y), new Vector(EARTH_VX, EARTH_VY)));
+        particles.add(new Particle("mars", MARS_MASS, MARS_RADIUS, new Vector(MARS_X, MARS_Y), new Vector(MARS_VX, MARS_VY)));
 
 
         double time = 0;
@@ -83,8 +88,6 @@ public class MarsVoyage {
 
             time = dt * i;
             if(Double.compare(time,start) == 0){
-                System.out.println(start);
-                System.out.println(time);
                 Particle particle = initializeSpaceship(state.get(1));
                 particle = updateParticleState(particle,state);
                 state.add(particle);
@@ -102,7 +105,7 @@ public class MarsVoyage {
                     }
                 }
 
-                Particle newParticle = new Particle(particle.getName(), particle.getMass(), newR);
+                Particle newParticle = new Particle(particle.getName(), particle.getMass(), particle.getRadius(), newR);
                 predictedState.add(newParticle);
             }
 
@@ -132,45 +135,50 @@ public class MarsVoyage {
                     newR.set(k, newR.get(k).sum(dR2s.get(j).multiply(ALPHAS[k]).divide(factor(dt, k))));
                 }
 
-                Particle correctedParticle = new Particle(predictedParticle.getName(), predictedParticle.getMass(), newR);
+                Particle correctedParticle = new Particle(predictedParticle.getName(), predictedParticle.getMass(), predictedParticle.getRadius(), newR);
                 correctedState.add(correctedParticle);
             }
 
             if(Double.compare(time,start) >= 0)
-                events.add(new Event<>(new MarsVoyageState(state, dt, time)));
+                for (Particle p:
+                 state) {
+                    try {
+                        builder.appendLine(
+                                fileName,
+                                String.valueOf(dt),
+                                String.valueOf(time),
+                                String.valueOf(p.getName()),
+                                String.valueOf(p.getRadius()),
+                                String.valueOf(p.getMass()),
+                                String.valueOf(p.getVelocity().norm()),
+                                String.valueOf(p.getPosition().getX()),
+                                String.valueOf(p.getPosition().getY())
+                        );
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
 
             state = correctedState;
             i++;
         }
 
-        events.add(new Event<>(new MarsVoyageState(state, dt, time)));
-
-
-        // CSV
-        String fileName = "output/solarium-pericardium.csv";
-        CSVBuilder builder = new CSVBuilder();
-        try {
-            builder.appendLine(fileName, "dt", "time", "name", "x", "y");
-
-            for (Event<?> event:
-                 events) {
-                MarsVoyageState marsVoyageState = (MarsVoyageState) event.getPayload();
-                List<Particle> particlesStates = marsVoyageState.getParticlesState();
-                for (Particle particleState:
-                     particlesStates) {
-                    builder.appendLine(
-                            fileName,
-                            String.valueOf(marsVoyageState.getDt()),
-                            String.valueOf(marsVoyageState.getTime()),
-                            String.valueOf(particleState.getName()),
-                            String.valueOf(particleState.getPosition().getX()),
-                            String.valueOf(particleState.getPosition().getY())
-                    );
-                }
+        for (Particle p:
+                state) {
+            try {
+                builder.appendLine(
+                        fileName,
+                        String.valueOf(dt),
+                        String.valueOf(time),
+                        String.valueOf(p.getName()),
+                        String.valueOf(p.getRadius()),
+                        String.valueOf(p.getPosition().getX()),
+                        String.valueOf(p.getPosition().getY())
+                );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -187,7 +195,7 @@ public class MarsVoyage {
                 }
             }
 
-            Particle updatedParticle = new Particle(current.getName(), current.getMass(), new ArrayList<>(current.getR()));
+            Particle updatedParticle = new Particle(current.getName(), current.getMass(), current.getRadius(), new ArrayList<>(current.getR()));
 
             updatedParticle.setVelocity(current.getVelocity());
             updatedParticle.setPosition(current.getPosition());
@@ -208,7 +216,7 @@ public class MarsVoyage {
                         other.getMass()));
             }
         }
-        Particle updatedParticle = new Particle(particle.getName(), particle.getMass(), new ArrayList<>(particle.getR()));
+        Particle updatedParticle = new Particle(particle.getName(), particle.getMass(), particle.getRadius(), new ArrayList<>(particle.getR()));
 
         updatedParticle.setVelocity(particle.getVelocity());
         updatedParticle.setPosition(particle.getPosition());
@@ -262,8 +270,12 @@ public class MarsVoyage {
         );
 
         // Crear y devolver el objeto nave espacial
-        return new Particle("spaceship", SPACESHIP_MASS, initialPositionVector, initialSpeedVector);
+        return new Particle("spaceship", SPACESHIP_MASS, 0 ,initialPositionVector, initialSpeedVector);
     }
 
 
+    public static int calculateIterationsForTwoYears(double deltaTimeInSeconds) {
+        double secondsInTwoYears = 2 * 365 * 24 * 60 * 60;
+        return (int) Math.ceil(secondsInTwoYears / deltaTimeInSeconds);
+    }
 }
