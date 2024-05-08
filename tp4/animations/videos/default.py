@@ -2,7 +2,6 @@ import colorsys
 from typing import Sequence
 
 import cv2
-import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
@@ -13,17 +12,33 @@ video_width = 800
 video_height = 800
 grid_size = 1 * 10 ** 9
 visiting_area_color: Sequence[float] = (50, 50, 50)
-
-
+# Track previous positions for each particle
+previous_positions = {}
 def draw_particles(video_builder: VideoBuilder, data: DataFrame):
-    # Draw particles relative to the Sun
+    global previous_positions
+
+    # Draw particles relative to the Sun and track trajectory
     for index, row in data.iterrows():
         x, y = int((row['x'] / grid_size) * video_width), int((row['y'] / grid_size) * video_height)
 
         x += video_width // 2
         y += video_height // 2
 
-        video_builder.draw_frame(lambda frame: cv2.circle(frame, (x, y), int((1 * 10 ** 7 / grid_size) * video_width), (255, 255, 255), -1))
+        particle_id = row['name']
+
+        # Draw trajectory if the particle has a previous position
+        if particle_id in previous_positions:
+            for center in previous_positions[particle_id]:
+                cv2.circle(video_builder.current_frame, center, 1,(120, 120, 120), -1)
+
+        # Draw current position
+        cv2.circle(video_builder.current_frame, (x, y), int((1 * 10 ** 7 / grid_size) * video_width), (255, 255, 255), -1)
+
+        # Update previous position
+        if particle_id not in previous_positions:
+            previous_positions[particle_id] = []
+        else:
+            previous_positions[particle_id].append((x, y))
 
 def render():
     video_builder = VideoBuilder("", video_name).set_width(video_width).set_height(video_height)
