@@ -1,10 +1,12 @@
 package ar.edu.itba.ss;
 
+import ar.edu.itba.ss.input.JsonConfigReader;
 import ar.edu.itba.ss.models.Particle;
 import ar.edu.itba.ss.models.Vector;
 import ar.edu.itba.ss.output.CSVBuilder;
 import ar.edu.itba.ss.simulation.events.Event;
 import ar.edu.itba.ss.simulation.events.EventsQueue;
+import ar.edu.itba.ss.models.TimeParameters;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,23 +59,32 @@ public class MarsVoyage {
 
     private static final double[] ALPHAS = new double[]{(3.0 / 20.0), (251.0 / 360), 1.0, (11.0 / 18.0), (1.0 / 6.0), (1.0 / 60.0)};
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        JsonConfigReader configReader = new JsonConfigReader();
+        TimeParameters timeParameters = configReader.readConfig("config.json",TimeParameters.class);
+
+        double stop = timeParameters.getStop();
+        double start = timeParameters.getStart();
+        double dt = timeParameters.getDt();
+
         EventsQueue events = new EventsQueue();
         List<Particle> particles = new ArrayList<>();
         particles.add(new Particle("sun", SUN_MASS, new Vector(0,0), new Vector(0,0)));
         particles.add(new Particle("earth", EARTH_MASS, new Vector(EARTH_X, EARTH_Y), new Vector(EARTH_VX, EARTH_VY)));
         particles.add(new Particle("mars", MARS_MASS, new Vector(MARS_X, MARS_Y), new Vector(MARS_VX, MARS_VY)));
 
-        int iteration = 172*24*2;
 
-        double dt = DT_STEP;
         double time = 0;
+        int i = 0;
         List<Particle> state = updateParticlesState(particles);
 
-        for (int i = 0; i < MAX_ITERATIONS + iteration; i++) {
-            time = dt * i;
+        while(Double.compare(time,start+stop) < 0) {
 
-            if(i == iteration){
+            time = dt * i;
+            if(Double.compare(time,start) == 0){
+                System.out.println(start);
+                System.out.println(time);
                 Particle particle = initializeSpaceship(state.get(1));
                 particle = updateParticleState(particle,state);
                 state.add(particle);
@@ -125,10 +136,11 @@ public class MarsVoyage {
                 correctedState.add(correctedParticle);
             }
 
-            if(i >= iteration)
-                events.add(new Event<>(new MarsVoyageState(state, dt, DT_STEP * i)));
+            if(Double.compare(time,start) >= 0)
+                events.add(new Event<>(new MarsVoyageState(state, dt, time)));
 
             state = correctedState;
+            i++;
         }
 
         events.add(new Event<>(new MarsVoyageState(state, dt, time)));
