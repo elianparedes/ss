@@ -41,6 +41,11 @@ public class Vector {
         return x*x + y*y;
     }
 
+    public double norm(){
+        return Math.sqrt(norm2());
+    }
+
+
     public double angle(){
         return Math.atan2(y,x);
     }
