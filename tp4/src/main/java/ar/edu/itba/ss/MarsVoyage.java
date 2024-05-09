@@ -1,5 +1,6 @@
 package ar.edu.itba.ss;
 
+import ar.edu.itba.ss.input.ArgumentHandler;
 import ar.edu.itba.ss.input.JsonConfigReader;
 import ar.edu.itba.ss.models.Particle;
 import ar.edu.itba.ss.models.TimeParameters;
@@ -61,15 +62,21 @@ public class MarsVoyage {
         JsonConfigReader configReader = new JsonConfigReader();
         TimeParameters timeParameters = configReader.readConfig("config.json",TimeParameters.class);
 
+        ArgumentHandler argumentHandler = new ArgumentHandler();
+        argumentHandler.addArgument("-O", (v)->true, true, "output/");
+        argumentHandler.parse(args);
+
+
         double stop = timeParameters.getStop();
         double start = timeParameters.getStart();
         double dt = timeParameters.getDt();
+        double printI = timeParameters.getPrintI();
 
         // Initialize CSV File
-        String fileName = String.format("output/dt-%s-start-%s.csv", dt, timeParameters.getRawStart() + timeParameters.getStartUnits());
+        String fileName = String.format(argumentHandler.getArgument("-O") + "dt-%s-start-%s.csv", dt, timeParameters.getRawStart() + timeParameters.getStartUnits());
         CSVBuilder builder = new CSVBuilder();
         try {
-            builder.appendLine(fileName, "dt", "time", "name", "radius", "mass", "velocity", "x", "y");
+            builder.appendLine(fileName, "time", "name", "velocity", "x", "y");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -139,17 +146,14 @@ public class MarsVoyage {
                 correctedState.add(correctedParticle);
             }
 
-            if(Double.compare(time,start) >= 0)
+            if(Double.compare(time,start) >= 0  && (i% printI == 0)){
                 for (Particle p:
                  state) {
                     try {
                         builder.appendLine(
                                 fileName,
-                                String.valueOf(dt),
-                                String.valueOf(time),
+                                String.valueOf(i),
                                 String.valueOf(p.getName()),
-                                String.valueOf(p.getRadius()),
-                                String.valueOf(p.getMass()),
                                 String.valueOf(p.getVelocity().norm()),
                                 String.valueOf(p.getPosition().getX()),
                                 String.valueOf(p.getPosition().getY())
@@ -158,27 +162,29 @@ public class MarsVoyage {
                         throw new RuntimeException(e);
                     }
                 }
+            }
 
             state = correctedState;
             i++;
+
         }
+        if((i% printI == 0)){
+            for (Particle p:
+                    state) {
+                try {
+                    builder.appendLine(
+                            fileName,
+                            String.valueOf(time),
+                            String.valueOf(p.getName()),
+                            String.valueOf(p.getVelocity().norm()),
+                            String.valueOf(p.getPosition().getX()),
+                            String.valueOf(p.getPosition().getY())
+                    );
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
-        for (Particle p:
-                state) {
-            try {
-                builder.appendLine(
-                        fileName,
-                        String.valueOf(dt),
-                        String.valueOf(time),
-                        String.valueOf(p.getName()),
-                        String.valueOf(p.getRadius()),
-                        String.valueOf(p.getPosition().getX()),
-                        String.valueOf(p.getPosition().getY())
-                );
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
-
         }
     }
 
@@ -265,8 +271,8 @@ public class MarsVoyage {
 
         // Calcular la posición inicial de la nave espacial
         Vector initialPositionVector = new Vector(
-                distance * position.getX() / position.norm() + (STATION_DISTANCE + EARTH_RADIUS) * perpendicular.getX(),
-                distance * position.getY() / position.norm() + (STATION_DISTANCE + EARTH_RADIUS) * perpendicular.getY()
+                position.getX() + (STATION_DISTANCE + EARTH_RADIUS) * (position.getX()/position.norm()),
+                position.getY() + (STATION_DISTANCE + EARTH_RADIUS) * (position.getY()/position.norm())
         );
 
         // Crear y devolver el objeto nave espacial

@@ -26,11 +26,21 @@ lines_x_values = []
 plt.figure(figsize=(10, 6))
 
 csv_files = [
-    '../../output/dt-100000.0-start-0.0d.csv',
+    #'../../output/dt-10000.0-start-0.0d.csv',
+    #'../../output/dt-1000.0-start-0.0d.csv',
+    '../../output/dt-100.0-start-0.0d.csv'
     # '../../output/dt-10000.0-start-0.0d.csv',
     # '../../output/dt-1000.0-start-0.0d.csv',
     # '../../output/dt-100.0-start-0.0d.csv',
 ]
+
+mass = {
+    "sun": 1.989 * 10 ** 30,
+    "earth": 5.972 * 10 ** 24,
+    "mars": 6.39 * 10 ** 23,
+    "spaceship": 200000
+}
+
 for csv_file in csv_files:
     data = pd.read_csv(csv_file)
 
@@ -45,7 +55,7 @@ for csv_file in csv_files:
         for i in range(len(timestep_data)):
             particle = timestep_data.iloc[i]
             name1 = particle['name']
-            mass1 = particle['mass']
+            mass1 = mass[name1]
             velocity1 = particle['velocity']
             x1 = particle['x']
             y1 = particle['y']
@@ -56,7 +66,7 @@ for csv_file in csv_files:
             for j in range(i + 1, len(timestep_data)):
                 other = timestep_data.iloc[j]
                 name2 = other['name']
-                mass2 = other['mass']
+                mass2 = mass[name2]
                 x2 = other['x']
                 y2 = other['y']
 
@@ -76,7 +86,7 @@ for csv_file in csv_files:
     lines_x_values.append(time_values)
 
 for (line_x_values, line_y_values) in zip(lines_x_values, lines_y_values):
-    plt.plot(line_x_values, line_y_values)
+    plt.loglog(line_x_values, line_y_values)
 
 plt.xlabel('t')
 plt.ylabel('energy')

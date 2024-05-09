@@ -9,6 +9,10 @@ public class TimeParameters {
     @JsonProperty("dt")
     private double dt;
 
+    @JsonProperty("print_i")
+    private int printI;
+
+
     @JsonProperty("dt_units")
     private String dtUnits;
 
@@ -29,6 +33,10 @@ public class TimeParameters {
 
     public double getDt() {
         return TimeUnits.fromString(dtUnits).toSeconds(dt);
+    }
+
+    public int getPrintI() {
+        return printI;
     }
 
     public String getDtUnits() {
