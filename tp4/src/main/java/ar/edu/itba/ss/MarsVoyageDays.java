@@ -22,13 +22,13 @@ public class MarsVoyageDays {
      * Sun
      */
     private static final double SUN_MASS = 1.989 * Math.pow(10, 30);
-    private static final double SUN_RADIUS = 696340 * Math.pow(10, 3);
+    private static final double SUN_RADIUS = 696340;
 
     /**
      * Earth
      */
     private static final double EARTH_MASS = 5.972 * Math.pow(10, 24);
-    private static final double EARTH_RADIUS = 6371 * Math.pow(10, 3);;
+    private static final double EARTH_RADIUS = 6371;
     private static final double EARTH_X = -1.219024854566760E+08;
     private static final double EARTH_Y = -8.830999621339682E+07;
     private static final double EARTH_VX = 1.698154915953803E+01;
@@ -38,7 +38,7 @@ public class MarsVoyageDays {
      * Mars
      */
     private static final double MARS_MASS = 6.39 * Math.pow(10, 23);
-    private static final double MARS_RADIUS = 3389.5 * Math.pow(10, 3);;
+    private static final double MARS_RADIUS = 3389.5;
     private static final double MARS_X = 1.758500774292310E+08;
     private static final double MARS_Y = -1.086968363813986E+08;
     private static final double MARS_VX = 1.365943796448699E+01;
