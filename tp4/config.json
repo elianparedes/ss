@@ -1,8 +1,9 @@
 {
-  "dt": 1,
-  "dt_units": "d",
+  "dt": 10,
+  "print_i": 1,
+  "dt_units": "s",
   "stop": 2,
   "stop_units": "y",
-  "start": 170,
+  "start": 0,
   "start_units": "d"
 }
