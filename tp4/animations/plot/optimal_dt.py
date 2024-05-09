@@ -1,94 +1,58 @@
-import glob
-import math
+import os
+import re
 
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib import ticker
 
-G = 6.693 * (10 ** -20)
+from utils.files import extract_dt
+from utils.plots import set_global_font_size, set_plot_size
+import utils.plots as plt_utils
 
+# Crear lista de archivos CSV desde el directorio ../data/energy/
+energy_dir = "../data/energy/"
+os.makedirs(energy_dir, exist_ok=True)
 
-def distance(x1, y1, x2, y2):
-    return np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+csv_files = [os.path.join(energy_dir, f) for f in os.listdir(energy_dir) if f.endswith('.csv')]
 
-
-def calculate_kinetic_energy(mass, velocity):
-    return 0.5 * mass * velocity ** 2
-
-
-def calculate_potential_energy(m1, m2, dist):
-    return -G * m1 * m2 / dist
-
-
-lines_y_values = []
+# Crear listas para guardar los valores
 lines_x_values = []
+lines_y_values = []
+legends = []
 
-plt.figure(figsize=(10, 6))
+# Leer cada archivo CSV y agregar los valores a las listas
+energy_pattern = r"energy_error_dt-([\d.]+)\.csv"
 
-csv_files = [
-    #'../../output/dt-10000.0-start-0.0d.csv',
-    #'../../output/dt-1000.0-start-0.0d.csv',
-    '../../output/dt-100.0-start-0.0d.csv'
-    # '../../output/dt-10000.0-start-0.0d.csv',
-    # '../../output/dt-1000.0-start-0.0d.csv',
-    # '../../output/dt-100.0-start-0.0d.csv',
-]
-
-mass = {
-    "sun": 1.989 * 10 ** 30,
-    "earth": 5.972 * 10 ** 24,
-    "mars": 6.39 * 10 ** 23,
-    "spaceship": 200000
-}
+dt_legend_data = []
 
 for csv_file in csv_files:
-    data = pd.read_csv(csv_file)
+    try:
+        dt = extract_dt(csv_file, energy_pattern)
+        data = pd.read_csv(csv_file)
+        lines_x_values.append(data['time'] * dt)
+        lines_y_values.append(data['energy_error'])
+        legends.append(f"{dt}")
+    except ValueError as e:
+        print(e)
 
-    initial_energy = 0
-    energy_values = []
-    time_values = data['time'].unique()
+set_global_font_size(16)
+fig, ax = plt.subplots()
+set_plot_size(fig, 14, 6)
 
-    for timestep in time_values:
-        timestep_data = data[data['time'] == timestep]
+for line_x_values, line_y_values, legend in zip(lines_x_values, lines_y_values, legends):
+    plt.plot(line_x_values, line_y_values, label=legend)
 
-        total_energy = 0
-        for i in range(len(timestep_data)):
-            particle = timestep_data.iloc[i]
-            name1 = particle['name']
-            mass1 = mass[name1]
-            velocity1 = particle['velocity']
-            x1 = particle['x']
-            y1 = particle['y']
 
-            kinetic_energy = calculate_kinetic_energy(mass1, velocity1)
+ax.set_xlabel('t')
+ax.set_ylabel('energy error (%)')
+ax.xaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
+ax.ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
+ax.set_yscale('log')
+ax.grid(True)
 
-            potential_energy = 0
-            for j in range(i + 1, len(timestep_data)):
-                other = timestep_data.iloc[j]
-                name2 = other['name']
-                mass2 = mass[name2]
-                x2 = other['x']
-                y2 = other['y']
+legend = plt_utils.PlotLegend.get_legend(ax)
+legend.set_legend_outside().set_title('dt (s)').set_title_bold().set_title_font_size(16).set_title_horizontal_alignment(
+    'left')
 
-                if name1 != name2:
-                    d = distance(x1, y1, x2, y2)
-                    potential_energy += calculate_potential_energy(mass1, mass2, d)
-
-            total_energy += kinetic_energy + potential_energy
-
-        if len(energy_values) == 0:
-            initial_energy = total_energy
-
-        error = np.abs((total_energy - initial_energy) / initial_energy) * 100
-        energy_values.append(error)
-
-    lines_y_values.append(energy_values)
-    lines_x_values.append(time_values)
-
-for (line_x_values, line_y_values) in zip(lines_x_values, lines_y_values):
-    plt.loglog(line_x_values, line_y_values)
-
-plt.xlabel('t')
-plt.ylabel('energy')
-plt.grid(True)
+plt.tight_layout()
 plt.show()

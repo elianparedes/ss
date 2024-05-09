@@ -174,7 +174,7 @@ public class MarsVoyage {
                 try {
                     builder.appendLine(
                             fileName,
-                            String.valueOf(time),
+                            String.valueOf(i),
                             String.valueOf(p.getName()),
                             String.valueOf(p.getVelocity().norm()),
                             String.valueOf(p.getPosition().getX()),
