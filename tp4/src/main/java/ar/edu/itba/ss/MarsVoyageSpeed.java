@@ -13,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static ar.edu.itba.ss.algorithms.gear.GearAlgorithmStep.factor;
 
-public class MarsVoyageDays {
+public class MarsVoyageSpeed {
 
     private static final double GRAVITY_CONSTANT = 6.693 * Math.pow(10, -20);
 
@@ -51,7 +52,7 @@ public class MarsVoyageDays {
      */
 
     private static final double SPACESHIP_MASS = 200000;
-    private static final double SPACESHIP_SPEED=8.0;
+    private static final double SPACESHIP_SPEED=8;
     private static final double STATION_DISTANCE=1500;
     private static final double STATION_SPEED=7.12;
 
@@ -62,13 +63,11 @@ public class MarsVoyageDays {
 
     public static void main(String[] args) throws IOException {
 
-        double startMs = System.currentTimeMillis();
-
         JsonConfigReader configReader = new JsonConfigReader();
-        TimeParameters timeParameters = configReader.readConfig("config.json",TimeParameters.class);
+        TimeParameters timeParameters = configReader.readConfig("config.json", TimeParameters.class);
 
         ArgumentHandler argumentHandler = new ArgumentHandler();
-        argumentHandler.addArgument("-O", (v)->true, true, "output/");
+        argumentHandler.addArgument("-O", (v) -> true, true, "output/");
         argumentHandler.parse(args);
 
 
@@ -77,115 +76,127 @@ public class MarsVoyageDays {
         double printI = timeParameters.getPrintI();
 
         // Initialize CSV File
-        String fileName = String.format(argumentHandler.getArgument("-O") + "min-distance.csv", dt, timeParameters.getRawStart() + timeParameters.getStartUnits());
+        String fileName = String.format(argumentHandler.getArgument("-O") + "min-distance-speed.csv", dt, timeParameters.getRawStart() + timeParameters.getStartUnits());
         CSVBuilder builder = new CSVBuilder();
         try {
-            builder.appendLine(fileName, "day", "distance","iteration");
+            builder.appendLine(fileName, "speed", "distance", "iteration");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        double maxSpeed = 7.8835067;
+        double step = 0.00000001;
+
         ExecutorService executor = Executors.newFixedThreadPool(20);
 
-        for (int s = 0; s < 60; s++) {
-
+        for (int s = 0; Double.compare( 7.8835066 + s * step, maxSpeed) <= 0; s++) {
             final int sFinal = s;
             executor.submit(() -> {
-            double start = TimeUnits.fromString("m").toSeconds(sFinal) + TimeUnits.fromString("d").toSeconds(176);
-            System.out.println("Minute: " + sFinal);
 
-            List<Particle> particles = new ArrayList<>();
-            particles.add(new Particle("sun", SUN_MASS, SUN_RADIUS, new Vector(0,0), new Vector(0,0)));
-            particles.add(new Particle("earth", EARTH_MASS, EARTH_RADIUS, new Vector(EARTH_X, EARTH_Y), new Vector(EARTH_VX, EARTH_VY)));
-            particles.add(new Particle("mars", MARS_MASS, MARS_RADIUS, new Vector(MARS_X, MARS_Y), new Vector(MARS_VX, MARS_VY)));
+                double speed = 7.8835066 + step * sFinal;
+                System.out.println("Speed: " + speed);
+                double start = TimeUnits.fromString("d").toSeconds(176);
+
+                List<Particle> particles = new ArrayList<>();
+                particles.add(new Particle("sun", SUN_MASS, SUN_RADIUS, new Vector(0, 0), new Vector(0, 0)));
+                particles.add(new Particle("earth", EARTH_MASS, EARTH_RADIUS, new Vector(EARTH_X, EARTH_Y), new Vector(EARTH_VX, EARTH_VY)));
+                particles.add(new Particle("mars", MARS_MASS, MARS_RADIUS, new Vector(MARS_X, MARS_Y), new Vector(MARS_VX, MARS_VY)));
 
 
-            double time = 0;
-            int i = 0;
-            List<Particle> state = updateParticlesState(particles);
+                double time = 0;
+                int i = 0;
+                List<Particle> state = updateParticlesState(particles);
 
-            double minDistance = Double.MAX_VALUE;
-            int minTimeIteration = 0;
+                double minDistance = Double.MAX_VALUE;
+                int minTimeIteration = 0;
 
-            while (Double.compare(time, start + stop) < 0) {
+                while (Double.compare(time, start + stop) < 0) {
 
-                time = dt * i;
-                if (Double.compare(time, start) == 0) {
-                    Particle particle = initializeSpaceship(state.get(1));
-                    particle = updateParticleState(particle, state);
-                    state.add(particle);
-                }
+                    time = dt * i;
+                    if (Double.compare(time, start) == 0) {
+                        Particle particle = initializeSpaceship(state.get(1),speed);
+                        particle = updateParticleState(particle, state);
+                        state.add(particle);
+                    }
 
-                // Predict
-                List<Particle> predictedState = new ArrayList<>();
-                for (Particle particle : state) {
-                    List<Vector> r = particle.getR();
-                    List<Vector> newR = new ArrayList<>(r);
+                    // Predict
+                    List<Particle> predictedState = new ArrayList<>();
+                    for (Particle particle : state) {
+                        List<Vector> r = particle.getR();
+                        List<Vector> newR = new ArrayList<>(r);
 
-                    for (int j = 0; j < r.size(); j++) {
-                        for (int k = j + 1; k < r.size(); k++) {
-                            newR.set(j, newR.get(j).sum(r.get(k).multiply(factor(dt, k - j))));
+                        for (int j = 0; j < r.size(); j++) {
+                            for (int k = j + 1; k < r.size(); k++) {
+                                newR.set(j, newR.get(j).sum(r.get(k).multiply(factor(dt, k - j))));
+                            }
                         }
+
+                        Particle newParticle = new Particle(particle.getName(), particle.getMass(), particle.getRadius(), newR);
+                        predictedState.add(newParticle);
                     }
 
-                    Particle newParticle = new Particle(particle.getName(), particle.getMass(), particle.getRadius(), newR);
-                    predictedState.add(newParticle);
-                }
+                    // Evaluate
+                    List<Particle> futureState = updateParticlesState(predictedState);
+                    List<Vector> dR2s = new ArrayList<>();
+                    for (int j = 0; j < futureState.size(); j++) {
+                        Particle futureParticle = futureState.get(j);
+                        Particle predictedParticle = predictedState.get(j);
 
-                // Evaluate
-                List<Particle> futureState = updateParticlesState(predictedState);
-                List<Vector> dR2s = new ArrayList<>();
-                for (int j = 0; j < futureState.size(); j++) {
-                    Particle futureParticle = futureState.get(j);
-                    Particle predictedParticle = predictedState.get(j);
+                        Vector futureA = futureParticle.getAcceleration();
+                        Vector dA = futureA.sub(predictedParticle.getAcceleration());
 
-                    Vector futureA = futureParticle.getAcceleration();
-                    Vector dA = futureA.sub(predictedParticle.getAcceleration());
-
-                    Vector dR2 = dA.multiply(factor(dt, 2));
-                    dR2s.add(dR2);
-                }
-
-                // Correct
-                List<Particle> correctedState = new ArrayList<>();
-                for (int j = 0; j < predictedState.size(); j++) {
-                    Particle predictedParticle = predictedState.get(j);
-
-                    List<Vector> r = predictedParticle.getR();
-                    List<Vector> newR = new ArrayList<>(r);
-
-                    for (int k = 0; k < predictedParticle.getR().size(); k++) {
-                        newR.set(k, newR.get(k).sum(dR2s.get(j).multiply(ALPHAS[k]).divide(factor(dt, k))));
+                        Vector dR2 = dA.multiply(factor(dt, 2));
+                        dR2s.add(dR2);
                     }
 
-                    Particle correctedParticle = new Particle(predictedParticle.getName(), predictedParticle.getMass(), predictedParticle.getRadius(), newR);
-                    correctedState.add(correctedParticle);
+                    // Correct
+                    List<Particle> correctedState = new ArrayList<>();
+                    for (int j = 0; j < predictedState.size(); j++) {
+                        Particle predictedParticle = predictedState.get(j);
+
+                        List<Vector> r = predictedParticle.getR();
+                        List<Vector> newR = new ArrayList<>(r);
+
+                        for (int k = 0; k < predictedParticle.getR().size(); k++) {
+                            newR.set(k, newR.get(k).sum(dR2s.get(j).multiply(ALPHAS[k]).divide(factor(dt, k))));
+                        }
+
+                        Particle correctedParticle = new Particle(predictedParticle.getName(), predictedParticle.getMass(), predictedParticle.getRadius(), newR);
+                        correctedState.add(correctedParticle);
+                    }
+
+                    if (Double.compare(time, start) >= 0 && (i % printI == 0)) {
+                        Particle marsState = state.get(2);
+                        Particle spaceshipState = state.get(3);
+                        double maybeMin = marsState.getPosition().sub(spaceshipState.getPosition()).norm();
+                        minDistance = Math.min(minDistance, maybeMin);
+                        if(Double.compare(minDistance, maybeMin) == 0)
+                            minTimeIteration = i;
+                    }
+
+                    state = correctedState;
+                    i++;
+
                 }
 
-                if (Double.compare(time, start) >= 0 && (i % printI == 0)) {
-                    Particle marsState = state.get(2);
-                    Particle spaceshipState = state.get(3);
-                    minDistance = Math.min(minDistance, marsState.getPosition().sub(spaceshipState.getPosition()).norm());
-                    minTimeIteration = i;
+                try {
+                    builder.appendLine(
+                            fileName,
+                            String.valueOf(speed),
+                            String.valueOf(minDistance),
+                            String.valueOf(minTimeIteration)
+                    );
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
 
-                state = correctedState;
-                i++;
-
-            }
-
-            try {
-                builder.appendLine(
-                        fileName,
-                        String.valueOf(sFinal),
-                        String.valueOf(minDistance),
-                        String.valueOf(minTimeIteration)
-                );
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        });
-
+            });
+        }
+        executor.shutdown();
+        try {
+            executor.awaitTermination(1, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -246,7 +257,7 @@ public class MarsVoyageDays {
         return totalForce;
     }
 
-    private static Particle initializeSpaceship(Particle earth) {
+    private static Particle initializeSpaceship(Particle earth, double speed) {
         // Obtener el vector posición de la Tierra
         Vector position = earth.getPosition();
         double distance = position.norm();
@@ -262,7 +273,7 @@ public class MarsVoyageDays {
                 earth.getVelocity().getY() * perpendicular.getY();
 
         // Sumar las velocidades de la estación y la nave espacial
-        double initialSpeed = tangentialSpeed + STATION_SPEED + SPACESHIP_SPEED;
+        double initialSpeed = tangentialSpeed + STATION_SPEED + speed;
 
         // Vector de velocidad inicial en la dirección tangencial
         Vector initialSpeedVector = new Vector(
