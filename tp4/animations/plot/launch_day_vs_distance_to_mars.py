@@ -27,7 +27,7 @@ min_day = day_values[min_distance_index]
 bbox_props = dict(boxstyle="round,pad=0.3", fc="white", ec="black", lw=1, alpha=0.9)
 ax.annotate(f'Minimum Distance: {min_distance:.2f} km\nat Day {min_day}',
             xy=(min_day, min_distance), xytext=(min_day + 64, min_distance),
-            arrowprops=dict(facecolor='black', arrowstyle='->'),
+            arrowprops=dict(facecolor='black', arrowstyle='-'),
             fontsize=12, ha='left', bbox=bbox_props)
 ax.axvline(x=min_day, color='gray', linestyle='--', label='')
 

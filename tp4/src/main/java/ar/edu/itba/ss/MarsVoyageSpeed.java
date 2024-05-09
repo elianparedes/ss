@@ -84,18 +84,19 @@ public class MarsVoyageSpeed {
             throw new RuntimeException(e);
         }
 
-        double maxSpeed = 7.8835067;
-        double step = 0.00000001;
+        double maxSpeed = 9;
+        double step = 0.001;
 
         ExecutorService executor = Executors.newFixedThreadPool(20);
 
-        for (int s = 0; Double.compare( 7.8835066 + s * step, maxSpeed) <= 0; s++) {
+        for (int s = 0; Double.compare( 7 + s * step, maxSpeed) <= 0; s++) {
             final int sFinal = s;
             executor.submit(() -> {
 
-                double speed = 7.8835066 + step * sFinal;
-                System.out.println("Speed: " + speed);
-                double start = TimeUnits.fromString("d").toSeconds(176);
+                double speed = 7 + step * sFinal;
+                double start = TimeUnits.fromString("d").toSeconds(176) +
+                        TimeUnits.fromString("h").toSeconds(8) +
+                        TimeUnits.fromString("m").toSeconds(11);
 
                 List<Particle> particles = new ArrayList<>();
                 particles.add(new Particle("sun", SUN_MASS, SUN_RADIUS, new Vector(0, 0), new Vector(0, 0)));
