@@ -31,29 +31,31 @@ def draw_particles(video_builder: VideoBuilder, data: DataFrame):
         particle_id = row['name']
 
         # Draw trajectory if the particle has a previous position
-        if particle_id in previous_positions:
-            for center in previous_positions[particle_id]:
-                cv2.circle(video_builder.current_frame, center, 1, (120, 120, 120), -1)
+        #if particle_id in previous_positions:
+        #    for center in previous_positions[particle_id]:
+        #        cv2.circle(video_builder.current_frame, center, 1, (120, 120, 120), -1)
 
         # Draw current position
         cv2.circle(video_builder.current_frame, (x, y), int((radius[row['name']] * 1000 / grid_size) * video_width),
                    color[row['name']], -1)
 
         # Update previous position
-        if particle_id not in previous_positions:
-            previous_positions[particle_id] = []
-        else:
-            previous_positions[particle_id].append((x, y))
+        #if particle_id not in previous_positions:
+        #    previous_positions[particle_id] = []
+        #else:
+        #    previous_positions[particle_id].append((x, y))
 
 
 def render():
     video_builder = VideoBuilder("", video_name).set_width(video_width).set_height(video_height)
 
-    simulation_file = '../../output/solarium-pericardium.csv'
+    simulation_file = '../../output/dt-10.0-start-0.0d.csv'
     data = pd.read_csv(simulation_file)
 
     timesteps = data['time'].unique()
-    for i, timestep in enumerate(timesteps):
+    step = 10
+    selected_timesteps = timesteps[::step]
+    for timestep in selected_timesteps:
         timestep_data = data[data['time'] == timestep]
 
         video_builder.create_frame()
