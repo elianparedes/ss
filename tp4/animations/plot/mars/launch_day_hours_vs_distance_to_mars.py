@@ -34,7 +34,7 @@ plt.scatter(day_values, distance_values, s=30)
 plt.scatter(day_values[day_values == min_day], distance_values[day_values == min_day], color='red', s=50)
 
 ax.set_xlabel(f'Horas entre los días {day_range}')
-ax.set_ylabel('Mínima distancia entre la nave y Marte (km)')
+ax.set_ylabel('$d_{{min}}$ entre la nave y Marte (km)')
 ax.xaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
 plt.yscale('log')
 
@@ -43,7 +43,7 @@ ax.set_xticks(range(0, 24, 2))
 ax.set_xticklabels([f'{hour % 24:02}:00' for hour in range(0, 24, 2)], rotation=45, ha='right')
 
 bbox_props = dict(boxstyle="round,pad=0.3", fc="white", ec="black", lw=1, alpha=0.9)
-ax.annotate(f'Mínima distancia: {min_distance:.2f} km\nel {current_day} a las {min_day}:00',
+ax.annotate(f'$d_{{min}}$={min_distance:.2f} km\nel {current_day} a las {min_day}:00',
             xy=(min_day, min_distance), xytext=(min_day + 2, min_distance),
             arrowprops=dict(facecolor='black', arrowstyle='-'),
             fontsize=16, ha='left', bbox=bbox_props)

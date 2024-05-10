@@ -9,18 +9,15 @@ from utils.files import extract_dt
 from utils.plots import set_global_font_size, set_plot_size
 import utils.plots as plt_utils
 
-# Crear lista de archivos CSV desde el directorio ../data/energy/
 energy_dir = "../data/energy/"
 os.makedirs(energy_dir, exist_ok=True)
 
 csv_files = [os.path.join(energy_dir, f) for f in os.listdir(energy_dir) if f.endswith('.csv')]
 
-# Crear listas para guardar los valores
 lines_x_values = []
 lines_y_values = []
 legends = []
 
-# Leer cada archivo CSV y agregar los valores a las listas
 energy_pattern = r"energy_error_dt-([\d.]+)\.csv"
 
 dt_legend_data = []

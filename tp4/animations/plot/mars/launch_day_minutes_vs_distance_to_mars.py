@@ -27,17 +27,20 @@ min_distance = min(distance_values)
 min_distance_index = distance_values.idxmin()
 min_day = day_values[min_distance_index]
 
+
+
+
 plt.scatter(day_values, distance_values, s=20)
 plt.scatter(day_values[day_values == min_day], distance_values[day_values == min_day], color='red', s=50)
 
 ax.set_xlabel(f'Minutos en la fecha de lanzamiento {custom_date_fmt(176, None)} a las 8:00')
-ax.set_ylabel('Mínima distancia entre la nave y Marte (km)')
+ax.set_ylabel('$d_{{min}}$ entre la nave y Marte (km)')
 plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(custom_minute_fmt))
 plt.gca().tick_params(axis='x', rotation=45)
 plt.yscale('log')
 
 bbox_props = dict(boxstyle="round,pad=0.3", fc="white", ec="black", lw=1, alpha=0.9)
-ax.annotate(f'Mínima distancia: {min_distance:.2f} km\nel {custom_date_fmt(176, None)} a las 8:{min_day}',
+ax.annotate(f'$d_{{min}}$={min_distance:.2f} km\nel {custom_date_fmt(176, None)} a las 8:{min_day}',
             xy=(min_day, min_distance), xytext=(min_day + 2, min_distance),
             arrowprops=dict(facecolor='black', arrowstyle='-'),
             fontsize=16, ha='left', bbox=bbox_props)

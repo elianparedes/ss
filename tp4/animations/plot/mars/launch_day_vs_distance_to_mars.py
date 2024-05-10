@@ -24,7 +24,7 @@ set_plot_size(fig, 14, 8)
 plt.scatter(day_values, distance_values, s=4)
 
 ax.set_xlabel('Fecha de lanzamiento')
-ax.set_ylabel('Mínima distancia entre la nave y Marte (km)')
+ax.set_ylabel('$d_{{min}}$ entre la nave y Marte (km)')
 ax.xaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
 plt.yscale('log')
 
@@ -41,7 +41,7 @@ plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(custom_date_fmt))
 plt.gca().tick_params(axis='x', rotation=45)
 
 bbox_props = dict(boxstyle="round,pad=0.3", fc="white", ec="black", lw=1, alpha=0.9)
-ax.annotate(f'Mínima distancia: {min_distance:.2f} km\nen el día {custom_date_fmt(value=float(min_day), _=None)}',
+ax.annotate(f'$d_{{min}}$={min_distance:.2f} km\nen el día {custom_date_fmt(value=float(min_day), _=None)}',
             xy=(min_day, min_distance), xytext=(min_day + 64, min_distance),
             arrowprops=dict(facecolor='black', arrowstyle='-'),
             fontsize=16, ha='left', bbox=bbox_props)
