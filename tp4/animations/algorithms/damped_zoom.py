@@ -40,9 +40,13 @@ for i, line in enumerate(lines):
 plt.xlabel('$dt$ (s)')
 plt.ylabel('Posición')
 
+
 plt.legend()
 plt.tight_layout()
 plt.grid(True)
+
+plt.xlim(3.1545, 4.1546)
+plt.ylim(0.1048, 0.1048)
 
 plt.savefig('algorithms_damped.png')
 plt.show()

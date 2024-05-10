@@ -44,7 +44,7 @@ plt.scatter(time_values, velocity_values, s=10)
 plt.scatter([min_time], [min_distance_velocity], color='red', s=50)
 
 ax.set_xlabel('Tiempo ($s$)')
-ax.set_ylabel('Módulo de la velocidad de la nave ($\\frac{km}{s}$)')
+ax.set_ylabel('$\Vert \overrightarrow{V_{nave}} \Vert$ ($km/s$)')
 
 
 

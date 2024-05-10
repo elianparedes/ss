@@ -1,8 +1,8 @@
-import math
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+from utils.plots import set_global_font_size, set_plot_size
 
 amplitude = 1
 gamma = 100
@@ -13,10 +13,10 @@ k = 10000
 def damped_harmonic_oscillator(a, k, gamma, m, t):
     return a * np.exp(-(gamma / (2 * m)) * t) * np.cos(((k / m - (gamma ** 2) / (4 * (m ** 2))) ** 0.5) * t)
 
-path = '../../output/'
+
+path = '../../output/algorithms/'
 
 csv_files = [
-    'i0.csv',
     'i1.csv',
     'i2.csv',
     'i3.csv',
@@ -28,9 +28,10 @@ csv_files = [
     'i9.csv'
 ]
 
-algorithms = ['verlet','beeman','gear']
+algorithms = ['verlet', 'beeman', 'gear']
 
 mqe_values = {}
+std_values = {}
 for algorithm in algorithms:
     mqe_values[algorithm] = []
 dt_values = []
@@ -48,14 +49,20 @@ for csv_file in csv_files:
 
     dt_values.append(dt)
 
-plt.figure(figsize=(10, 6))
+set_global_font_size(16)
+fig, ax = plt.subplots()
+set_plot_size(fig, 12, 8)
+
 plt.yscale('log')
-colors = ['blue', 'orange','green']
+colors = ['blue', 'orange', 'green']
 
 for i, algorithm in enumerate(algorithms):
     plt.scatter(dt_values, mqe_values[algorithm], label=algorithm.capitalize(), color=colors[i])
 
-plt.xlabel('dt')
-plt.ylabel('mqe')
+plt.xlabel('$dt$')
+plt.ylabel('Error cuadrático medio $MQE$')
 plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.savefig('../plot/output/algorithms-comparison.png')
 plt.show()

@@ -45,11 +45,17 @@ def draw_particles(video_builder: VideoBuilder, data: DataFrame):
         else:
             previous_positions[particle_id].append((x, y))
 
+    time = data['time'].iloc[0] * 10
+    # Add time text overlay
+    time_text = f"Time: {time}"
+    cv2.putText(video_builder.current_frame, time_text, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+
+
 
 def render():
     video_builder = VideoBuilder("", video_name).set_width(video_width).set_height(video_height)
 
-    simulation_file = '../../output/venus-dt-10.0-start-190.0d.csv'
+    simulation_file = '../../output/venus-dt-10.0-start-198.0d.csv'
     data = pd.read_csv(simulation_file)
 
     timesteps = data['time'].unique()

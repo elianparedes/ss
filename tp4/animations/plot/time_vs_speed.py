@@ -6,7 +6,7 @@ import matplotlib.ticker as ticker
 import utils.plots as plots
 
 # Reemplaza esta parte con la ruta de tu archivo CSV
-csv_file = '../../output/min-distance-speed.csv'
+csv_file = 'distances/min-distance-speed-8.5-9.csv'
 
 speeds = []
 iterations_multiplied = []
@@ -23,10 +23,10 @@ with open(csv_file, newline='') as file:
 # Crea el gráfico
 fig, ax = plt.subplots()
 plt.scatter(speeds, iterations_multiplied, color='blue')
-plots.set_plot_size(fig,10,6)
+plots.set_plot_size(fig,14, 8)
 plots.set_global_font_size(18)
-ax.set_xlabel('Speed')
-ax.set_ylabel('Tiempo (s)')
+ax.set_xlabel('$V_0 (km/s)$')
+ax.set_ylabel('$t_{marte}$ (s)')
 
 ax.xaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
 ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%.3f'))

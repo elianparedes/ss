@@ -42,7 +42,7 @@ for line_x_values, line_y_values, legend in zip(lines_x_values, lines_y_values, 
 
 
 ax.set_xlabel('Tiempo ($s$)')
-ax.set_ylabel('Error porcentual  $\\%P_E$')
+ax.set_ylabel('$\\%P_E$')
 ax.xaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
 ax.ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
 ax.set_yscale('log')

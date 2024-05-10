@@ -18,8 +18,6 @@ error_values = []
 
 for csv_file in csv_files:
     dt = extract_dt(csv_file, energy_pattern)
-    if dt not in [10, 100, 1000, 10000]:
-        continue
 
     energy_data = pd.read_csv(csv_file)
 
@@ -35,12 +33,21 @@ for csv_file in csv_files:
 
 set_global_font_size(16)
 fig, ax = plt.subplots()
-set_plot_size(fig, 14, 6)
+set_plot_size(fig, 14, 9)
 
-plt.errorbar(dt_values, mean_values, yerr=error_values, fmt='o', color='blue', ecolor='red', capsize=5)
+
+sorted_dt_values = np.sort(dt_values)
+for i, sorted_dt_value in enumerate(sorted_dt_values):
+
+    plt.errorbar([sorted_dt_value], [mean_values[dt_values.index(sorted_dt_value)]], yerr=[error_values[dt_values.index(sorted_dt_value)]], fmt='o', capsize=5, markersize=10)
 
 ax.grid(True)
 
+ax.set_xlabel('$dt$ ($s$)')
+ax.set_ylabel('$\overline{\\%P_E}$')
+
 plt.xscale('log')
+plt.yscale('log')
 plt.tight_layout()
+plt.savefig('output/energy_error_mean_vs_dt')
 plt.show()
