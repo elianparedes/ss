@@ -13,6 +13,7 @@ energy_dir = "../data/energy/"
 os.makedirs(energy_dir, exist_ok=True)
 
 csv_files = [os.path.join(energy_dir, f) for f in os.listdir(energy_dir) if f.endswith('.csv')]
+csv_files.sort()
 
 lines_x_values = []
 lines_y_values = []
@@ -40,16 +41,17 @@ for line_x_values, line_y_values, legend in zip(lines_x_values, lines_y_values, 
     plt.plot(line_x_values, line_y_values, label=legend)
 
 
-ax.set_xlabel('t')
-ax.set_ylabel('energy error (%)')
+ax.set_xlabel('Tiempo ($s$)')
+ax.set_ylabel('Error porcentual  $\\%P_E$')
 ax.xaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
 ax.ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
 ax.set_yscale('log')
 ax.grid(True)
 
 legend = plt_utils.PlotLegend.get_legend(ax)
-legend.set_legend_outside().set_title('dt (s)').set_title_bold().set_title_font_size(16).set_title_horizontal_alignment(
+legend.set_legend_outside().set_title('$dt$ ($s$)').set_title_font_size(16).set_title_horizontal_alignment(
     'left')
 
 plt.tight_layout()
+plt.savefig('output/optimal_dt.png')
 plt.show()
