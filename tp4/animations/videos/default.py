@@ -13,8 +13,8 @@ video_height = 800
 grid_size = 5 * 10 ** 8
 visiting_area_color: Sequence[float] = (50, 50, 50)
 
-radius = {"sun": 6378, "earth": 6378, "mars": 3389.5, "spaceship": 1500}
-color = {"sun": (0, 255, 255), "earth": (0, 255, 0), "mars": (0, 0, 255), "spaceship": (255, 255, 255)}
+radius = {"sun": 6378, "earth": 6378, "mars": 3389.5, "spaceship": 1500, "venus": 6378}
+color = {"sun": (0, 255, 255), "earth": (0, 255, 0), "mars": (0, 0, 255), "spaceship": (255, 255, 255), "venus": (0, 75, 150)}
 previous_positions = {}
 
 
@@ -49,7 +49,7 @@ def draw_particles(video_builder: VideoBuilder, data: DataFrame):
 def render():
     video_builder = VideoBuilder("", video_name).set_width(video_width).set_height(video_height)
 
-    simulation_file = '../../output/dt-10.0-start-190.0d.csv'
+    simulation_file = '../../output/venus-dt-10.0-start-190.0d.csv'
     data = pd.read_csv(simulation_file)
 
     timesteps = data['time'].unique()
