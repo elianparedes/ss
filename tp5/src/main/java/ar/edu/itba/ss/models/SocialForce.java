@@ -46,7 +46,7 @@ public class SocialForce {
         for (Particle j : particles) {
             if(!j.equals(i)){
                 Vector normal = j.getPosition().sub(i.getPosition());
-                double epsilon = normal.norm();
+                double epsilon = normal.norm() - (i.getRadius()+j.getRadius());
                 normal = normal.divide(normal.norm());
 
                 if(epsilon > 0){
