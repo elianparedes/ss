@@ -3,6 +3,15 @@ import math
 import pandas as pd
 from pandas import DataFrame
 
+def merge_data_to_csv(home_data, away_data, from_range, to_range, from_time, to_time):
+    merged_df = pd.merge(home_data, away_data, on=['Period', 'Frame', 'Time [s]'], suffixes=('_home', '_away'))
+    merged_df = merged_df.drop(labels=['Ball_home', 'Unnamed: 32'], axis=1)
+    merged_df = merged_df.rename(columns={'Ball_away': 'Ball'})
+    range_df = merged_df[merged_df['Frame'].between(from_range, to_range - 1)]
+    range_df = range_df.dropna(subset=['Ball'])
+
+    range_df.to_csv(f"input/merged-{from_range}-{to_range - 1}-{(to_time - from_time) // 60}.csv")
+
 def get_positions_by_player(data: DataFrame):
     positions = {}
     positions_columns = data.columns[3:]
@@ -31,14 +40,16 @@ away_positions = get_positions_by_player(away_data)
 
 def get_ranges_with_same_players(data: DataFrame, positions):
     times = data['Time [s]']
+    frames = data['Frame']
     initial_time = times.iloc[0]
+    initial_frame = frames.iloc[0]
     previous_players = set()
     for i, time in enumerate(times):
         frame = i + 1
         current_players = set()
 
         for player in positions.keys():
-            if player == 'Ball':
+            if player == "Ball":
                 continue
 
             x, y = positions[player][i]
@@ -46,18 +57,23 @@ def get_ranges_with_same_players(data: DataFrame, positions):
                 current_players.add(player)
 
         if time != initial_time and current_players != previous_players:
-            print('range duration in minutes: ', (time - initial_time) // 60)
+            print('range duration in minutes: ', f"{frame}-{initial_frame} ", (time - initial_time) // 60)
             print('frame', frame)
             print('current_count: ', len(current_players))
             print('previous_count: ', len(previous_players))
             print('difference: ', current_players ^ previous_players)
             print()
+
+            merge_data_to_csv(home_data, away_data, initial_frame, frame, initial_time, time)
+
             initial_time = time
+            initial_frame = frame
 
         previous_players = current_players
 
 
-print('home team ranges')
+print('# home team ranges')
 get_ranges_with_same_players(home_data, home_positions)
-print('away team ranges')
+print('# away team ranges')
 get_ranges_with_same_players(away_data, away_positions)
+
