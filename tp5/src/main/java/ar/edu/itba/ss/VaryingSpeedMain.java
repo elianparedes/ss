@@ -17,7 +17,7 @@ public class VaryingSpeedMain {
         argumentHandler.parse(args);
 
         //TODO: The step es very little but should start with 0.1 and end with 13.0. Maybe a list with values is better
-        double step = 0.1;
+        double step = 1;
         double max = 13.0;
 
         int maxI = (int) (max / step);
