@@ -36,4 +36,12 @@ public class FootballSimulationConfig {
     public double getTau() {
         return tau;
     }
+
+    public void setTau(double tau) {
+        this.tau = tau;
+    }
+
+    public void setDesiredSpeed(double desiredSpeed) {
+        this.desiredSpeed = desiredSpeed;
+    }
 }
