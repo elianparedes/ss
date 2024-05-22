@@ -25,11 +25,13 @@ public class Particle {
         this.r.set(1, velocity);
     }
 
-    public Particle(String name, double mass, double radius, List<Vector> r) {
+    public Particle(String name, double mass, double radius, List<Vector> r, double desiredSpeed, Vector target) {
         this.name = name;
         this.mass = mass;
         this.radius = radius;
         this.r = r;
+        this.target = target;
+        this.desiredSpeed = desiredSpeed;
     }
 
     public Particle(String name, double mass, double radius) {
@@ -98,6 +100,14 @@ public class Particle {
         Vector direction = target.sub(this.getPosition());
         direction = direction.multiply(direction.norm());
         return direction.multiply(desiredSpeed);
+    }
+
+    public double getDesiredSpeed() {
+        return desiredSpeed;
+    }
+
+    public Vector getTarget() {
+        return target;
     }
 
     @Override
