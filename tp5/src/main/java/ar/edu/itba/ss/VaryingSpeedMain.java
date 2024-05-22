@@ -25,7 +25,7 @@ public class VaryingSpeedMain {
             config.setDesiredSpeed(i*step);
 
             // Initialize CSV File
-            String fileName = String.format(argumentHandler.getArgument("-O") + "varying_speed-vd%.2f-tau%.2f", config.getDesiredSpeed(), config.getTau());
+            String fileName = String.format(argumentHandler.getArgument("-O") + "varying_speed-vd%.2f-tau%.2f.csv", config.getDesiredSpeed(), config.getTau());
             FootballSimulation.simulate(fileName,config);
         }
 

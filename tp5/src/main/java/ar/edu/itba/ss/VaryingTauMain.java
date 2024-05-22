@@ -24,7 +24,7 @@ public class VaryingTauMain {
             config.setTau(i*step);
 
             // Initialize CSV File
-            String fileName = String.format(argumentHandler.getArgument("-O") + "varying_tau-vd%.2f-tau%.2f", config.getDesiredSpeed(), config.getTau());
+            String fileName = String.format(argumentHandler.getArgument("-O") + "varying_tau-vd%.2f-tau%.2f.csv", config.getDesiredSpeed(), config.getTau());
             FootballSimulation.simulate(fileName,config);
         }
 
