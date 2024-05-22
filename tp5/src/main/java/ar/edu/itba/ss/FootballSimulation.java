@@ -20,9 +20,11 @@ public class FootballSimulation {
     public static final String AWAY_FILEPATH = "input/away.csv";
 
     public static final int[] HOME_POSITION_INDEXES = {4, 6, 8, 10, 14, 16, 18, 20, 22, 24, 26};
+    public static final int[] HOME_PLAYERS_NUMBERS = {11, 1, 2, 3, 5, 6, 7, 8, 9, 10, 12};
     public static final int HOME_BALL_INDEX = 32;
 
     public static final int[] AWAY_POSITION_INDEXES = {4, 6, 8, 10, 12, 14, 16, 18, 22, 24, 26};
+    public static final int[] AWAY_PLAYERS_NUMBERS = {25, 15, 16, 17, 18, 19, 20, 21, 23, 24, 26};
     public static final int AWAY_BALL_INDEX = 28;
 
     private static final double DT = 1.0 / 240.0;
@@ -38,11 +40,15 @@ public class FootballSimulation {
             throw new RuntimeException(e);
         }
 
-        MatchStateMapper homeMapper = new MatchStateMapper(HOME_POSITION_INDEXES,
+        MatchStateMapper homeMapper = new MatchStateMapper(
+                HOME_POSITION_INDEXES,
+                HOME_PLAYERS_NUMBERS,
                 HOME_BALL_INDEX
         );
 
-        MatchStateMapper awayMapper = new MatchStateMapper(AWAY_POSITION_INDEXES,
+        MatchStateMapper awayMapper = new MatchStateMapper(
+                AWAY_POSITION_INDEXES,
+                AWAY_PLAYERS_NUMBERS,
                 AWAY_BALL_INDEX
         );
         GearPredictor gearPredictor = new GearPredictor(DT);
@@ -124,7 +130,7 @@ public class FootballSimulation {
         builder.appendLine(fileName,
                 String.valueOf(i),
                 "ball",
-                "N/A",
+                null,
                 String.valueOf(ballPosition.getX()),
                 String.valueOf(ballPosition.getY()));
 
@@ -132,7 +138,7 @@ public class FootballSimulation {
         builder.appendLine(fileName,
                 String.valueOf(i),
                 lunatic.getName(),
-                "N/A",
+                null,
                 String.valueOf(lunatic.getPosition().getX()),
                 String.valueOf(lunatic.getPosition().getY()));
 
@@ -140,7 +146,7 @@ public class FootballSimulation {
         for(Particle particle : home){
             builder.appendLine(fileName,
                     String.valueOf(i),
-                    "N/A",
+                    particle.getName(),
                     "home",
                     String.valueOf(particle.getPosition().getX()),
                     String.valueOf(particle.getPosition().getY()));
@@ -150,7 +156,7 @@ public class FootballSimulation {
         for(Particle particle : away){
             builder.appendLine(fileName,
                     String.valueOf(i),
-                    "N/A",
+                    particle.getName(),
                     "away",
                     String.valueOf(particle.getPosition().getX()),
                     String.valueOf(particle.getPosition().getY()));
