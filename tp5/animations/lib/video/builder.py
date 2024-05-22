@@ -6,8 +6,8 @@ import numpy as np
 from numpy import ndarray
 from dotenv import load_dotenv
 
-DEFAULT_VIDEO_WIDTH = 1050
-DEFAULT_VIDEO_HEIGHT = 680
+DEFAULT_VIDEO_WIDTH = 1280
+DEFAULT_VIDEO_HEIGHT = 720
 DEFAULT_VIDEO_FPS = 60
 
 env_path = os.path.join(os.path.dirname(__file__), '..', '..', '.env')
