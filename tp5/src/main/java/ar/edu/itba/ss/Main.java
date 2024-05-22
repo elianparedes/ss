@@ -1,13 +1,11 @@
 package ar.edu.itba.ss;
 
-import ar.edu.itba.ss.input.CSVIterator;
-import ar.edu.itba.ss.input.FootballSimulationConfig;
-import ar.edu.itba.ss.input.JsonConfigReader;
-import ar.edu.itba.ss.input.MatchStateMapper;
+import ar.edu.itba.ss.input.*;
 import ar.edu.itba.ss.models.GearPredictor;
 import ar.edu.itba.ss.models.Particle;
 import ar.edu.itba.ss.models.SocialForce;
 import ar.edu.itba.ss.models.Vector;
+import ar.edu.itba.ss.output.CSVBuilder;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,6 +32,19 @@ public class Main {
 
         JsonConfigReader configReader = new JsonConfigReader();
         FootballSimulationConfig config = configReader.readConfig("config.json", FootballSimulationConfig.class);
+
+        ArgumentHandler argumentHandler = new ArgumentHandler();
+        argumentHandler.addArgument("-O", (v)->true, true, "output/");
+        argumentHandler.parse(args);
+
+        // Initialize CSV File
+        String fileName = String.format(argumentHandler.getArgument("-O") + "futball-vd%.2f-tau%.2f", config.getDesiredSpeed(), config.getTau());
+        CSVBuilder builder = new CSVBuilder();
+        try {
+            builder.appendLine(fileName, "frame", "particle", "team", "x", "y");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         MatchStateMapper homeMapper = new MatchStateMapper(HOME_POSITION_INDEXES,
                 HOME_BALL_INDEX
@@ -86,8 +97,11 @@ public class Main {
                 Vector dR2 = gearPredictor.evaluate(predicted, future);
                 Particle corrected = gearPredictor.correct(predicted, dR2);
 
-                System.out.println(lunatic.getPosition());
-                //Maybe export some state before
+                //Report state every dt2= 1/24 s
+                if(i%10 == 0){
+                    reportToCsv(builder,fileName,i,lunatic,ballPosition,homeRowPlayers,awayRowPlayers);
+                }
+
                 lunatic = corrected;
                 i++;
             }
@@ -107,5 +121,46 @@ public class Main {
 
         Vector realLunaticPosition = new Vector(x, y).sum(ballRealPosition);
         return new Vector(realLunaticPosition.getX() / FIELD_X, realLunaticPosition.getY() / FIELD_Y);
+    }
+
+    private static void reportToCsv(CSVBuilder builder, String fileName, int i, Particle lunatic, Vector ballPosition, List<Particle> home, List<Particle> away) throws IOException {
+
+        i = i/10;
+
+        //Ball
+        builder.appendLine(fileName,
+                String.valueOf(i),
+                "ball",
+                "N/A",
+                String.valueOf(ballPosition.getX()),
+                String.valueOf(ballPosition.getY()));
+
+        //Lunatic
+        builder.appendLine(fileName,
+                String.valueOf(i),
+                lunatic.getName(),
+                "N/A",
+                String.valueOf(lunatic.getPosition().getX()),
+                String.valueOf(lunatic.getPosition().getY()));
+
+        //Home players
+        for(Particle particle : home){
+            builder.appendLine(fileName,
+                    String.valueOf(i),
+                    "N/A",
+                    "home",
+                    String.valueOf(particle.getPosition().getX()),
+                    String.valueOf(particle.getPosition().getY()));
+        }
+
+        //Away players
+        for(Particle particle : away){
+            builder.appendLine(fileName,
+                    String.valueOf(i),
+                    "N/A",
+                    "away",
+                    String.valueOf(particle.getPosition().getX()),
+                    String.valueOf(particle.getPosition().getY()));
+        }
     }
 }
