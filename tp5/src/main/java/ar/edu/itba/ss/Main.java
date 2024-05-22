@@ -1,6 +1,8 @@
 package ar.edu.itba.ss;
 
 import ar.edu.itba.ss.input.CSVIterator;
+import ar.edu.itba.ss.input.FootballSimulationConfig;
+import ar.edu.itba.ss.input.JsonConfigReader;
 import ar.edu.itba.ss.input.MatchStateMapper;
 import ar.edu.itba.ss.models.GearPredictor;
 import ar.edu.itba.ss.models.Particle;
@@ -24,8 +26,15 @@ public class Main {
     public static final int AWAY_BALL_INDEX = 28;
 
     private static final double DT = 1.0 / 240.0;
+    private static final double FIELD_X = 105.0;
+    private static final double FIELD_Y = 68;
+    private static final double INITIAL_DISTANCE = 10;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        JsonConfigReader configReader = new JsonConfigReader();
+        FootballSimulationConfig config = configReader.readConfig("config.json", FootballSimulationConfig.class);
+
         MatchStateMapper homeMapper = new MatchStateMapper(HOME_POSITION_INDEXES,
                 HOME_BALL_INDEX
         );
@@ -48,15 +57,15 @@ public class Main {
 
             Particle lunatic = new Particle(
                     "lunatic",
-                    80.0,
-                    0.25,
+                    config.getLunaticMass(),
+                    config.getLunaticRadius(),
                     generateLunaticPosition(ballPosition),
                     new Vector(0, 0),
-                    3.0,
+                    config.getDesiredSpeed(),
                     ballPosition
             );
 
-            lunatic = GearPredictor.calculateFutureParticle(lunatic,SocialForce.calculateForce(lunatic,players,0.5));
+            lunatic = GearPredictor.calculateFutureParticle(lunatic, SocialForce.calculateForce(lunatic, players, config.getTau()));
 
             int i = 0;
             while (homeIterator.hasNext() && awayIterator.hasNext() || (i % 10 != 0)) {
@@ -73,9 +82,9 @@ public class Main {
                 }
 
                 Particle predicted = gearPredictor.predict(lunatic);
-                Particle future = GearPredictor.calculateFutureParticle(predicted,SocialForce.calculateForce(lunatic,players,0.5));
-                Vector dR2 = gearPredictor.evaluate(predicted,future);
-                Particle corrected = gearPredictor.correct(predicted,dR2);
+                Particle future = GearPredictor.calculateFutureParticle(predicted, SocialForce.calculateForce(lunatic, players, config.getTau()));
+                Vector dR2 = gearPredictor.evaluate(predicted, future);
+                Particle corrected = gearPredictor.correct(predicted, dR2);
 
                 System.out.println(lunatic.getPosition());
                 //Maybe export some state before
@@ -88,15 +97,15 @@ public class Main {
     }
 
     private static Vector generateLunaticPosition(Vector ballPosition) {
-        Vector ballRealPosition = new Vector(ballPosition.getX() * 105, ballPosition.getY() * 68);
-        double y = Math.random() * 10;
-        double x = Math.sqrt(10 * 10 - y * y);
+        Vector ballRealPosition = new Vector(ballPosition.getX() * FIELD_X, ballPosition.getY() * FIELD_Y);
+        double y = Math.random() * INITIAL_DISTANCE;
+        double x = Math.sqrt(INITIAL_DISTANCE * INITIAL_DISTANCE - y * y);
         double signX = Math.random() < 0.5 ? 1 : -1;
         double signY = Math.random() < 0.5 ? 1 : -1;
         x = signX * x;
         y = signY * y;
 
         Vector realLunaticPosition = new Vector(x, y).sum(ballRealPosition);
-        return new Vector(realLunaticPosition.getX() /105.0, realLunaticPosition.getY() / 68.0);
+        return new Vector(realLunaticPosition.getX() / FIELD_X, realLunaticPosition.getY() / FIELD_Y);
     }
 }

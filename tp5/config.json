@@ -1,0 +1,6 @@
+{
+  "lunatic_mass": 80,
+  "lunatic_radius": 0.25,
+  "desired_speed": 3,
+  "tau": 0.5
+}
