@@ -40,5 +40,5 @@ class PlotLegend:
         return self
 
     def set_title_horizontal_alignment(self, align):
-        self.legend.get_title().set_ha(align)
+        self.legend._legend_box.align = align
         return self
