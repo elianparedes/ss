@@ -98,7 +98,7 @@ public class Particle {
 
     public Vector getDesiredSpeedVector() {
         Vector direction = target.sub(this.getPosition());
-        direction = direction.multiply(direction.norm());
+        direction = direction.divide(direction.norm());
         return direction.multiply(desiredSpeed);
     }
 
