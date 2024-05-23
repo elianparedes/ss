@@ -25,11 +25,11 @@ public class SocialForce {
 
         for (Particle j : particles) {
             if(!j.equals(i)){
-                Vector normal = j.getPosition().sub(i.getPosition());
+                Vector normal = i.getPosition().sub(j.getPosition());
                 double epsilon = normal.norm() - (i.getRadius()+j.getRadius());
                 normal = normal.divide(normal.norm());
 
-                if(epsilon > 0){
+                if(epsilon <= 0){
                     granularForce.sum(normal.multiply(-1*epsilon*KN));
                 }
 
@@ -45,16 +45,13 @@ public class SocialForce {
 
         for (Particle j : particles) {
             if(!j.equals(i)){
-                Vector normal = j.getPosition().sub(i.getPosition());
+                Vector normal = i.getPosition().sub(j.getPosition());
                 double epsilon = normal.norm() - (i.getRadius()+j.getRadius());
                 normal = normal.divide(normal.norm());
-
-                if(epsilon > 0){
-                    socialForce.sum(normal.multiply(A*Math.exp(-1*epsilon/B)));
+                socialForce.sum(normal.multiply(A*Math.exp(-1*epsilon/B)));
                 }
 
             }
-        }
 
         return socialForce;
     }
