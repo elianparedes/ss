@@ -11,9 +11,6 @@ video_name = "default.mp4"
 video_width = 1280
 video_height = 720
 
-field_width = 1050
-field_height = 680
-
 show_numbers = True
 
 
@@ -28,7 +25,7 @@ def is_number(s: str) -> bool:
 def draw_particles(video_builder: VideoBuilder, data: DataFrame):
     ball = None
     for index, row in data.iterrows():
-        x, y = int((row['x']) * field_width), int((row['y']) * field_height)
+        x, y = int((row['x']) * 10), int((row['y']) * 10)
 
         x += 116
         y += 20
@@ -76,7 +73,7 @@ def render():
     field_image = cv2.imread('../assets/field.png')
     field_image = cv2.resize(field_image, (video_width, video_height))
 
-    simulation_file = '../../output/futball-vd3.00-tau0.50'
+    simulation_file = '../../output/futball-vd3.00-tau0.50.csv'
     data = pd.read_csv(simulation_file)
 
     timesteps = data['frame'].unique()

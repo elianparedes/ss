@@ -7,7 +7,6 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-
         JsonConfigReader configReader = new JsonConfigReader();
         FootballSimulationConfig config = configReader.readConfig("config.json", FootballSimulationConfig.class);
 
@@ -16,7 +15,7 @@ public class Main {
         argumentHandler.parse(args);
 
         // Initialize CSV File
-        String fileName = String.format(argumentHandler.getArgument("-O") + "futball-vd%.2f-tau%.2f", config.getDesiredSpeed(), config.getTau());
+        String fileName = String.format(argumentHandler.getArgument("-O") + "futball-vd%.2f-tau%.2f.csv", config.getDesiredSpeed(), config.getTau());
 
         FootballSimulation.simulate(fileName,config);
     }

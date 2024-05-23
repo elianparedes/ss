@@ -1,10 +1,6 @@
 import pandas as pd
 from data.utils import calculate_distance
 
-FIELD_X = 105
-FIELD_Y = 68
-
-
 def create_distance_avg_dataframe(dataframes, variable_name, output_path):
     average_distances = []
     for item in dataframes:
@@ -29,9 +25,6 @@ def create_distance_dataframe(file_path, output_path):
 
     lunatic_data = data[data['particle'] == 'lunatic']
     ball_data = data[data['particle'] == 'ball']
-
-    lunatic_data.loc[:, ['x', 'y']] = lunatic_data[['x', 'y']].multiply([FIELD_X, FIELD_Y])
-    ball_data.loc[:, ['x', 'y']] = ball_data[['x', 'y']].multiply([FIELD_X, FIELD_Y])
 
     lunatic_data = lunatic_data.sort_values(by='frame').reset_index(drop=True)
     ball_data = ball_data.sort_values(by='frame').reset_index(drop=True)

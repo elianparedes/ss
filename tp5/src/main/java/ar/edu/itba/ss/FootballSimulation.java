@@ -28,8 +28,6 @@ public class FootballSimulation {
     public static final int AWAY_BALL_INDEX = 28;
 
     private static final double DT = 1.0 / 240.0;
-    private static final double FIELD_X = 105.0;
-    private static final double FIELD_Y = 68;
     private static final double INITIAL_DISTANCE = 10;
 
     public static void simulate(String fileName, FootballSimulationConfig config){
@@ -76,7 +74,6 @@ public class FootballSimulation {
             );
 
             lunatic = GearPredictor.calculateFutureParticle(lunatic, SocialForce.calculateForce(lunatic, players, config.getTau()));
-
             int i = 0;
             while (homeIterator.hasNext() && awayIterator.hasNext() || (i % 10 != 0)) {
 
@@ -110,7 +107,6 @@ public class FootballSimulation {
     }
 
     private static Vector generateLunaticPosition(Vector ballPosition) {
-        Vector ballRealPosition = new Vector(ballPosition.getX() * FIELD_X, ballPosition.getY() * FIELD_Y);
         double y = Math.random() * INITIAL_DISTANCE;
         double x = Math.sqrt(INITIAL_DISTANCE * INITIAL_DISTANCE - y * y);
         double signX = Math.random() < 0.5 ? 1 : -1;
@@ -118,8 +114,7 @@ public class FootballSimulation {
         x = signX * x;
         y = signY * y;
 
-        Vector realLunaticPosition = new Vector(x, y).sum(ballRealPosition);
-        return new Vector(realLunaticPosition.getX() / FIELD_X, realLunaticPosition.getY() / FIELD_Y);
+        return  new Vector(x, y).sum(ballPosition);
     }
 
     private static void reportToCsv(CSVBuilder builder, String fileName, int i, Particle lunatic, Vector ballPosition, List<Particle> home, List<Particle> away) throws IOException {

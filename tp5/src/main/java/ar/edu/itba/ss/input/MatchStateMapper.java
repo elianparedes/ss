@@ -17,6 +17,9 @@ public class MatchStateMapper {
     private final int[] playersNumbers;
     private final int ballIndex;
 
+    private static final double FIELD_X = 105;
+    private static final double FIELD_Y = 68;
+
 
     public MatchStateMapper(int[] playerPositionIndexes, int[] playersNumbers, int ballIndex) {
         this.playerPositionIndexes = playerPositionIndexes;
@@ -29,8 +32,8 @@ public class MatchStateMapper {
 
         for (int i = 0; i < playerPositionIndexes.length; i++) {
             int playerPositionIndex = playerPositionIndexes[i];
-            double x = Double.parseDouble(row[playerPositionIndex]);
-            double y = Double.parseDouble(row[playerPositionIndex + 1]);
+            double x = Double.parseDouble(row[playerPositionIndex]) * FIELD_X;
+            double y = Double.parseDouble(row[playerPositionIndex + 1]) * FIELD_Y;
 
             Particle player = new Particle(
                     String.format("%s", playersNumbers[i]),
@@ -49,7 +52,7 @@ public class MatchStateMapper {
     }
 
     public Vector getBall(String[] row) {
-        return new Vector(Double.parseDouble(row[ballIndex]), Double.parseDouble(row[ballIndex + 1]));
+        return new Vector(Double.parseDouble(row[ballIndex]) * FIELD_X, Double.parseDouble(row[ballIndex + 1]) * FIELD_Y);
     }
 
     public double getFrame(String[] row) {
