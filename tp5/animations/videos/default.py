@@ -77,7 +77,7 @@ def render():
     field_image = cv2.imread('../assets/field.png')
     field_image = cv2.resize(field_image, (video_width, video_height))
 
-    simulation_file = '../../output/varying_speed-vd1.00-tau0.50.csv'
+    simulation_file = '../../output/futball-vd5.00-tau0.50.csv'
     data = pd.read_csv(simulation_file)
 
     timesteps = data['frame'].unique()

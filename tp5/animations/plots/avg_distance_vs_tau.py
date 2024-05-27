@@ -10,7 +10,7 @@ vd_values = data['tau']
 mean_values = data['avg']
 std_values = data['std']
 
-set_global_font_size(16)
+set_global_font_size(20)
 fig, ax = plt.subplots()
 set_plot_size(fig, 16, 9)
 
@@ -18,7 +18,7 @@ plt.errorbar(vd_values, mean_values,
              yerr=std_values, fmt='o', capsize=5, markersize=10)
 
 ax.grid(True)
-ax.set_ylabel('$\\text{Promedio de la distancia entre el loco y pelota}$ $\overline{D}$ ($\\text{m}$)')
+ax.set_ylabel('$\\text{Promedio de la distancia entre el Loco y pelota}$ $\overline{D}$ ($\\text{m}$)')
 ax.set_xlabel('$\\text{Tiempo de relajación}$ $\\tau$ ($\\text{s}$)')
 
 plt.tight_layout()

@@ -44,3 +44,4 @@ animations/data/output/
 animations/videos/*.mp4
 preprocessing/input/*.csv
 /animations/.env
+animations/**/*.png

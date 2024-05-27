@@ -10,7 +10,7 @@ vd_values = data['vd']
 mean_values = data['avg']
 std_values = data['std']
 
-set_global_font_size(16)
+set_global_font_size(20)
 fig, ax = plt.subplots()
 set_plot_size(fig, 16, 9)
 
@@ -19,7 +19,7 @@ plt.errorbar(vd_values, mean_values,
 
 ax.grid(True)
 
-ax.set_ylabel('$\\text{Promedio de la distancia entre el loco y pelota}$ $\overline{D}$ ($\\text{m}$)')
+ax.set_ylabel('$\\text{Promedio de la distancia entre el Loco y pelota}$ $\overline{D}$ ($\\text{m}$)')
 ax.set_xlabel('$\\text{Velocidad deseada}$ $V_d$ ($\\text{m/s}$)')
 
 plt.tight_layout()
