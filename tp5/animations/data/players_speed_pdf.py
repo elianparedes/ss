@@ -5,7 +5,8 @@ import pandas as pd
 FILE_NAME = 'futball-vd3.00-tau0.50.csv'
 PLAYERS = [('home', '10'), ('home', '5'), ('away', '15')]
 DT = 1.0 / 24.0
-BIN_WIDTH = 0.1
+BIN_WIDTH = 0.4
+MAX_SPEED = 8
 
 def calculate_pdf(dataframe):
     speeds = []
@@ -18,14 +19,13 @@ def calculate_pdf(dataframe):
         speed_y = (current_row['y']- previous_row['y']) / DT
         speed = (speed_x ** 2 + speed_y ** 2) ** 0.5
 
-        if speed < 10:
+        if speed < MAX_SPEED:
             speeds.append(speed)
 
     if not speeds:
         return [], []
 
-    max_speed = max(speeds)
-    bin_edges = np.arange(0, max_speed + BIN_WIDTH, BIN_WIDTH)
+    bin_edges = np.arange(0, MAX_SPEED, BIN_WIDTH)
 
     hist, bin_edges = np.histogram(speeds, bins=bin_edges)
     N = len(speeds)
