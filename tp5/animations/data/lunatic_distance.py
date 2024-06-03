@@ -1,5 +1,8 @@
 import pandas as pd
+import scipy.stats as sci
+
 from data.utils import calculate_distance
+
 
 def create_distance_avg_dataframe(dataframes, variable_name, output_path):
     average_distances = []
@@ -8,7 +11,7 @@ def create_distance_avg_dataframe(dataframes, variable_name, output_path):
         variable_value = item[variable_name]
 
         avg_distance = dataframe['distance'].mean()
-        std_distance = dataframe['distance'].std()
+        std_distance = sci.sem(dataframe['distance'])
 
         average_distances.append({
             variable_name: variable_value,
@@ -19,6 +22,7 @@ def create_distance_avg_dataframe(dataframes, variable_name, output_path):
     average_distances_df = pd.DataFrame(average_distances)
     average_distances_df = average_distances_df.sort_values(by=variable_name)
     average_distances_df.to_csv(output_path, index=False)
+
 
 def create_distance_dataframe(file_path, output_path):
     data = pd.read_csv(file_path)

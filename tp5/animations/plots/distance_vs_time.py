@@ -39,7 +39,7 @@ def plot(variable_name, value):
             ax.plot(data['time'], data['distance'], label=f"{param_value:.2f} {LEGEND_UNITS[variable_name]}")
 
     ax.set_xlabel('$\\text{Tiempo (s)}$')
-    ax.set_ylabel('$\\text{Distancia entre Loco y pelota} \\ D \\ \\text{(m)}$')
+    ax.set_ylabel('$\\text{Distancia entre el Loco y la pelota (m)}$')
 
     legend = plots.PlotLegend.get_legend(ax).set_title(LEGEND_TITLE[variable_name]).set_title_horizontal_alignment(
         'left').set_title_bold()

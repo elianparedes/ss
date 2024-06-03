@@ -1,3 +1,5 @@
+import math
+
 import pandas as pd
 from matplotlib import pyplot as plt
 
@@ -18,8 +20,8 @@ plt.errorbar(vd_values, mean_values,
              yerr=std_values, fmt='o', capsize=5, markersize=10)
 
 ax.grid(True)
-ax.set_ylabel('$\\text{Promedio de la distancia entre el Loco y pelota}$ $\overline{D}$ ($\\text{m}$)')
-ax.set_xlabel('$\\text{Tiempo de relajación}$ $\\tau$ ($\\text{s}$)')
+ax.set_ylabel('$\\text{Promedio de la distancia entre el Loco y la pelota}$ ($\\text{m}$)')
+ax.set_xlabel('$\\text{Tiempo de relajación}$ ($\\text{s}$)')
 
 plt.tight_layout()
 plt.savefig('avg_distance_vs_tau.png')

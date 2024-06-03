@@ -1,3 +1,5 @@
+import math
+
 import pandas as pd
 from matplotlib import pyplot as plt
 
@@ -15,12 +17,12 @@ fig, ax = plt.subplots()
 set_plot_size(fig, 16, 9)
 
 plt.errorbar(vd_values, mean_values,
-             yerr=std_values, fmt='o', capsize=5, markersize=10)
+             yerr=std_values, fmt='o', capsize=5)
 
 ax.grid(True)
 
-ax.set_ylabel('$\\text{Promedio de la distancia entre el Loco y pelota}$ $\overline{D}$ ($\\text{m}$)')
-ax.set_xlabel('$\\text{Velocidad deseada}$ $V_d$ ($\\text{m/s}$)')
+ax.set_ylabel('$\\text{Promedio de la distancia entre el Loco y la pelota}$ ($\\text{m}$)')
+ax.set_xlabel('$\\text{Velocidad deseada}$ ($\\text{m/s}$)')
 
 plt.tight_layout()
 plt.savefig('avg_distance_vs_speed.png')
