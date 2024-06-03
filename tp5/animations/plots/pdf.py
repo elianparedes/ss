@@ -42,6 +42,7 @@ legend = plots.PlotLegend.get_legend(ax).set_title('Jugador').set_title_horizont
     'center').set_title_bold()
 legend.set_legend_outside()
 
+plt.semilogy()
 plt.grid(True)
 plt.tight_layout()
 plt.show()

@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
+from data.utils import calculate_speed
 
 FILE_NAME = 'futball-vd3.00-tau0.50.csv'
 PLAYERS = [('home', '10'), ('home', '5'), ('away', '15')]
@@ -15,9 +16,7 @@ def calculate_pdf(dataframe):
         current_row = dataframe.iloc[idx]
         previous_row = dataframe.iloc[idx - 1]
 
-        speed_x = (current_row['x']  - previous_row['x']) / DT
-        speed_y = (current_row['y']- previous_row['y']) / DT
-        speed = (speed_x ** 2 + speed_y ** 2) ** 0.5
+        speed = calculate_speed(current_row['x'],current_row['y'], previous_row['x'], previous_row['y'], DT)
 
         if speed < MAX_SPEED:
             speeds.append(speed)
